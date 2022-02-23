@@ -1,0 +1,6 @@
+name: Umcp
+version: '${project.version}'
+main: org.umc.umcp.Main
+api-version: 1.18
+authors: [ NikitaSamkov ]
+description: nu i vyser
