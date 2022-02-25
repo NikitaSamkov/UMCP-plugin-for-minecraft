@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.umc.umcp.commands.JoinInstituteTabExecutor;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ public final class Main extends JavaPlugin {
         this.getLogger().info("Я ЖИВОЙ!!1!!");
         Bukkit.getServer().getPluginManager().registerEvents(new MyListener(), this);
         getCommand("test").setExecutor(new MyExecutor());
+        getCommand("join").setExecutor(new JoinInstituteTabExecutor());
         addCrafts();
 
     }

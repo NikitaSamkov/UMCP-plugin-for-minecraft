@@ -1,6 +1,11 @@
 name: Umcp
 version: '${project.version}'
 main: org.umc.umcp.Main
-api-version: 1.18
+api-version: 1.14
 authors: [ NikitaSamkov ]
 description: nu i vyser
+commands:
+  test:
+    usage: /<command>
+  join:
+    usage: /<command> <institute name>

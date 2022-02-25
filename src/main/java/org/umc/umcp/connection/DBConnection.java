@@ -43,4 +43,12 @@ public class DBConnection {
         }
         return null;
     }
+
+    public void MakeUpdate(String query) {
+        try {
+            stmt.executeUpdate(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
