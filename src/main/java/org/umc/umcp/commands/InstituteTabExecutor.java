@@ -12,6 +12,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.bukkit.entity.Player;
+import org.umc.umcp.commands.help.Help;
+import org.umc.umcp.commands.help.UmcpCommand;
 import org.umc.umcp.connection.DBConnection;
 
 @FunctionalInterface
@@ -25,22 +27,29 @@ public class InstituteTabExecutor implements TabExecutor {
     private final List<String> institutes;
     private final Map<String, InstituteSubcommand> subcommands;
     private final Map<String, String> painter;
+    private final UmcpCommand commandTree;
+    private Help helper;
 
     public InstituteTabExecutor() {
         conn = new DBConnection("jdbc:mysql://umcraft.scalacubes.org:2163/UMCraft", "root", "4o168PPYSIdyjFU");
-        institutes = GetInstitutes();
+        commandTree = GetTree();
+        institutes = commandTree.GetSubcommand("join").GetSubcommands();
         painter = CreatePainter(institutes);
+        helper = new Help(commandTree);
 
         subcommands = new HashMap<String, InstituteSubcommand>();
         subcommands.put("join", this::Join);
         subcommands.put("info", this::Info);
+        subcommands.put("list", this::InstitutesList);
 
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length < 1)
-            return InstitutesList(sender);
+            return false;
+        if (args[args.length - 1].equalsIgnoreCase("help"))
+            return helper.GetHelp(sender, command, label, args);
         return subcommands.get(args[0].toLowerCase(Locale.ROOT)).subcommand(sender, command, label, args);
     }
 
@@ -55,7 +64,7 @@ public class InstituteTabExecutor implements TabExecutor {
         return null;
     }
 
-    private boolean InstitutesList(CommandSender sender) {
+    private boolean InstitutesList(CommandSender sender, Command command, String label, String[] args) {
         sender.sendMessage(painter.values().stream().sorted().collect(Collectors.joining("\n")));
         return true;
     }
@@ -151,6 +160,18 @@ public class InstituteTabExecutor implements TabExecutor {
             result.put(list.get(i), colored.get(i));
         }
         return result;
+    }
+
+    private UmcpCommand GetTree() {
+        List<String> institutes = GetInstitutes();
+        UmcpCommand tree = new UmcpCommand("institute", "База для команд поступления в один из институтов", Arrays.asList(
+                new UmcpCommand("join", "Поступить в один из институтов", null),
+                new UmcpCommand("info", "Узнать, в каком институте сейчас учишься", null),
+                new UmcpCommand("list", "Посмотреть список всех институтов", null)
+        ));
+        for (String i: institutes)
+            tree.GetSubcommand("join").subcommands.add(new UmcpCommand(i, "", null));
+        return tree;
     }
 }
 
