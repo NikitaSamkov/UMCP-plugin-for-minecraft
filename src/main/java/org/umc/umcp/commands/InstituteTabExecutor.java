@@ -4,29 +4,55 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Function;
 
 import org.bukkit.entity.Player;
 import org.umc.umcp.connection.DBConnection;
 
-public class JoinInstituteTabExecutor implements TabExecutor {
+@FunctionalInterface
+interface InstituteSubcommand{
+    public Boolean subcommand(CommandSender cs, Command c, String s, String[] sa);
+}
 
-    private List<String> institutes;
+public class InstituteTabExecutor implements TabExecutor {
 
-    public JoinInstituteTabExecutor() {
+    private final DBConnection conn;
+    private final List<String> institutes;
+    private final Map<String, InstituteSubcommand> subcommands;
+
+    public InstituteTabExecutor() {
+        conn = new DBConnection("jdbc:mysql://umcraft.scalacubes.org:2163/UMCraft", "root", "4o168PPYSIdyjFU");
         institutes = GetInstitutes();
+        subcommands = new HashMap<String, InstituteSubcommand>();
+        subcommands.put("join", this::Join);
+        subcommands.put("info", this::Info);
+
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        String instituteName = args[0];
+        if (args.length < 1)
+            return false;
+        return subcommands.get(args[0].toLowerCase(Locale.ROOT)).subcommand(sender, command, label, args);
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+        if (args.length == 1) {
+            return new ArrayList<>(subcommands.keySet());
+        }
+        if (args.length == 2 && args[0].equalsIgnoreCase("join")) {
+            return institutes;
+        }
+        return null;
+    }
+
+    private boolean Join(CommandSender sender, Command command, String label, String[] args) {
+        String instituteName = args[1];
         if (!(sender instanceof Player)) return false;
         Player player = (Player) sender;
         player.getUniqueId();
@@ -39,19 +65,28 @@ public class JoinInstituteTabExecutor implements TabExecutor {
         }
     }
 
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length == 1) {
-            return institutes;
+    private boolean Info(CommandSender sender, Command command, String label, String[] args) {
+        try {
+            Player player = (Player) sender;
+            conn.Connect();
+            ResultSet result = conn.MakeQuery(String.format("select id, name from institutes " +
+                    "inner join players p on institutes.id = p.institute where p.uuid='%s'", player.getUniqueId()));
+            if (result.next()) {
+                sender.sendMessage(String.format("Вы сейчас состоите в институте %s!", result.getString("name")));
+            } else {
+                sender.sendMessage("Вы сейчас не состоите ни в каком институте, поступите в него командой \"/institute join <название института>\"!");
+            }
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return null;
+        return false;
     }
 
     private boolean JoinInstitute(String uuid, String instituteName) {
-        DBConnection conn = new DBConnection("jdbc:mysql://umcraft.scalacubes.org:2163/UMCraft", "root", "4o168PPYSIdyjFU");
-        conn.Connect();
-        ResultSet instituteID = conn.MakeQuery(String.format("select id from institutes where name='%s'", instituteName));
         try {
+            conn.Connect();
+            ResultSet instituteID = conn.MakeQuery(String.format("select id from institutes where name='%s'", instituteName));
             if (!instituteID.next()) {
                 return false;
             }
@@ -76,9 +111,8 @@ public class JoinInstituteTabExecutor implements TabExecutor {
     private List<String> GetInstitutes() {
         List<String> result = new ArrayList<String>();
 
-        DBConnection conn = new DBConnection("jdbc:mysql://umcraft.scalacubes.org:2163/UMCraft", "root", "4o168PPYSIdyjFU");
-        conn.Connect();
         try {
+            conn.Connect();
             ResultSet institutes = conn.MakeQuery("select name from institutes");
 
             while (institutes.next()) {
@@ -92,3 +126,5 @@ public class JoinInstituteTabExecutor implements TabExecutor {
         return result;
     }
 }
+
+

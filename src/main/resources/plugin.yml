@@ -7,5 +7,5 @@ description: nu i vyser
 commands:
   test:
     usage: /<command>
-  join:
-    usage: /<command> <institute name>
+  institute:
+    usage: /<command> join <institute name>, /<command> info
