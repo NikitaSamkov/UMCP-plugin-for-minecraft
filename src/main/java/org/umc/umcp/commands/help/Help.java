@@ -34,14 +34,12 @@ public class Help {
             return false;
         }
 
-        if (last.subcommands.size() == 0) {
-            sender.sendMessage(String.format("%s\n%s", start, last.description));
-            return true;
-        }
-
         List<String> variants = new ArrayList<>();
         for(UmcpCommand sub: last.subcommands) {
             variants.add(String.format("%s §a%s§f %s", start, sub.toString(), (sub.subcommands.size() > 0) ? "..." : ""));
+        }
+        for (String arg: last.GetArguments()) {
+            variants.add(String.format("%s §e%s§f", start, arg));
         }
         sender.sendMessage(String.format("Возможные дополнения:\n%s\n%s",
                 variants.stream().sorted().collect(Collectors.joining("\n")), last.description));
