@@ -6,6 +6,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.umc.umcp.commands.InstituteTabExecutor;
+import org.umc.umcp.listeners.PlayerChatListener;
 
 public final class Main extends JavaPlugin {
 
@@ -13,6 +14,7 @@ public final class Main extends JavaPlugin {
     public void onEnable() {
         this.getLogger().info("Я ЖИВОЙ!!1!!");
         Bukkit.getServer().getPluginManager().registerEvents(new MyListener(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new PlayerChatListener(), this);
         getCommand("test").setExecutor(new MyExecutor());
         getCommand("institute").setExecutor(new InstituteTabExecutor());
         addCrafts();
