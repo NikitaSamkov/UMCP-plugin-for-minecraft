@@ -2,11 +2,10 @@ package org.umc.umcp.commands.help;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.checkerframework.checker.units.qual.A;
 import org.umc.umcp.commands.UmcpCommand;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Help {
@@ -17,7 +16,7 @@ public class Help {
     }
 
     public Boolean GetHelp(CommandSender sender, Command command, String label, String[] args) {
-        StringBuilder start = new StringBuilder("/" + label + " ");
+        List<String> fullComm = new LinkedList<>(Arrays.asList("/" + label));
 
         int i = 0;
         UmcpCommand last = commandsTree;
@@ -27,12 +26,14 @@ public class Help {
                 return false;
             }
             last = sub;
-            start.append(args[i]).append(" ");
+            fullComm.add(args[i]);
             i++;
         }
         if (i < args.length - 1) {
             return false;
         }
+
+        String start = String.join(" ", fullComm);
 
         List<String> variants = new ArrayList<>();
         for(UmcpCommand sub: last.subcommands) {

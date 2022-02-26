@@ -50,10 +50,13 @@ public class InstituteTabExecutor extends HelpSupport {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+
         List<String> path = new LinkedList<>(Arrays.asList(args));
         if (path.size() > 0)
             path.remove(path.size() - 1);
         UmcpCommand comm = commandTree.GetSubcommand(path);
+        if (comm == null)
+            return null;
         List<String> subs = comm.GetSubcommands();
         subs.addAll(comm.GetArguments());
         subs.add("help");
