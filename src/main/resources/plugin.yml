@@ -8,4 +8,4 @@ commands:
   test:
     usage: /<command>
   institute:
-    usage: /<command> help
+    usage: §cпопробуйте /<command> help§f
