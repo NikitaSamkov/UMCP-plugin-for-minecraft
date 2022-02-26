@@ -2,31 +2,22 @@ package org.umc.umcp.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabExecutor;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.bukkit.entity.Player;
 import org.umc.umcp.commands.help.Help;
 import org.umc.umcp.commands.help.HelpSupport;
-import org.umc.umcp.commands.help.UmcpCommand;
 import org.umc.umcp.connection.DBConnection;
-
-@FunctionalInterface
-interface InstituteSubcommand{
-    public Boolean subcommand(CommandSender cs, Command c, String s, String[] sa);
-}
 
 public class InstituteTabExecutor extends HelpSupport {
 
     private final DBConnection conn;
     private final List<String> institutes;
-    private final Map<String, InstituteSubcommand> subcommands;
     private final Map<String, String> painter;
     private UmcpCommand commandTree;
     private Help helper;
@@ -34,14 +25,9 @@ public class InstituteTabExecutor extends HelpSupport {
     public InstituteTabExecutor() {
         conn = new DBConnection("jdbc:mysql://umcraft.scalacubes.org:2163/UMCraft", "root", "4o168PPYSIdyjFU");
         commandTree = GetTree();
-        institutes = commandTree.GetSubcommand("join").GetSubcommands();
+        institutes = commandTree.GetSubcommand("join").GetArguments();
         painter = CreatePainter(institutes);
         helper = new Help(commandTree);
-
-        subcommands = new HashMap<String, InstituteSubcommand>();
-        subcommands.put("join", this::Join);
-        subcommands.put("info", this::Info);
-        subcommands.put("list", this::InstitutesList);
 
     }
 
@@ -51,7 +37,15 @@ public class InstituteTabExecutor extends HelpSupport {
             return false;
         if (args[args.length - 1].equalsIgnoreCase("help"))
             return helper.GetHelp(sender, command, label, args);
-        return subcommands.get(args[0].toLowerCase(Locale.ROOT)).subcommand(sender, command, label, args);
+        UmcpCommand curr = commandTree;
+        for (int i = 0; i < args.length; i++) {
+            UmcpCommand next = curr.GetSubcommand(args[i]);
+            if (next == null) {
+                return curr.Execute(sender, command, label, Arrays.copyOfRange(args, i, args.length));
+            }
+            curr = next;
+        }
+        return curr.Execute(sender, command, label, new String[0]);
     }
 
     @Override
@@ -59,9 +53,39 @@ public class InstituteTabExecutor extends HelpSupport {
         List<String> path = new LinkedList<>(Arrays.asList(args));
         if (path.size() > 0)
             path.remove(path.size() - 1);
-        List<String> subs = commandTree.GetSubcommands(path);
+        UmcpCommand comm = commandTree.GetSubcommand(path);
+        List<String> subs = comm.GetSubcommands();
+        subs.addAll(comm.GetArguments());
         subs.add("help");
         return subs;
+    }
+
+    private List<String> GetInstitutes() {
+        List<String> result = new ArrayList<>();
+
+        try {
+            conn.Connect();
+            ResultSet institutes = conn.MakeQuery("select name from institutes");
+
+            while (institutes.next()) {
+                result.add(institutes.getString("name"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        conn.Close();
+
+        return result;
+    }
+
+    protected UmcpCommand GetTree() {
+        List<String> institutes = GetInstitutes();
+        return new UmcpCommand("institute", this::NoCommand,
+                "База для команд поступления в один из институтов", new LinkedList<>(Arrays.asList(
+                new UmcpCommand("join", this::Join, "Поступить в один из институтов", null, institutes),
+                new UmcpCommand("info", this::Info, "Узнать, в каком институте сейчас учишься"),
+                new UmcpCommand("list", this::InstitutesList, "Посмотреть список всех институтов")
+        )));
     }
 
     private boolean InstitutesList(CommandSender sender, Command command, String label, String[] args) {
@@ -70,7 +94,7 @@ public class InstituteTabExecutor extends HelpSupport {
     }
 
     private boolean Join(CommandSender sender, Command command, String label, String[] args) {
-        String instituteName = args[1];
+        String instituteName = args[0];
         if (!(sender instanceof Player)) return false;
         Player player = (Player) sender;
         player.getUniqueId();
@@ -81,6 +105,10 @@ public class InstituteTabExecutor extends HelpSupport {
             sender.sendMessage("Произошла ошибка: проверьте правильность написания названия института (даже подсказки есть)");
             return false;
         }
+    }
+
+    private boolean NoCommand(CommandSender sender, Command command, String label, String[] args) {
+        return false;
     }
 
     private boolean Info(CommandSender sender, Command command, String label, String[] args) {
@@ -126,24 +154,6 @@ public class InstituteTabExecutor extends HelpSupport {
         return false;
     }
 
-    private List<String> GetInstitutes() {
-        List<String> result = new ArrayList<String>();
-
-        try {
-            conn.Connect();
-            ResultSet institutes = conn.MakeQuery("select name from institutes");
-
-            while (institutes.next()) {
-                result.add(institutes.getString("name"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        conn.Close();
-
-        return result;
-    }
-
     private List<String> GetColorfulElements(List<String> list) {
         List<String> paints = Arrays.asList("2", "3", "4", "5", "6", "7", "9", "a", "b", "c", "d", "e", "f");
         ArrayList<String> result = new ArrayList<>();
@@ -160,18 +170,6 @@ public class InstituteTabExecutor extends HelpSupport {
             result.put(list.get(i), colored.get(i));
         }
         return result;
-    }
-
-    protected UmcpCommand GetTree() {
-        List<String> institutes = GetInstitutes();
-        UmcpCommand tree = new UmcpCommand("institute", "База для команд поступления в один из институтов", Arrays.asList(
-                new UmcpCommand("join", "Поступить в один из институтов", null),
-                new UmcpCommand("info", "Узнать, в каком институте сейчас учишься", null),
-                new UmcpCommand("list", "Посмотреть список всех институтов", null)
-        ));
-        for (String i: institutes)
-            tree.GetSubcommand("join").subcommands.add(new UmcpCommand(i, "", null));
-        return tree;
     }
 }
 

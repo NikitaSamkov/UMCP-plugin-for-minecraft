@@ -2,6 +2,7 @@ package org.umc.umcp.commands.help;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.umc.umcp.commands.UmcpCommand;
 
 import java.util.ArrayList;
 import java.util.List;

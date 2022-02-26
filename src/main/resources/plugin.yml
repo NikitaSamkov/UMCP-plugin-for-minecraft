@@ -8,4 +8,4 @@ commands:
   test:
     usage: /<command>
   institute:
-    usage: /<command> join <institute name>, /<command> info
+    usage: /<command> help
