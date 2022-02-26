@@ -27,7 +27,7 @@ public final class Main extends JavaPlugin {
     private void addCrafts() {
         ShapedRecipe diamond = new ShapedRecipe(new ItemStack(Material.DIAMOND, 1));
         diamond.shape("***", "***", "***");
-        diamond.setIngredient('*', Material.DIRT);
+        diamond.setIngredient('*', Material.GRASS_BLOCK);
         getServer().addRecipe(diamond);
     }
 }

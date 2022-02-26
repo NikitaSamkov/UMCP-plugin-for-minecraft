@@ -22,6 +22,9 @@ public class InstituteTabExecutor extends HelpSupport {
     private UmcpCommand commandTree;
     private Help helper;
 
+    private int currentArgCount;
+    private List<String> currentTabComplete;
+
     public InstituteTabExecutor() {
         conn = new DBConnection("jdbc:mysql://umcraft.scalacubes.org:2163/UMCraft", "root", "4o168PPYSIdyjFU");
         commandTree = GetTree();
@@ -29,13 +32,15 @@ public class InstituteTabExecutor extends HelpSupport {
         painter = CreatePainter(institutes);
         helper = new Help(commandTree);
 
+        currentArgCount = 0;
+        currentTabComplete = commandTree.GetSubcommands();
+        currentTabComplete.add("help");
+
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length < 1)
-            return false;
-        if (args[args.length - 1].equalsIgnoreCase("help"))
+        if (args.length < 1 || args[args.length - 1].equalsIgnoreCase("help"))
             return helper.GetHelp(sender, command, label, args);
         UmcpCommand curr = commandTree;
         for (int i = 0; i < args.length; i++) {
@@ -50,16 +55,23 @@ public class InstituteTabExecutor extends HelpSupport {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+        if (currentArgCount == args.length)
+            return currentTabComplete;
 
+        currentArgCount = args.length;
         List<String> path = new LinkedList<>(Arrays.asList(args));
         if (path.size() > 0)
             path.remove(path.size() - 1);
+
         UmcpCommand comm = commandTree.GetSubcommand(path);
+
         if (comm == null)
-            return null;
+            return new ArrayList<>();
+
         List<String> subs = comm.GetSubcommands();
         subs.addAll(comm.GetArguments());
         subs.add("help");
+        currentTabComplete = subs;
         return subs;
     }
 
@@ -97,8 +109,11 @@ public class InstituteTabExecutor extends HelpSupport {
     }
 
     private boolean Join(CommandSender sender, Command command, String label, String[] args) {
-        String instituteName = args[0];
+        if (args.length == 0)
+            return false;
         if (!(sender instanceof Player)) return false;
+
+        String instituteName = args[0];
         Player player = (Player) sender;
         player.getUniqueId();
         if (JoinInstitute(player.getUniqueId().toString(), instituteName)) {

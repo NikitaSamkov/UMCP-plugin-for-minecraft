@@ -35,6 +35,10 @@ public class UmcpCommand {
     public UmcpCommand(String name, UmcpSubcommand func, List<UmcpCommand> subcommands) {
         this(name, func, "", subcommands, new ArrayList<>());
     }
+
+    public UmcpCommand(String name, UmcpSubcommand func) {
+        this(name, func, "", new ArrayList<>(), new ArrayList<>());
+    }
     //endregion
 
     public UmcpCommand GetSubcommand(String name) {

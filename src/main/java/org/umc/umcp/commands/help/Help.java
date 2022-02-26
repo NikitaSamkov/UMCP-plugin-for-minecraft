@@ -36,11 +36,11 @@ public class Help {
         String start = String.join(" ", fullComm);
 
         List<String> variants = new ArrayList<>();
-        for(UmcpCommand sub: last.subcommands) {
-            variants.add(String.format("%s §a%s§f %s", start, sub.toString(), (sub.subcommands.size() > 0) ? "..." : ""));
-        }
         for (String arg: last.GetArguments()) {
             variants.add(String.format("%s §e%s§f", start, arg));
+        }
+        for(UmcpCommand sub: last.subcommands) {
+            variants.add(String.format("%s §a%s§f %s", start, sub.toString(), (sub.subcommands.size() > 0) ? "..." : ""));
         }
         sender.sendMessage(String.format("Возможные дополнения:\n%s\n%s",
                 variants.stream().sorted().collect(Collectors.joining("\n")), last.description));
