@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 import org.bukkit.entity.Player;
 import org.umc.umcp.commands.help.Help;
+import org.umc.umcp.commands.help.HelpSupport;
 import org.umc.umcp.commands.help.UmcpCommand;
 import org.umc.umcp.connection.DBConnection;
 
@@ -21,13 +22,13 @@ interface InstituteSubcommand{
     public Boolean subcommand(CommandSender cs, Command c, String s, String[] sa);
 }
 
-public class InstituteTabExecutor implements TabExecutor {
+public class InstituteTabExecutor extends HelpSupport {
 
     private final DBConnection conn;
     private final List<String> institutes;
     private final Map<String, InstituteSubcommand> subcommands;
     private final Map<String, String> painter;
-    private final UmcpCommand commandTree;
+    private UmcpCommand commandTree;
     private Help helper;
 
     public InstituteTabExecutor() {
@@ -162,7 +163,7 @@ public class InstituteTabExecutor implements TabExecutor {
         return result;
     }
 
-    private UmcpCommand GetTree() {
+    protected UmcpCommand GetTree() {
         List<String> institutes = GetInstitutes();
         UmcpCommand tree = new UmcpCommand("institute", "База для команд поступления в один из институтов", Arrays.asList(
                 new UmcpCommand("join", "Поступить в один из институтов", null),
