@@ -14,20 +14,19 @@ public class MyExecutor implements TabExecutor
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] strings) {
-        sender.sendMessage("Test");
+        sender.sendMessage("'"+String.join(", ", strings)+"'");
         return true;
     }
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+        List<String> result = new ArrayList<>();
         if (args.length == 1) {
-            List<String> result = new ArrayList<>();
             result.add("Test2");
             result.add("Test3");
-            result.add("Test4");
-            return result;
         }
+        result.add(args.length + ": " + String.join(", ", args));
 
-        return null;
+        return result;
     }
 }

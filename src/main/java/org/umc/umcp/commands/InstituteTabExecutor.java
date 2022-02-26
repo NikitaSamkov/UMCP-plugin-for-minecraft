@@ -56,13 +56,12 @@ public class InstituteTabExecutor extends HelpSupport {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length == 1) {
-            return new ArrayList<>(subcommands.keySet());
-        }
-        if (args.length == 2 && args[0].equalsIgnoreCase("join")) {
-            return institutes;
-        }
-        return null;
+        List<String> path = new LinkedList<>(Arrays.asList(args));
+        if (path.size() > 0)
+            path.remove(path.size() - 1);
+        List<String> subs = commandTree.GetSubcommands(path);
+        subs.add("help");
+        return subs;
     }
 
     private boolean InstitutesList(CommandSender sender, Command command, String label, String[] args) {

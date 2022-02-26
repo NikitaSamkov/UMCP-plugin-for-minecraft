@@ -24,10 +24,29 @@ public class UmcpCommand {
         return null;
     }
 
+    public UmcpCommand GetSubcommand(List<String> path) {
+        UmcpCommand current = this;
+        for (String e: path) {
+            UmcpCommand next = current.GetSubcommand(e);
+            if (next == null) {
+                return null;
+            }
+            current = next;
+        }
+        return current;
+    }
+
     public List<String> GetSubcommands() {
         return subcommands.stream()
                 .map(UmcpCommand::toString)
                 .collect(Collectors.toList());
+    }
+
+    public List<String> GetSubcommands(List<String> path) {
+        UmcpCommand sub = GetSubcommand(path);
+        if (sub != null)
+            return sub.GetSubcommands();
+        return null;
     }
 
     @Override
