@@ -5,16 +5,24 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.umc.umcp.commands.InstituteTabExecutor;
+import org.umc.umcp.commands.Painter;
 import org.umc.umcp.connection.DBConnection;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class PlayerChatListener implements Listener {
-    private DBConnection conn;
+    private final DBConnection conn;
+    private final Map<String, String> painter;
 
     public PlayerChatListener() {
         conn = new DBConnection("jdbc:mysql://umcraft.scalacubes.org:2163/UMCraft", "root", "4o168PPYSIdyjFU");
+        painter = Painter.GetPainter(GetInstitutesList(), null, (String s) -> "["+s+"]");
+        painter.put("не поступил", "§8[не поступил]§f");
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -24,7 +32,7 @@ public class PlayerChatListener implements Listener {
         if (instituteName == null) {
             instituteName = "не поступил";
         }
-        e.setFormat(String.format("[%s] %s", instituteName, e.getFormat()));
+        e.setFormat(String.format("%s %s", painter.get(instituteName), e.getFormat()));
     }
 
     private String GetInstitute(String uuid) {
@@ -43,5 +51,25 @@ public class PlayerChatListener implements Listener {
             exception.printStackTrace();
         }
         return null;
+    }
+
+
+
+    private List<String> GetInstitutesList() {
+        List<String> result = new ArrayList<>();
+
+        try {
+            conn.Connect();
+            ResultSet institutes = conn.MakeQuery("select name from institutes");
+
+            while (institutes.next()) {
+                result.add(institutes.getString("name"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        conn.Close();
+
+        return result;
     }
 }

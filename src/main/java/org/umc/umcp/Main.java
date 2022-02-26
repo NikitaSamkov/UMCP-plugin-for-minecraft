@@ -13,10 +13,10 @@ public final class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         this.getLogger().info("Я ЖИВОЙ!!1!!");
-        Bukkit.getServer().getPluginManager().registerEvents(new MyListener(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new PlayerChatListener(), this);
         getCommand("test").setExecutor(new MyExecutor());
         getCommand("institute").setExecutor(new InstituteTabExecutor());
+        Bukkit.getServer().getPluginManager().registerEvents(new MyListener(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new PlayerChatListener(), this);
         addCrafts();
 
     }

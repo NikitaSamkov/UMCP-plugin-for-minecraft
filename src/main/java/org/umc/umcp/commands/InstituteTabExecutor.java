@@ -29,7 +29,7 @@ public class InstituteTabExecutor extends HelpSupport {
         conn = new DBConnection("jdbc:mysql://umcraft.scalacubes.org:2163/UMCraft", "root", "4o168PPYSIdyjFU");
         commandTree = GetTree();
         institutes = commandTree.GetSubcommand("join").GetArguments();
-        painter = CreatePainter(institutes);
+        painter = Painter.GetPainter(institutes);
         helper = new Help(commandTree);
 
         currentArgCount = 0;
@@ -40,7 +40,9 @@ public class InstituteTabExecutor extends HelpSupport {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length < 1 || args[args.length - 1].equalsIgnoreCase("help"))
+        if (args.length < 1)
+            return false;
+        if (args[args.length - 1].equalsIgnoreCase("help"))
             return helper.GetHelp(sender, command, label, args);
         UmcpCommand curr = commandTree;
         for (int i = 0; i < args.length; i++) {
@@ -170,24 +172,6 @@ public class InstituteTabExecutor extends HelpSupport {
         }
         conn.Close();
         return false;
-    }
-
-    private List<String> GetColorfulElements(List<String> list) {
-        List<String> paints = Arrays.asList("2", "3", "4", "5", "6", "7", "9", "a", "b", "c", "d", "e", "f");
-        ArrayList<String> result = new ArrayList<>();
-        for (int i = 0; i < list.size(); i++) {
-            result.add("§" + paints.get(i % paints.size()) + list.get(i) + "§f");
-        }
-        return result;
-    }
-
-    private Map<String, String> CreatePainter(List<String> list) {
-        List<String> colored = GetColorfulElements(list);
-        Map<String, String> result = new HashMap<>();
-        for (int i = 0; i < list.size(); i++) {
-            result.put(list.get(i), colored.get(i));
-        }
-        return result;
     }
 }
 
