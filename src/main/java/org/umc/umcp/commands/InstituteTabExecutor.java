@@ -1,5 +1,10 @@
 package org.umc.umcp.commands;
 
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
@@ -7,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.bukkit.entity.Player;
@@ -14,10 +20,12 @@ import org.umc.umcp.commands.help.Help;
 import org.umc.umcp.commands.help.HelpSupport;
 import org.umc.umcp.connection.DBConnection;
 
+import net.md_5.bungee.api.chat.TextComponent;
+
 public class InstituteTabExecutor extends HelpSupport {
 
     private final DBConnection conn;
-    private final List<String> institutes;
+    private final Map<String, String> institutesDescription;
     private final Map<String, String> painter;
     private UmcpCommand commandTree;
     private Help helper;
@@ -27,9 +35,9 @@ public class InstituteTabExecutor extends HelpSupport {
 
     public InstituteTabExecutor() {
         conn = new DBConnection("jdbc:mysql://umcraft.scalacubes.org:2163/UMCraft", "root", "4o168PPYSIdyjFU");
+        institutesDescription = GetInstitutes();
         commandTree = GetTree();
-        institutes = commandTree.GetSubcommand("join").GetArguments();
-        painter = Painter.GetPainter(institutes);
+        painter = Painter.GetPainter(new ArrayList<>(institutesDescription.keySet()));
         helper = new Help(commandTree);
 
         currentArgCount = 0;
@@ -77,32 +85,50 @@ public class InstituteTabExecutor extends HelpSupport {
         return subs;
     }
 
-    private List<String> GetInstitutes() {
-        List<String> result = new ArrayList<>();
+//    private List<String> GetInstitutes() {
+//        List<String> result = new ArrayList<>();
+//
+//        try {
+//            conn.Connect();
+//            ResultSet institutes = conn.MakeQuery("select name from institutes");
+//
+//            while (institutes.next()) {
+//                result.add(institutes.getString("name"));
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        conn.Close();
+//
+//        return result;
+//    }
 
+    private Map<String, String> GetInstitutes() {
+        Map<String, String> desc = new HashMap<>();
         try {
             conn.Connect();
-            ResultSet institutes = conn.MakeQuery("select name from institutes");
-
-            while (institutes.next()) {
-                result.add(institutes.getString("name"));
+            ResultSet rs = conn.MakeQuery("select name, description from institutes");
+            while (rs.next()) {
+                desc.put(rs.getString("name"), rs.getString("description"));
             }
+            conn.Close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        conn.Close();
 
-        return result;
+        return desc;
     }
 
     protected UmcpCommand GetTree() {
-        List<String> institutes = GetInstitutes();
-        return new UmcpCommand("institute", this::NoCommand,
+        List<String> institutesList = new ArrayList<>(institutesDescription.keySet());
+        UmcpCommand tree = new UmcpCommand("institute", this::NoCommand,
                 "База для команд поступления в один из институтов", new LinkedList<>(Arrays.asList(
-                new UmcpCommand("join", this::Join, "Поступить в один из институтов", null, institutes),
-                new UmcpCommand("info", this::Info, "Узнать, в каком институте сейчас учишься"),
+                new UmcpCommand("join", this::Join, "Поступить в один из институтов", null, institutesList),
+                new UmcpCommand("info", this::Info, "Узнать, об институте", null, institutesList),
                 new UmcpCommand("list", this::InstitutesList, "Посмотреть список всех институтов")
         )));
+        tree.GetSubcommand("info").arguments.add("me");
+        return tree;
     }
 
     private boolean InstitutesList(CommandSender sender, Command command, String label, String[] args) {
@@ -132,21 +158,80 @@ public class InstituteTabExecutor extends HelpSupport {
     }
 
     private boolean Info(CommandSender sender, Command command, String label, String[] args) {
+        if (args.length == 0)
+            return false;
+
+        Player player = (Player) sender;
+        Player target = Bukkit.getPlayer(args[0]);
+
+        if (args[0].equalsIgnoreCase("me") || Objects.equals(target, player)) {
+            return InfoMe(player);
+        }
+
+        if (target != null) {
+            return InfoPlayer(player, target);
+        }
+        //TODO institute info
+        return false;
+    }
+
+    private String GetPlayerInstitute(UUID uuid) {
         try {
-            Player player = (Player) sender;
             conn.Connect();
             ResultSet result = conn.MakeQuery(String.format("select id, name from institutes " +
-                    "inner join players p on institutes.id = p.institute where p.uuid='%s'", player.getUniqueId()));
+                    "inner join players p on institutes.id = p.institute where p.uuid='%s'", uuid));
             if (result.next()) {
-                sender.sendMessage(String.format("Вы сейчас состоите в институте %s!", painter.get(result.getString("name"))));
+                return result.getString("name");
             } else {
-                sender.sendMessage("Вы сейчас не состоите ни в каком институте, поступите в него командой \"/institute join <название института>\"!");
+                return null;
             }
-            return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
+        return null;
+    }
+
+    private boolean InfoMe(Player player) {
+        String institute = GetPlayerInstitute(player.getUniqueId());
+        TextComponent msg;
+        if (institute != null) {
+            msg = new TextComponent("Вы сейчас состоите в институте ");
+            msg.addExtra(GetInteractiveInstitute(institute));
+            msg.addExtra("!");
+        } else {
+            msg = new TextComponent("Вы сейчас не состоите ни в каком институте, поступите в него командой ");
+            TextComponent extra = new TextComponent("\"/institute join <название института>\"");
+            extra.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/institute join "));
+            extra.setColor(ChatColor.GREEN);
+            msg.addExtra(extra);
+            msg.addExtra("!");
+        }
+        player.spigot().sendMessage(msg);
+        return true;
+    }
+
+    private boolean InfoPlayer(Player player, Player target) {
+        String institute = GetPlayerInstitute(target.getUniqueId());
+
+        TextComponent msg = new TextComponent("Игрок ");
+
+        TextComponent targetName = new TextComponent(target.getName());
+        targetName.setColor(ChatColor.BLUE);
+
+        msg.addExtra(targetName);
+        msg.addExtra(" учится в институте ");
+        msg.addExtra(GetInteractiveInstitute(GetPlayerInstitute(target.getUniqueId())));
+        msg.addExtra("!");
+        player.spigot().sendMessage(msg);
+        return true;
+
+    }
+
+    private TextComponent GetInteractiveInstitute(String name) {
+        TextComponent institute = new TextComponent(painter.get(name));
+        institute.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(institutesDescription.get(name)).create()));
+        institute.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/institute info " + name));
+        return institute;
     }
 
     private boolean JoinInstitute(String uuid, String instituteName) {
