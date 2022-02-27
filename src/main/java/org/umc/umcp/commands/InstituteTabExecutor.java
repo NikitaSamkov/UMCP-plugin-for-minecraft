@@ -171,8 +171,7 @@ public class InstituteTabExecutor extends HelpSupport {
         if (target != null) {
             return InfoPlayer(player, target);
         }
-        //TODO institute info
-        return false;
+        return InfoInstitute(player, args[0]);
     }
 
     private String GetPlayerInstitute(UUID uuid) {
@@ -216,7 +215,7 @@ public class InstituteTabExecutor extends HelpSupport {
         TextComponent msg = new TextComponent("Игрок ");
 
         TextComponent targetName = new TextComponent(target.getName());
-        targetName.setColor(ChatColor.BLUE);
+        targetName.setColor(ChatColor.AQUA);
 
         msg.addExtra(targetName);
         msg.addExtra(" учится в институте ");
@@ -225,6 +224,17 @@ public class InstituteTabExecutor extends HelpSupport {
         player.spigot().sendMessage(msg);
         return true;
 
+    }
+
+    private boolean InfoInstitute(Player player, String instituteName) {
+        if (!painter.containsKey(instituteName) || !institutesDescription.containsKey(instituteName))
+            return false;
+        player.sendMessage(String.format("-----------------------\n" +
+                "%s\n" +
+                "%s\n" +
+                "-----------------------",
+                painter.get(instituteName), institutesDescription.get(instituteName)));
+        return true;
     }
 
     private TextComponent GetInteractiveInstitute(String name) {
