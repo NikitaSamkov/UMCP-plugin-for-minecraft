@@ -124,7 +124,7 @@ public class InstituteTabExecutor extends HelpSupport {
         UmcpCommand tree = new UmcpCommand("institute", this::NoCommand,
                 "База для команд поступления в один из институтов", new LinkedList<>(Arrays.asList(
                 new UmcpCommand("join", this::Join, "Поступить в один из институтов", null, institutesList),
-                new UmcpCommand("info", this::Info, "Узнать, об институте", null, institutesList),
+                new UmcpCommand("info", this::Info, "Узнать, об институте", null, institutesList, true),
                 new UmcpCommand("list", this::InstitutesList, "Посмотреть список всех институтов")
         )));
         tree.GetSubcommand("info").arguments.add("me");

@@ -1,7 +1,9 @@
 package org.umc.umcp.commands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,15 +15,21 @@ public class UmcpCommand {
     public final List<String> arguments;
     public final String description;
     public final UmcpSubcommand func;
+    public final Boolean argumentPlayers;
 
 
     //region Constructor
-    public UmcpCommand(String name, UmcpSubcommand func, String description, List<UmcpCommand> subcommands, List<String> arguments) {
+    public UmcpCommand(String name, UmcpSubcommand func, String description, List<UmcpCommand> subcommands, List<String> arguments, Boolean argumentPlayers) {
         this.name = name;
         this.func = func;
         this.description = description;
         this.subcommands = (subcommands == null) ? new ArrayList<>() : subcommands;
         this.arguments = arguments;
+        this.argumentPlayers = argumentPlayers;
+    }
+
+    public UmcpCommand(String name, UmcpSubcommand func, String description, List<UmcpCommand> subcommands, List<String> arguments) {
+        this(name, func, description,subcommands, arguments, false);
     }
 
     public UmcpCommand(String name, UmcpSubcommand func, String description, List<UmcpCommand> subcommands) {
@@ -37,7 +45,7 @@ public class UmcpCommand {
     }
 
     public UmcpCommand(String name, UmcpSubcommand func) {
-        this(name, func, "", new ArrayList<>(), new ArrayList<>());
+        this(name, func, "");
     }
     //endregion
 
@@ -75,6 +83,13 @@ public class UmcpCommand {
     }
 
     public List<String> GetArguments() {
+        if (argumentPlayers) {
+            List<String> onlinePlayers = new ArrayList<>();
+            for (Player player: Bukkit.getOnlinePlayers())
+                onlinePlayers.add(player.getName());
+            onlinePlayers.addAll(arguments);
+            return onlinePlayers;
+        }
         return arguments;
     }
 
