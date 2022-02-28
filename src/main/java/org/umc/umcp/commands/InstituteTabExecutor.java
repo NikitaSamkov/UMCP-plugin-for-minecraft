@@ -85,24 +85,6 @@ public class InstituteTabExecutor extends HelpSupport {
         return subs;
     }
 
-//    private List<String> GetInstitutes() {
-//        List<String> result = new ArrayList<>();
-//
-//        try {
-//            conn.Connect();
-//            ResultSet institutes = conn.MakeQuery("select name from institutes");
-//
-//            while (institutes.next()) {
-//                result.add(institutes.getString("name"));
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        conn.Close();
-//
-//        return result;
-//    }
-
     private Map<String, String> GetInstitutes() {
         Map<String, String> desc = new HashMap<>();
         try {
@@ -120,7 +102,7 @@ public class InstituteTabExecutor extends HelpSupport {
     }
 
     protected UmcpCommand GetTree() {
-        List<String> institutesList = new ArrayList<>(institutesDescription.keySet());
+        List<String> institutesList = institutesDescription.keySet().stream().sorted().collect(Collectors.toList());
         UmcpCommand tree = new UmcpCommand("institute", this::NoCommand,
                 "База для команд поступления в один из институтов", new LinkedList<>(Arrays.asList(
                 new UmcpCommand("join", this::Join, "Поступить в один из институтов", null, institutesList),
@@ -132,7 +114,18 @@ public class InstituteTabExecutor extends HelpSupport {
     }
 
     private boolean InstitutesList(CommandSender sender, Command command, String label, String[] args) {
-        sender.sendMessage(painter.values().stream().sorted().collect(Collectors.joining("\n")));
+        List<String> institutes = new ArrayList<>(painter.keySet());
+        TextComponent msg = new TextComponent();
+        for (String institute: institutes) {
+            msg.addExtra(GetInteractiveInstitute(institute));
+            msg.addExtra("\n");
+        }
+        msg.addExtra("Подробную информацию об институте можно получить, кликнув по его названию или с помощью команды ");
+        TextComponent cmd = new TextComponent("/institute info <название института>");
+        cmd.setColor(ChatColor.GREEN);
+        cmd.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/institute info "));
+        msg.addExtra(cmd);
+        sender.spigot().sendMessage(msg);
         return true;
     }
 

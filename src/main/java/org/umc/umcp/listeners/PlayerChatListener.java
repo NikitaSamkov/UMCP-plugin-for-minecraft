@@ -22,7 +22,7 @@ public class PlayerChatListener implements Listener {
     public PlayerChatListener() {
         conn = new DBConnection("jdbc:mysql://umcraft.scalacubes.org:2163/UMCraft", "root", "4o168PPYSIdyjFU");
         painter = Painter.GetPainter(GetInstitutesList(), null, (String s) -> "["+s+"]");
-        painter.put("не поступил", "§8[не поступил]§f");
+        painter.put("абитуриент", "§8[абитуриент]§f");
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -30,7 +30,7 @@ public class PlayerChatListener implements Listener {
         Player player = e.getPlayer();
         String instituteName = GetInstitute(player.getUniqueId().toString());
         if (instituteName == null) {
-            instituteName = "не поступил";
+            instituteName = "абитуриент";
         }
         e.setFormat(String.format("%s %s", painter.get(instituteName), e.getFormat()));
     }
