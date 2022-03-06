@@ -6,9 +6,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.umc.umcp.commands.InstituteTabExecutor;
+import org.umc.umcp.connection.DBConnection;
+import org.umc.umcp.listeners.CraftListener;
 import org.umc.umcp.listeners.PlayerChatListener;
 
 public final class Main extends JavaPlugin {
+    public static DBConnection conn = new DBConnection("jdbc:mysql://umcraft.scalacubes.org:2163/UMCraft", "root", "4o168PPYSIdyjFU");
 
     @Override
     public void onEnable() {
@@ -17,6 +20,7 @@ public final class Main extends JavaPlugin {
         getCommand("institute").setExecutor(new InstituteTabExecutor());
         Bukkit.getServer().getPluginManager().registerEvents(new MyListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerChatListener(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new CraftListener(), this);
         addCrafts();
 
     }

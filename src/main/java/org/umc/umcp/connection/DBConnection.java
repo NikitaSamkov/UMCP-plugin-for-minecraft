@@ -51,4 +51,22 @@ public class DBConnection {
             e.printStackTrace();
         }
     }
+
+    public String GetInstitute(String uuid) {
+        try {
+            this.Connect();
+            ResultSet result = this.MakeQuery(String.format("select name from institutes " +
+                    "inner join players p on institutes.id = p.institute where p.uuid='%s'", uuid));
+            String name = null;
+            if (result.next()) {
+                name = result.getString("name");
+            }
+            result.close();
+            this.Close();
+            return name;
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+        return null;
+    }
 }

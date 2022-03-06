@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.umc.umcp.commands.InstituteTabExecutor;
 import org.umc.umcp.commands.Painter;
 import org.umc.umcp.connection.DBConnection;
 
@@ -28,29 +27,11 @@ public class PlayerChatListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onAsyncPlayerChatEvent(AsyncPlayerChatEvent e) {
         Player player = e.getPlayer();
-        String instituteName = GetInstitute(player.getUniqueId().toString());
+        String instituteName = conn.GetInstitute(player.getUniqueId().toString());
         if (instituteName == null) {
             instituteName = "абитуриент";
         }
         e.setFormat(String.format("%s %s", painter.get(instituteName), e.getFormat()));
-    }
-
-    private String GetInstitute(String uuid) {
-        try {
-            conn.Connect();
-            ResultSet result = conn.MakeQuery(String.format("select name from institutes " +
-                    "inner join players p on institutes.id = p.institute where p.uuid='%s'", uuid));
-            String name = null;
-            if (result.next()) {
-                name = result.getString("name");
-            }
-            result.close();
-            conn.Close();
-            return name;
-        } catch (SQLException exception) {
-            exception.printStackTrace();
-        }
-        return null;
     }
 
 
