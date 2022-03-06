@@ -17,7 +17,7 @@ public class CraftListener implements Listener {
     public void onCraftItem(PrepareItemCraftEvent e) {
         Player player = (Player) e.getViewers().get(0);
         String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
-        if (e.getRecipe().getResult().equals(new ItemStack(Material.DIAMOND)) && !institute.equals("ИРИТ-РТФ")) {
+        if (e.getRecipe().getResult().equals(new ItemStack(Material.DIAMOND)) && !player.hasPermission("umcp.rtf")) {
             e.getInventory().setResult(new ItemStack(Material.AIR));
         }
     }

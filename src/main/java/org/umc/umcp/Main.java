@@ -2,8 +2,11 @@ package org.umc.umcp;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.permissions.PermissionAttachment;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.umc.umcp.commands.InstituteTabExecutor;
 import org.umc.umcp.connection.DBConnection;
@@ -16,6 +19,7 @@ public final class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         this.getLogger().info("Я ЖИВОЙ!!1!!");
+        PermissionMaster.plugin = this;
         getCommand("test").setExecutor(new MyExecutor());
         getCommand("institute").setExecutor(new InstituteTabExecutor());
         Bukkit.getServer().getPluginManager().registerEvents(new MyListener(), this);

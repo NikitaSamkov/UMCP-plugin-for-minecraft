@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.bukkit.entity.Player;
+import org.umc.umcp.PermissionMaster;
 import org.umc.umcp.commands.help.Help;
 import org.umc.umcp.commands.help.HelpSupport;
 import org.umc.umcp.connection.DBConnection;
@@ -25,7 +26,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 public class InstituteTabExecutor extends HelpSupport {
 
     private final DBConnection conn;
-    private final Map<String, String> institutesDescription;
+    private final Map<String, Map<String, String>> institutes;
     private final Map<String, String> painter;
     private UmcpCommand commandTree;
     private Help helper;
@@ -35,9 +36,9 @@ public class InstituteTabExecutor extends HelpSupport {
 
     public InstituteTabExecutor() {
         conn = new DBConnection("jdbc:mysql://umcraft.scalacubes.org:2163/UMCraft", "root", "4o168PPYSIdyjFU");
-        institutesDescription = GetInstitutes();
+        institutes = GetInstitutes();
         commandTree = GetTree();
-        painter = Painter.GetPainter(new ArrayList<>(institutesDescription.keySet()));
+        painter = Painter.GetPainter(new ArrayList<>(institutes.keySet()));
         helper = new Help(commandTree);
 
         currentArgCount = 0;
@@ -85,24 +86,27 @@ public class InstituteTabExecutor extends HelpSupport {
         return subs;
     }
 
-    private Map<String, String> GetInstitutes() {
-        Map<String, String> desc = new HashMap<>();
+    private Map<String, Map<String, String>> GetInstitutes() {
+        Map<String, Map<String, String>> ins = new HashMap<>();
         try {
             conn.Connect();
-            ResultSet rs = conn.MakeQuery("select name, description from institutes");
+            ResultSet rs = conn.MakeQuery("select name, description, permission from institutes");
             while (rs.next()) {
-                desc.put(rs.getString("name"), rs.getString("description"));
+                String name = rs.getString("name");
+                ins.put(name, new HashMap<>());
+                ins.get(name).put("description", rs.getString("description"));
+                ins.get(name).put("permission", rs.getString("permission"));
             }
             conn.Close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return desc;
+        return ins;
     }
 
     protected UmcpCommand GetTree() {
-        List<String> institutesList = institutesDescription.keySet().stream().sorted().collect(Collectors.toList());
+        List<String> institutesList = institutes.keySet().stream().sorted().collect(Collectors.toList());
         UmcpCommand tree = new UmcpCommand("institute", this::NoCommand,
                 "База для команд поступления в один из институтов", new LinkedList<>(Arrays.asList(
                 new UmcpCommand("join", this::Join, "Поступить в один из институтов", null, institutesList),
@@ -220,19 +224,19 @@ public class InstituteTabExecutor extends HelpSupport {
     }
 
     private boolean InfoInstitute(Player player, String instituteName) {
-        if (!painter.containsKey(instituteName) || !institutesDescription.containsKey(instituteName))
+        if (!painter.containsKey(instituteName) || !institutes.containsKey(instituteName))
             return false;
         player.sendMessage(String.format("-----------------------\n" +
                 "%s\n" +
                 "%s\n" +
                 "-----------------------",
-                painter.get(instituteName), institutesDescription.get(instituteName)));
+                painter.get(instituteName), institutes.get(instituteName).get("description")));
         return true;
     }
 
     private TextComponent GetInteractiveInstitute(String name) {
         TextComponent institute = new TextComponent(painter.get(name));
-        institute.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(institutesDescription.get(name)).create()));
+        institute.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(institutes.get(name).get("description")).create()));
         institute.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/institute info " + name));
         return institute;
     }
@@ -246,14 +250,18 @@ public class InstituteTabExecutor extends HelpSupport {
             }
             int iid = instituteID.getInt("id");
             instituteID.close();
-            ResultSet players = conn.MakeQuery(String.format("select * from players where uuid='%s'", uuid));
+            ResultSet players = conn.MakeQuery(String.format("select uuid, name from players inner join institutes i on i.id = institute where uuid='%s'", uuid));
             SimpleDateFormat fdate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String date = fdate.format(new Date());
+            Player player = Bukkit.getPlayer(UUID.fromString(uuid));
             if (players.next()) {
+                PermissionMaster.SetPermission(player, institutes.get(players.getString("name")).get("permission"), false);
                 conn.MakeUpdate(String.format("update players set institute=%d, last_change='%s' where uuid='%s'", iid, date, uuid));
             } else {
                 conn.MakeUpdate(String.format("insert into players values ('%s', %d, '%s')", uuid, iid, date));
             }
+            conn.Close();
+            PermissionMaster.SetPermission(player, institutes.get(instituteName).get("permission"), true);
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
