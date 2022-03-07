@@ -16,8 +16,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.PermissionAttachment;
-import org.umc.umcp.PermissionMaster;
 import org.umc.umcp.commands.help.Help;
 import org.umc.umcp.commands.help.HelpSupport;
 import org.umc.umcp.connection.DBConnection;
@@ -189,8 +187,6 @@ public class InstituteTabExecutor extends HelpSupport {
     }
 
     private boolean InfoPlayer(Player player, Player target) {
-        String institute = GetPlayerInstitute(target.getUniqueId());
-
         TextComponent msg = new TextComponent("Игрок ");
 
         TextComponent targetName = new TextComponent(target.getName());
@@ -235,7 +231,6 @@ public class InstituteTabExecutor extends HelpSupport {
             ResultSet players = conn.MakeQuery(String.format("select uuid, name from players inner join institutes i on i.id = institute where uuid='%s'", uuid));
             SimpleDateFormat fdate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String date = fdate.format(new Date());
-            Player player = Bukkit.getPlayer(UUID.fromString(uuid));
             if (players.next()) {
                 conn.MakeUpdate(String.format("update players set institute=%d, last_change='%s' where uuid='%s'", iid, date, uuid));
             } else {

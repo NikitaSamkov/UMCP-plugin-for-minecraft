@@ -81,7 +81,6 @@ public class DBConnection {
                 String name = rs.getString("name");
                 ins.put(name, new HashMap<>());
                 ins.get(name).put("description", rs.getString("description"));
-                ins.get(name).put("permission", rs.getString("permission"));
             }
             this.Close();
         } catch (SQLException e) {
