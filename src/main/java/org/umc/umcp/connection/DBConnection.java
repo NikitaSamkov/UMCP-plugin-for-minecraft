@@ -1,6 +1,8 @@
 package org.umc.umcp.connection;
 
 import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DBConnection {
     private final String url;
@@ -68,5 +70,24 @@ public class DBConnection {
             exception.printStackTrace();
         }
         return null;
+    }
+
+    public Map<String, Map<String, String>> GetInstitutes() {
+        Map<String, Map<String, String>> ins = new HashMap<>();
+        try {
+            this.Connect();
+            ResultSet rs = this.MakeQuery("select * from institutes");
+            while (rs.next()) {
+                String name = rs.getString("name");
+                ins.put(name, new HashMap<>());
+                ins.get(name).put("description", rs.getString("description"));
+                ins.get(name).put("permission", rs.getString("permission"));
+            }
+            this.Close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return ins;
     }
 }

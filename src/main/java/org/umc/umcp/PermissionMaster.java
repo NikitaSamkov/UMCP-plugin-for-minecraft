@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public class PermissionMaster {
     public static HashMap<UUID, PermissionAttachment> perms = new HashMap<>();
-    public static Plugin plugin;
+    static Plugin plugin;
 
     public static PermissionAttachment GetPerms(Player player) {
         if (!perms.containsKey(player.getUniqueId())) {
@@ -22,5 +22,14 @@ public class PermissionMaster {
     public static void SetPermission(Player player, String permission, Boolean value) {
         PermissionAttachment perm = GetPerms(player);
         perm.setPermission(permission, value);
+    }
+
+    public static void RemovePermission(Player player, String permission) {
+        PermissionAttachment perm = GetPerms(player);
+        perm.unsetPermission(permission);
+    }
+
+    public static Boolean HavePermissions(UUID uuid) {
+        return perms.containsKey(uuid);
     }
 }

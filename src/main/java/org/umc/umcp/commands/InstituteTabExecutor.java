@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.PermissionAttachment;
 import org.umc.umcp.PermissionMaster;
 import org.umc.umcp.commands.help.Help;
 import org.umc.umcp.commands.help.HelpSupport;
@@ -36,7 +37,7 @@ public class InstituteTabExecutor extends HelpSupport {
 
     public InstituteTabExecutor() {
         conn = new DBConnection("jdbc:mysql://umcraft.scalacubes.org:2163/UMCraft", "root", "4o168PPYSIdyjFU");
-        institutes = GetInstitutes();
+        institutes = conn.GetInstitutes();
         commandTree = GetTree();
         painter = Painter.GetPainter(new ArrayList<>(institutes.keySet()));
         helper = new Help(commandTree);
@@ -84,25 +85,6 @@ public class InstituteTabExecutor extends HelpSupport {
         subs.add("help");
         currentTabComplete = subs;
         return subs;
-    }
-
-    private Map<String, Map<String, String>> GetInstitutes() {
-        Map<String, Map<String, String>> ins = new HashMap<>();
-        try {
-            conn.Connect();
-            ResultSet rs = conn.MakeQuery("select name, description, permission from institutes");
-            while (rs.next()) {
-                String name = rs.getString("name");
-                ins.put(name, new HashMap<>());
-                ins.get(name).put("description", rs.getString("description"));
-                ins.get(name).put("permission", rs.getString("permission"));
-            }
-            conn.Close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return ins;
     }
 
     protected UmcpCommand GetTree() {
@@ -255,13 +237,11 @@ public class InstituteTabExecutor extends HelpSupport {
             String date = fdate.format(new Date());
             Player player = Bukkit.getPlayer(UUID.fromString(uuid));
             if (players.next()) {
-                PermissionMaster.SetPermission(player, institutes.get(players.getString("name")).get("permission"), false);
                 conn.MakeUpdate(String.format("update players set institute=%d, last_change='%s' where uuid='%s'", iid, date, uuid));
             } else {
                 conn.MakeUpdate(String.format("insert into players values ('%s', %d, '%s')", uuid, iid, date));
             }
             conn.Close();
-            PermissionMaster.SetPermission(player, institutes.get(instituteName).get("permission"), true);
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
