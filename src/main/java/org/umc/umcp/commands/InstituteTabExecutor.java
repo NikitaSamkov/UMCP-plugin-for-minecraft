@@ -30,19 +30,12 @@ public class InstituteTabExecutor extends HelpSupport {
     private UmcpCommand commandTree;
     private Help helper;
 
-    private int currentArgCount;
-    private List<String> currentTabComplete;
-
     public InstituteTabExecutor() {
         conn = new DBConnection("jdbc:mysql://umcraft.scalacubes.org:2163/UMCraft", "root", "4o168PPYSIdyjFU");
         institutes = conn.GetInstitutes();
         commandTree = GetTree();
         painter = Painter.GetPainter(new ArrayList<>(institutes.keySet()));
         helper = new Help(commandTree);
-
-        currentArgCount = 0;
-        currentTabComplete = commandTree.GetSubcommands();
-        currentTabComplete.add("help");
 
     }
 
@@ -65,10 +58,7 @@ public class InstituteTabExecutor extends HelpSupport {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        if (currentArgCount == args.length)
-            return currentTabComplete;
 
-        currentArgCount = args.length;
         List<String> path = new LinkedList<>(Arrays.asList(args));
         if (path.size() > 0)
             path.remove(path.size() - 1);
@@ -81,8 +71,8 @@ public class InstituteTabExecutor extends HelpSupport {
         List<String> subs = comm.GetSubcommands();
         subs.addAll(comm.GetArguments());
         subs.add("help");
-        currentTabComplete = subs;
-        return subs;
+
+        return subs.stream().filter((String sub)->sub.startsWith(args[args.length - 1])).collect(Collectors.toList());
     }
 
     protected UmcpCommand GetTree() {
