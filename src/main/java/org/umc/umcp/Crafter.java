@@ -41,9 +41,6 @@ public class Crafter {
         vapeMeta.setCustomModelData(1337);
         vapeMeta.setColor(Color.fromRGB(255, 255, 255));
         vapeMeta.addCustomEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 600, 0, false, false, true), true);
-        vapeMeta.addEnchant(Enchantment.LUCK, 0, false);
-        vapeMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        vapeMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
         Vape.setItemMeta(vapeMeta);
     }
 }

@@ -30,7 +30,7 @@ public final class Main extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new MyListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerChatListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new CraftListener(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new GlobalListener(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new GlobalListener(this), this);
         addCrafts();
 
     }
