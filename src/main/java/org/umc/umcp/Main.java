@@ -11,6 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.umc.umcp.commands.InstituteTabExecutor;
 import org.umc.umcp.connection.DBConnection;
 import org.umc.umcp.listeners.CraftListener;
+import org.umc.umcp.listeners.GlobalListener;
 import org.umc.umcp.listeners.PlayerChatListener;
 
 import java.awt.*;
@@ -29,6 +30,7 @@ public final class Main extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new MyListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerChatListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new CraftListener(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new GlobalListener(), this);
         addCrafts();
 
     }

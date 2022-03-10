@@ -29,11 +29,12 @@ public class CraftListener implements Listener {
         if (e.getRecipe().getResult().equals(Crafter.Vape) && !institute.equals("ИРИТ-РТФ")) {
             e.getInventory().setResult(new ItemStack(Material.AIR));
         } else {
-            PotionMeta vapeMeta = (PotionMeta) Crafter.Vape.getItemMeta();
+            ItemStack vape = Crafter.Vape;
+            PotionMeta vapeMeta = (PotionMeta) vape.getItemMeta();
             Random r = new Random();
             vapeMeta.setColor(Color.fromRGB(r.nextInt(255), r.nextInt(255), r.nextInt(255)));
-            Crafter.Vape.setItemMeta(vapeMeta);
-            e.getInventory().setResult(Crafter.Vape);
+            vape.setItemMeta(vapeMeta);
+            e.getInventory().setResult(vape);
         }
     }
 }
