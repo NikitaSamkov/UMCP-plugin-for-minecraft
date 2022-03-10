@@ -39,25 +39,13 @@ public final class Main extends JavaPlugin {
     }
 
     private void addCrafts() {
+        Crafter.CreateCrafts(this);
         ShapedRecipe diamond = new ShapedRecipe(new ItemStack(Material.DIAMOND, 1));
         diamond.shape("***", "***", "***");
         diamond.setIngredient('*', Material.GRASS_BLOCK);
         getServer().addRecipe(diamond);
 
-        ItemStack Vape = new ItemStack(Material.POTION, 1);
-        ItemMeta vapeMeta = Vape.getItemMeta();
-        vapeMeta.setDisplayName("Вейп");
-        List<String> lore = new ArrayList<>();
-        lore.add("Одноразовый вейп радиста.");
-        lore.add("Слишком частое употребление вредно для здоровья!");
-        vapeMeta.setLore(lore);
-        vapeMeta.setCustomModelData(1337);
-        Vape.setItemMeta(vapeMeta);
-        ShapedRecipe VapeRecipe = new ShapedRecipe(NamespacedKey.minecraft("vape"), Vape);
-        VapeRecipe.shape(" s ", " w ", " c ");
-        VapeRecipe.setIngredient('s', Material.SUGAR);
-        VapeRecipe.setIngredient('w', Material.POTION);
-        VapeRecipe.setIngredient('c', Material.COAL);
-        getServer().addRecipe(VapeRecipe);
+        this.getLogger().info(Crafter.VapeRecipe.toString());
+        getServer().addRecipe(Crafter.VapeRecipe);
     }
 }
