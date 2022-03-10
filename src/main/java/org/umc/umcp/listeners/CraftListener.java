@@ -24,11 +24,13 @@ public class CraftListener implements Listener {
         if (e.getRecipe() == null) {
             return;
         }
-        Player player = (Player) e.getViewers().get(0);
-        String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
-        if (e.getRecipe().getResult().equals(Crafter.Vape) && !institute.equals("ИРИТ-РТФ")) {
-            e.getInventory().setResult(new ItemStack(Material.AIR));
-        } else {
+        if (e.getRecipe().getResult().equals(Crafter.Vape)) {
+            Player player = (Player) e.getViewers().get(0);
+            String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
+            if (!institute.equals("ИРИТ-РТФ")) {
+                e.getInventory().setResult(new ItemStack(Material.AIR));
+                return;
+            }
             ItemStack vape = Crafter.Vape;
             PotionMeta vapeMeta = (PotionMeta) vape.getItemMeta();
             Random r = new Random();
