@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.bukkit.entity.Player;
+import org.umc.umcp.Main;
 import org.umc.umcp.commands.help.Help;
 import org.umc.umcp.commands.help.HelpSupport;
 import org.umc.umcp.connection.DBConnection;
@@ -31,7 +32,7 @@ public class InstituteTabExecutor extends HelpSupport {
     private Help helper;
 
     public InstituteTabExecutor() {
-        conn = new DBConnection("jdbc:mysql://umcraft.scalacubes.org:2163/UMCraft", "root", "4o168PPYSIdyjFU");
+        conn = Main.conn;
         institutes = conn.GetInstitutes();
         commandTree = GetTree();
         painter = Painter.GetPainter(new ArrayList<>(institutes.keySet()));

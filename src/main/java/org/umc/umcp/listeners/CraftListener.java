@@ -15,6 +15,9 @@ import java.sql.SQLException;
 public class CraftListener implements Listener {
     @EventHandler
     public void onCraftItem(PrepareItemCraftEvent e) {
+        if (e.getRecipe() == null) {
+            return;
+        }
         Player player = (Player) e.getViewers().get(0);
         String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
         if (e.getRecipe().getResult().equals(new ItemStack(Material.DIAMOND)) && !institute.equals("ИРИТ-РТФ")) {
