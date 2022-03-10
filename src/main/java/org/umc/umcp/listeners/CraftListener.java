@@ -16,6 +16,7 @@ import java.awt.*;
 import org.bukkit.Color;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
 import java.util.Random;
 
 public class CraftListener implements Listener {
@@ -24,19 +25,19 @@ public class CraftListener implements Listener {
         if (e.getRecipe() == null) {
             return;
         }
-        if (e.getRecipe().getResult().equals(Crafter.Vape)) {
-            Player player = (Player) e.getViewers().get(0);
+        Player player = (Player) e.getViewers().get(0);
+        if (e.getRecipe().getResult().toString().equals(Crafter.Vape.toString())) {
             String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
             if (!institute.equals("ИРИТ-РТФ")) {
                 e.getInventory().setResult(new ItemStack(Material.AIR));
-                return;
+            } else {
+                ItemStack vape = Crafter.Vape;
+                PotionMeta vapeMeta = (PotionMeta) vape.getItemMeta();
+                Random r = new Random();
+                vapeMeta.setColor(Color.fromRGB(r.nextInt(255), r.nextInt(255), r.nextInt(255)));
+                vape.setItemMeta(vapeMeta);
+                e.getInventory().setResult(vape);
             }
-            ItemStack vape = Crafter.Vape;
-            PotionMeta vapeMeta = (PotionMeta) vape.getItemMeta();
-            Random r = new Random();
-            vapeMeta.setColor(Color.fromRGB(r.nextInt(255), r.nextInt(255), r.nextInt(255)));
-            vape.setItemMeta(vapeMeta);
-            e.getInventory().setResult(vape);
         }
     }
 }

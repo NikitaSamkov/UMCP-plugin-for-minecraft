@@ -67,14 +67,12 @@ public class GlobalListener implements Listener {
 
     @EventHandler
     public void onAreaCloud(AreaEffectCloudApplyEvent e) {
-        plugin.getLogger().info("[AREA CLOUD AFFECTED]");
         if (e.getEntity().hasMetadata("isVapeSteam") && e.getEntity().getMetadata("isVapeSteam").get(0).asBoolean()) {
             List<LivingEntity> entities = e.getAffectedEntities();
             for (LivingEntity entity: entities) {
                 if (entity instanceof Player) {
                     Player player = (Player) entity;
                     String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
-                    plugin.getLogger().info("[" + institute + "]");
                     if (!Objects.equals(institute, "ИРИТ-РТФ")) {
                         player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 200, 24));
                     }
