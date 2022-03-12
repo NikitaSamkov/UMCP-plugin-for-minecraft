@@ -142,24 +142,8 @@ public class InstituteTabExecutor extends HelpSupport {
         return InfoInstitute(player, args[0]);
     }
 
-    private String GetPlayerInstitute(UUID uuid) {
-        try {
-            conn.Connect();
-            ResultSet result = conn.MakeQuery(String.format("select id, name from institutes " +
-                    "inner join players p on institutes.id = p.institute where p.uuid='%s'", uuid));
-            if (result.next()) {
-                return result.getString("name");
-            } else {
-                return null;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     private boolean InfoMe(Player player) {
-        String institute = GetPlayerInstitute(player.getUniqueId());
+        String institute = conn.GetInstitute(player.getUniqueId().toString());
         TextComponent msg;
         if (institute != null) {
             msg = new TextComponent("Вы сейчас состоите в институте ");
@@ -185,7 +169,7 @@ public class InstituteTabExecutor extends HelpSupport {
 
         msg.addExtra(targetName);
         msg.addExtra(" учится в институте ");
-        msg.addExtra(GetInteractiveInstitute(GetPlayerInstitute(target.getUniqueId())));
+        msg.addExtra(GetInteractiveInstitute(conn.GetInstitute(target.getUniqueId().toString())));
         msg.addExtra("!");
         player.spigot().sendMessage(msg);
         return true;
