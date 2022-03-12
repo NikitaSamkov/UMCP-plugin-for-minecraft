@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.umc.umcp.Crafter;
@@ -26,8 +27,14 @@ public class CraftListener implements Listener {
         if (e.getRecipe() == null) {
             return;
         }
+
+        //end of shapless recipies
+        if (!(e.getRecipe() instanceof ShapedRecipe)) {
+            return;
+        }
         Player player = (Player) e.getViewers().get(0);
-        if (UmcpItem.VAPE.check(e.getRecipe().getResult())) {
+        ShapedRecipe recipe = (ShapedRecipe) e.getRecipe();
+        if (recipe.getKey().getKey().equals("vape")) {
             String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
             if (!institute.equals("ИРИТ-РТФ")) {
                 e.getInventory().setResult(new ItemStack(Material.AIR));
