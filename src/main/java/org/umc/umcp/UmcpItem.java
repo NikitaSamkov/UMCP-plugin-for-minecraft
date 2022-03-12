@@ -42,4 +42,8 @@ public enum UmcpItem {
     public String getDisplayName() {
         return displayName;
     }
+
+    public Boolean check(@NotNull ItemStack itemStack) {
+        return UmcpItem.check(itemStack, this);
+    }
 }

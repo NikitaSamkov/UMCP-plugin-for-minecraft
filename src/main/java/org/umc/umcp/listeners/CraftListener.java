@@ -10,6 +10,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.umc.umcp.Crafter;
 import org.umc.umcp.Main;
+import org.umc.umcp.UmcpItem;
 import org.umc.umcp.connection.DBConnection;
 
 import java.awt.*;
@@ -26,7 +27,7 @@ public class CraftListener implements Listener {
             return;
         }
         Player player = (Player) e.getViewers().get(0);
-        if (e.getRecipe().getResult().toString().equals(Crafter.Vape.toString())) {
+        if (UmcpItem.VAPE.check(e.getRecipe().getResult())) {
             String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
             if (!institute.equals("ИРИТ-РТФ")) {
                 e.getInventory().setResult(new ItemStack(Material.AIR));
