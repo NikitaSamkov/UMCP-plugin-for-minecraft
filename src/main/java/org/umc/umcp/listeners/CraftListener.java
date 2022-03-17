@@ -33,7 +33,7 @@ public class CraftListener implements Listener {
             if (!institute.equals("ИРИТ-РТФ")) {
                 e.getInventory().setResult(new ItemStack(Material.AIR));
             } else {
-                ItemStack vape = Crafter.Vape;
+                ItemStack vape = Crafter.VapeRecipe.getResult();
                 PotionMeta vapeMeta = (PotionMeta) vape.getItemMeta();
                 Random r = new Random();
                 vapeMeta.setColor(Color.fromRGB(r.nextInt(255), r.nextInt(255), r.nextInt(255)));

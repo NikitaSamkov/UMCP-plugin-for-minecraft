@@ -79,5 +79,6 @@ public final class Main extends JavaPlugin {
         getServer().addRecipe(Crafter.VapeRecipe);
         getServer().addRecipe(Crafter.SocksRecipe);
         getServer().addRecipe(Crafter.LongsocksRecipe);
+        getServer().addRecipe(Crafter.CatEarsRecipe);
     }
 }

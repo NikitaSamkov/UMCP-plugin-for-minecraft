@@ -11,7 +11,8 @@ import java.util.List;
 public enum UmcpItem {
     VAPE("Вейп", Arrays.asList("Одноразовый вейп радиста.", "Слишком частое употребление вредно для здоровья!"), Material.POTION, 1337),
     SOCKS("Чулки радиста", new ArrayList<>(), Material.GOLDEN_BOOTS, 1),
-    LONGSOCKS("Чулки радиста", new ArrayList<>(), Material.GOLDEN_LEGGINGS, 1);
+    LONGSOCKS("Чулки радиста", new ArrayList<>(), Material.GOLDEN_LEGGINGS, 1),
+    CAT_EARS("Кошачьи ушки", new ArrayList<>(), Material.GOLDEN_HELMET, 1);
 
     private final String displayName;
     private final List<String> lore;
