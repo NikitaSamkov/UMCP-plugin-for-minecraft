@@ -16,12 +16,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.bukkit.entity.Player;
+import org.umc.umcp.Cooldowns;
 import org.umc.umcp.Main;
 import org.umc.umcp.commands.help.Help;
 import org.umc.umcp.commands.help.HelpSupport;
 import org.umc.umcp.connection.DBConnection;
 
 import net.md_5.bungee.api.chat.TextComponent;
+import org.umc.umcp.enums.CooldownType;
 
 public class InstituteTabExecutor extends HelpSupport {
 
@@ -30,6 +32,7 @@ public class InstituteTabExecutor extends HelpSupport {
     private final Map<String, String> painter;
     private UmcpCommand commandTree;
     private Help helper;
+    private Boolean haveCooldown;
 
     public InstituteTabExecutor() {
         conn = Main.conn;
@@ -37,7 +40,7 @@ public class InstituteTabExecutor extends HelpSupport {
         commandTree = GetTree();
         painter = Painter.GetPainter(new ArrayList<>(institutes.keySet()));
         helper = new Help(commandTree);
-
+        haveCooldown = true;
     }
 
     @Override
@@ -82,7 +85,8 @@ public class InstituteTabExecutor extends HelpSupport {
                 "База для команд поступления в один из институтов", new LinkedList<>(Arrays.asList(
                 new UmcpCommand("join", this::Join, "Поступить в один из институтов", null, institutesList),
                 new UmcpCommand("info", this::Info, "Узнать, об институте", null, institutesList, true),
-                new UmcpCommand("list", this::InstitutesList, "Посмотреть список всех институтов")
+                new UmcpCommand("list", this::InstitutesList, "Посмотреть список всех институтов"),
+                new UmcpCommand("cooldown", this::SwitchCooldown, "", null, new LinkedList<>(Arrays.asList("ON", "OFF")))
         )));
         tree.GetSubcommand("info").arguments.add("me");
         return tree;
@@ -109,11 +113,16 @@ public class InstituteTabExecutor extends HelpSupport {
             return false;
         if (!(sender instanceof Player)) return false;
 
-        String instituteName = args[0];
         Player player = (Player) sender;
-        player.getUniqueId();
+        if (haveCooldown && !Cooldowns.IsCooldownEnded(player.getUniqueId(), CooldownType.INSTITUTE_JOIN)) {
+            sender.sendMessage("Вы можете менять институт не чаще, чем раз в 2 дня!");
+            return true;
+        }
+
+        String instituteName = args[0];
         if (JoinInstitute(player.getUniqueId().toString(), instituteName)) {
             sender.sendMessage("Успешно сменен институт на " + painter.get(instituteName) + "!");
+            Cooldowns.Update(player.getUniqueId(), CooldownType.INSTITUTE_JOIN);
             return true;
         } else {
             sender.sendMessage("Произошла ошибка: проверьте правильность написания названия института (даже подсказки есть)");
@@ -122,6 +131,21 @@ public class InstituteTabExecutor extends HelpSupport {
     }
 
     private boolean NoCommand(CommandSender sender, Command command, String label, String[] args) {
+        return false;
+    }
+
+    private boolean SwitchCooldown(CommandSender sender, Command command, String label, String[] args) {
+        if (args.length == 0) {
+            return false;
+        }
+        if (Objects.equals(args[0], "ON")) {
+            haveCooldown = true;
+            return true;
+        }
+        if (Objects.equals(args[0], "OFF")) {
+            haveCooldown = false;
+            return true;
+        }
         return false;
     }
 

@@ -23,14 +23,20 @@ public class Cooldowns {
         Update(uuid, type, new Date());
     }
 
-    public static Boolean UpdateWithDiff(UUID uuid, CooldownType type, Date cooldownLength, Date forMoment) {
+    public static @NotNull Boolean UpdateWithDiff(UUID uuid, CooldownType type, Date cooldownLength, Date forMoment) {
         Boolean ended = IsCooldownEnded(uuid, type, cooldownLength, forMoment);
         Update(uuid, type, new Date());
         return ended;
     }
 
-    public static Boolean UpdateWithDiff(UUID uuid, CooldownType type, Date cooldownLength) {
+    public static @NotNull Boolean UpdateWithDiff(UUID uuid, CooldownType type, Date cooldownLength) {
         return UpdateWithDiff(uuid, type, cooldownLength, new Date());
+    }
+
+    public static @NotNull Boolean UpdateWithDiff(UUID uuid, CooldownType type) {
+        Boolean ended = IsCooldownEnded(uuid, type);
+        Update(uuid, type, new Date());
+        return ended;
     }
 
     public static @Nullable Date GetDifference(UUID uuid, CooldownType type, Date forMoment) {
@@ -48,8 +54,12 @@ public class Cooldowns {
         return true;
     }
 
-    public static Boolean IsCooldownEnded(UUID uuid, CooldownType type, Date cooldownLength) {
+    public static @NotNull Boolean IsCooldownEnded(UUID uuid, CooldownType type, Date cooldownLength) {
         return IsCooldownEnded(uuid, type, cooldownLength, new Date());
+    }
+
+    public static @NotNull Boolean IsCooldownEnded(UUID uuid, CooldownType type) {
+        return IsCooldownEnded(uuid, type, type.time, new Date());
     }
 
     public static @Nullable Date Get(UUID uuid, CooldownType type) {

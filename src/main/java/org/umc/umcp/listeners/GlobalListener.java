@@ -71,7 +71,7 @@ public class GlobalListener implements Listener {
             steam.setMetadata("isVapeSteam", new FixedMetadataValue(plugin, true));
             steam.addCustomEffect(new PotionEffect(PotionEffectType.WEAKNESS, 1, 0), false);
             //</editor-fold>
-            if (!Cooldowns.UpdateWithDiff(player.getUniqueId(), CooldownType.VAPE, new Date(60000))) {
+            if (!Cooldowns.UpdateWithDiff(player.getUniqueId(), CooldownType.VAPE)) {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 1200, 1));
             }
 
