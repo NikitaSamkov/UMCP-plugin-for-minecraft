@@ -12,6 +12,7 @@ import org.umc.umcp.Crafter;
 import org.umc.umcp.Main;
 
 import org.bukkit.Color;
+import org.umc.umcp.enums.InstitutesNames;
 
 import java.util.Random;
 
@@ -30,7 +31,7 @@ public class CraftListener implements Listener {
         String recipeKey = ((ShapedRecipe) e.getRecipe()).getKey().getKey();
         if (recipeKey.equals("vape") || recipeKey.equals("socks") || recipeKey.equals("longsocks") || recipeKey.equals("catears")) {
             String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
-            if (!institute.equals("ИРИТ-РТФ")) {
+            if (!institute.equals(InstitutesNames.RTF.name)) {
                 e.getInventory().setResult(new ItemStack(Material.AIR));
             } else {
                 if (recipeKey.equals("vape")) {

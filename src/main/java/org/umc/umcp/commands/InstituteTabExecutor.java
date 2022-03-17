@@ -5,6 +5,7 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
@@ -24,6 +25,7 @@ import org.umc.umcp.connection.DBConnection;
 
 import net.md_5.bungee.api.chat.TextComponent;
 import org.umc.umcp.enums.CooldownType;
+import org.umc.umcp.enums.InstitutesNames;
 
 public class InstituteTabExecutor extends HelpSupport {
 
@@ -118,10 +120,16 @@ public class InstituteTabExecutor extends HelpSupport {
             sender.sendMessage("Вы можете менять институт не чаще, чем раз в 2 дня!");
             return true;
         }
-
+        String lastInstitute = conn.GetInstitute(player.getUniqueId().toString());
         String instituteName = args[0];
         if (JoinInstitute(player.getUniqueId().toString(), instituteName)) {
             sender.sendMessage("Успешно сменен институт на " + painter.get(instituteName) + "!");
+            if (lastInstitute.equals(InstitutesNames.IFKSIMP.name)) {
+                player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
+            }
+            if (instituteName.equals(InstitutesNames.IFKSIMP.name)) {
+                player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(24);
+            }
             Cooldowns.Update(player.getUniqueId(), CooldownType.INSTITUTE_JOIN);
             return true;
         } else {
