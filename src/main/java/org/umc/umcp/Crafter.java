@@ -25,7 +25,7 @@ public class Crafter {
     public static ShapelessRecipe SportBootsRecipe;
 
     public static void CreateCrafts(Plugin plugin) {
-        //<editor-fold desc="Вейп">
+        //<editor-fold desc="Вейп" defaultstate="collapsed">
         ItemStack vape = CreateItem(UmcpItem.VAPE, 1);
         PotionMeta vapeMeta = (PotionMeta) vape.getItemMeta();
         vapeMeta.setColor(Color.fromRGB(255, 255, 255));
@@ -38,42 +38,42 @@ public class Crafter {
         VapeRecipe.setIngredient('w', Material.POTION);
         VapeRecipe.setIngredient('c', Material.COAL);
         //</editor-fold>
-        //<editor-fold desc="Чулки - нижняя часть">
+        //<editor-fold desc="Чулки - нижняя часть" defaultstate="collapsed">
         SocksRecipe = new ShapedRecipe(new NamespacedKey(plugin, "socks"), CreateItem(UmcpItem.SOCKS, 1));
         SocksRecipe.shape("   ", "w w", "w w");
         SocksRecipe.setIngredient('w', Material.WHITE_WOOL);
         //</editor-fold>
-        //<editor-fold desc="Чулки - верхняя часть">
+        //<editor-fold desc="Чулки - верхняя часть" defaultstate="collapsed">
         LongsocksRecipe = new ShapedRecipe(new NamespacedKey(plugin, "longsocks"), CreateItem(UmcpItem.LONGSOCKS, 1));
         LongsocksRecipe.shape("w w", "w w", "w w");
         LongsocksRecipe.setIngredient('w', Material.WHITE_WOOL);
         //</editor-fold>
-        //<editor-fold desc="Кошачьи ушки">
+        //<editor-fold desc="Кошачьи ушки" defaultstate="collapsed">
         CatEarsRecipe = new ShapedRecipe(new NamespacedKey(plugin, "catears"), CreateItem(UmcpItem.CAT_EARS, 1));
         CatEarsRecipe.shape("   ", "fsf", "sis");
         CatEarsRecipe.setIngredient('f', Material.FEATHER);
         CatEarsRecipe.setIngredient('s', Material.STICK);
         CatEarsRecipe.setIngredient('i', Material.IRON_INGOT);
         //</editor-fold>
-        //<editor-fold desc="Козырёк 'Абибас'">
+        //<editor-fold desc="Козырёк 'Абибас'" defaultstate="collapsed">
         SportHelmetRecipe = new ShapelessRecipe(new NamespacedKey(plugin, "sporthelmet"), CreateItem(UmcpItem.SPORT_HELMET, 1));
         SportHelmetRecipe.addIngredient(Material.IRON_HELMET);
         SportHelmetRecipe.addIngredient(Material.BLACK_DYE);
         SportHelmetRecipe.addIngredient(Material.IRON_SWORD);
         //</editor-fold>
-        //<editor-fold desc="Куртка 'Адик даст'">
+        //<editor-fold desc="Куртка 'Адик даст'" defaultstate="collapsed">
         SportChestplateRecipe = new ShapelessRecipe(new NamespacedKey(plugin, "sportchestplate"), CreateItem(UmcpItem.SPORT_CHESTPLATE, 1));
         SportChestplateRecipe.addIngredient(Material.IRON_CHESTPLATE);
         SportChestplateRecipe.addIngredient(Material.BLACK_DYE);
         SportChestplateRecipe.addIngredient(Material.OXEYE_DAISY);
         //</editor-fold>
-        //<editor-fold desc="Спортивные штаны 'Бабидас'">
+        //<editor-fold desc="Спортивные штаны 'Бабидас'" defaultstate="collapsed">
         SportLeggingsRecipe = new ShapelessRecipe(new NamespacedKey(plugin, "sportleggings"), CreateItem(UmcpItem.SPORT_LEGGINGS, 1));
         SportLeggingsRecipe.addIngredient(Material.IRON_LEGGINGS);
         SportLeggingsRecipe.addIngredient(Material.BLACK_DYE);
         SportLeggingsRecipe.addIngredient(Material.LEVER);
         //</editor-fold>
-        //<editor-fold desc="Фирменные кроссовки 'Адибас'">
+        //<editor-fold desc="Фирменные кроссовки 'Адибас'" defaultstate="collapsed">
         SportBootsRecipe = new ShapelessRecipe(new NamespacedKey(plugin, "sportboots"), CreateItem(UmcpItem.SPORT_BOOTS, 1));
         SportBootsRecipe.addIngredient(Material.IRON_BOOTS);
         SportBootsRecipe.addIngredient(Material.BLACK_DYE);

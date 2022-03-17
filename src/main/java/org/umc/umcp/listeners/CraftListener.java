@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.umc.umcp.Crafter;
 import org.umc.umcp.Main;
@@ -14,6 +15,8 @@ import org.umc.umcp.Main;
 import org.bukkit.Color;
 import org.umc.umcp.enums.InstitutesNames;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.Random;
 
 public class CraftListener implements Listener {
@@ -22,14 +25,11 @@ public class CraftListener implements Listener {
         if (e.getRecipe() == null) {
             return;
         }
-
-        //end of shapless recipies
-        if (!(e.getRecipe() instanceof ShapedRecipe)) {
-            return;
-        }
         Player player = (Player) e.getViewers().get(0);
-        String recipeKey = ((ShapedRecipe) e.getRecipe()).getKey().getKey();
-        if (recipeKey.equals("vape") || recipeKey.equals("socks") || recipeKey.equals("longsocks") || recipeKey.equals("catears")) {
+        String recipeKey = (e.getRecipe() instanceof ShapedRecipe) ? ((ShapedRecipe) e.getRecipe()).getKey().getKey() :
+                ((ShapelessRecipe) e.getRecipe()).getKey().getKey();
+
+        if (Arrays.asList("vape", "socks", "longsocks", "catears").contains(recipeKey)) {
             String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
             if (!institute.equals(InstitutesNames.RTF.name)) {
                 e.getInventory().setResult(new ItemStack(Material.AIR));
@@ -42,6 +42,13 @@ public class CraftListener implements Listener {
                     vape.setItemMeta(vapeMeta);
                     e.getInventory().setResult(vape);
                 }
+            }
+        }
+
+        if (Arrays.asList("sporthelmet", "sportchestplate", "sportleggings", "sportboots").contains(recipeKey)) {
+            String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
+            if (!institute.equals(InstitutesNames.IFKSIMP.name)) {
+                e.getInventory().setResult(new ItemStack(Material.AIR));
             }
         }
     }
