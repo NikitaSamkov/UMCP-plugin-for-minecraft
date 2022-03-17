@@ -51,7 +51,17 @@ public final class Main extends JavaPlugin {
                 null,
                 UmcpItem.LONGSOCKS,
                 UmcpItem.SOCKS,
-                Arrays.asList(new PotionEffect(PotionEffectType.SPEED, 100000, 1, false, false)), false
+                Arrays.asList(new PotionEffect(PotionEffectType.SPEED, 100000, 1, false, false)),
+                false
+        ));
+        SetMaster.AddSet(new UmcpArmorSet(
+                UmcpItem.SPORT_HELMET,
+                UmcpItem.SPORT_CHESTPLATE,
+                UmcpItem.SPORT_LEGGINGS,
+                UmcpItem.SPORT_BOOTS,
+                Arrays.asList(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 100000, 0, false, false),
+                        new PotionEffect(PotionEffectType.SPEED, 100000, 0, false, false)),
+                false
         ));
     }
 
@@ -71,6 +81,7 @@ public final class Main extends JavaPlugin {
 
     private void addCrafts() {
         Crafter.CreateCrafts(this);
+
         ShapedRecipe diamond = new ShapedRecipe(new ItemStack(Material.DIAMOND, 1));
         diamond.shape("***", "***", "***");
         diamond.setIngredient('*', Material.GRASS_BLOCK);
@@ -80,5 +91,9 @@ public final class Main extends JavaPlugin {
         getServer().addRecipe(Crafter.SocksRecipe);
         getServer().addRecipe(Crafter.LongsocksRecipe);
         getServer().addRecipe(Crafter.CatEarsRecipe);
+        getServer().addRecipe(Crafter.SportHelmetRecipe);
+        getServer().addRecipe(Crafter.SportChestplateRecipe);
+        getServer().addRecipe(Crafter.SportLeggingsRecipe);
+        getServer().addRecipe(Crafter.SportBootsRecipe);
     }
 }

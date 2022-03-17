@@ -12,7 +12,12 @@ public enum UmcpItem {
     VAPE("Вейп", Arrays.asList("Одноразовый вейп радиста.", "Слишком частое употребление вредно для здоровья!"), Material.POTION, 1337),
     SOCKS("Чулки радиста", new ArrayList<>(), Material.GOLDEN_BOOTS, 1),
     LONGSOCKS("Чулки радиста", new ArrayList<>(), Material.GOLDEN_LEGGINGS, 1),
-    CAT_EARS("Кошачьи ушки", new ArrayList<>(), Material.GOLDEN_HELMET, 1);
+    CAT_EARS("Кошачьи ушки", new ArrayList<>(), Material.GOLDEN_HELMET, 1),
+
+    SPORT_HELMET("Козырёк Абибас", new ArrayList<>(), Material.DIAMOND_HELMET, 1),
+    SPORT_CHESTPLATE("Куртка Адик даст", new ArrayList<>(), Material.DIAMOND_CHESTPLATE, 1),
+    SPORT_LEGGINGS("Спортивные штаны Бабидас", new ArrayList<>(), Material.DIAMOND_LEGGINGS, 1),
+    SPORT_BOOTS("Фирменные кроссовки Адибас", new ArrayList<>(), Material.DIAMOND_BOOTS, 1);
 
     private final String displayName;
     private final List<String> lore;

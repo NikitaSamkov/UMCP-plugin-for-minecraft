@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.plugin.Plugin;
@@ -18,6 +19,10 @@ public class Crafter {
     public static ShapedRecipe SocksRecipe;
     public static ShapedRecipe LongsocksRecipe;
     public static ShapedRecipe CatEarsRecipe;
+    public static ShapelessRecipe SportHelmetRecipe;
+    public static ShapelessRecipe SportChestplateRecipe;
+    public static ShapelessRecipe SportLeggingsRecipe;
+    public static ShapelessRecipe SportBootsRecipe;
 
     public static void CreateCrafts(Plugin plugin) {
         //<editor-fold desc="Вейп">
@@ -49,6 +54,31 @@ public class Crafter {
         CatEarsRecipe.setIngredient('f', Material.FEATHER);
         CatEarsRecipe.setIngredient('s', Material.STICK);
         CatEarsRecipe.setIngredient('i', Material.IRON_INGOT);
+        //</editor-fold>
+        //<editor-fold desc="Козырёк 'Абибас'">
+        SportHelmetRecipe = new ShapelessRecipe(new NamespacedKey(plugin, "sporthelmet"), CreateItem(UmcpItem.SPORT_HELMET, 1));
+        SportHelmetRecipe.addIngredient(Material.IRON_HELMET);
+        SportHelmetRecipe.addIngredient(Material.BLACK_DYE);
+        SportHelmetRecipe.addIngredient(Material.IRON_SWORD);
+        //</editor-fold>
+        //<editor-fold desc="Куртка 'Адик даст'">
+        SportChestplateRecipe = new ShapelessRecipe(new NamespacedKey(plugin, "sportchestplate"), CreateItem(UmcpItem.SPORT_CHESTPLATE, 1));
+        SportChestplateRecipe.addIngredient(Material.IRON_CHESTPLATE);
+        SportChestplateRecipe.addIngredient(Material.BLACK_DYE);
+        SportChestplateRecipe.addIngredient(Material.OXEYE_DAISY);
+        //</editor-fold>
+        //<editor-fold desc="Спортивные штаны 'Бабидас'">
+        SportLeggingsRecipe = new ShapelessRecipe(new NamespacedKey(plugin, "sportleggings"), CreateItem(UmcpItem.SPORT_LEGGINGS, 1));
+        SportLeggingsRecipe.addIngredient(Material.IRON_LEGGINGS);
+        SportLeggingsRecipe.addIngredient(Material.BLACK_DYE);
+        SportLeggingsRecipe.addIngredient(Material.LEVER);
+        //</editor-fold>
+        //<editor-fold desc="Фирменные кроссовки 'Адибас'">
+        SportBootsRecipe = new ShapelessRecipe(new NamespacedKey(plugin, "sportboots"), CreateItem(UmcpItem.SPORT_BOOTS, 1));
+        SportBootsRecipe.addIngredient(Material.IRON_BOOTS);
+        SportBootsRecipe.addIngredient(Material.BLACK_DYE);
+        SportBootsRecipe.addIngredient(Material.STRING);
+        SportBootsRecipe.addIngredient(Material.STRING);
         //</editor-fold>
     }
 
