@@ -53,8 +53,6 @@ public class SetMaster {
             return;
         }
         RemoveEffects(player, set.GetEffects());
-        activeSets.get(player.getUniqueId()).remove(set);
-        RefreshEffects(player);
     }
 
     static void RefreshEffects(@NotNull Player player) {
@@ -73,6 +71,7 @@ public class SetMaster {
         for (UmcpArmorSet set: activeSets.get(player.getUniqueId())) {
             RemoveSetEffect(player, set);
         }
+        activeSets.remove(player.getUniqueId());
     }
 
     public static void CheckSets(Player player) {
