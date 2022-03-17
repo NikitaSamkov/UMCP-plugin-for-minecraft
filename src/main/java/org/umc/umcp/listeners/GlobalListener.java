@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.AreaEffectCloudApplyEvent;
 import org.bukkit.event.inventory.BrewEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -21,6 +22,8 @@ import org.bukkit.potion.PotionEffectType;
 import org.umc.umcp.Cooldowns;
 import org.umc.umcp.Crafter;
 import org.umc.umcp.Main;
+import org.umc.umcp.armorset.ArmorEquipEvent.ArmorEquipEvent;
+import org.umc.umcp.armorset.SetMaster;
 import org.umc.umcp.enums.CooldownType;
 import org.umc.umcp.enums.UmcpItem;
 
@@ -88,5 +91,12 @@ public class GlobalListener implements Listener {
                 }
             }
         }
+    }
+
+    @EventHandler
+    public void onArmorEquip(ArmorEquipEvent e) {
+        ArmorEquipEvent.EquipMethod method = e.getMethod();
+        SetMaster.CheckSets(e.getPlayer());
+        e.getPlayer().sendMessage("ehhhhhhh..... more cringe.....");
     }
 }

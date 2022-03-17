@@ -8,6 +8,9 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.umc.umcp.armorset.ArmorEquipEvent.ArmorListener;
+import org.umc.umcp.armorset.ArmorEquipEvent.DispenserArmorListener;
+import org.umc.umcp.armorset.SetMaster;
 import org.umc.umcp.commands.InstituteTabExecutor;
 import org.umc.umcp.connection.DBConnection;
 import org.umc.umcp.listeners.CraftListener;
@@ -24,6 +27,8 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        saveDefaultConfig();
+        addArmorEquipEvent();
         this.getLogger().info("Я ЖИВОЙ!!1!!");
         getCommand("test").setExecutor(new MyExecutor());
         getCommand("institute").setExecutor(new InstituteTabExecutor());
@@ -32,7 +37,20 @@ public final class Main extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new CraftListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new GlobalListener(this), this);
         addCrafts();
+        addSets();
+    }
 
+    private void addSets() {
+        SetMaster.SetPlugin(this);
+    }
+
+    private void addArmorEquipEvent() {
+        getServer().getPluginManager().registerEvents(new ArmorListener(getConfig().getStringList("blocked")), this);
+        try{
+            //Better way to check for this? Only in 1.13.1+?
+            Class.forName("org.bukkit.event.block.BlockDispenseArmorEvent");
+            getServer().getPluginManager().registerEvents(new DispenserArmorListener(), this);
+        }catch(Exception ignored){}
     }
 
     @Override
