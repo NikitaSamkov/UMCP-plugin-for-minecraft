@@ -44,20 +44,20 @@ public class Crafter {
         LongsocksRecipe.setIngredient('w', Material.WHITE_WOOL);
         //</editor-fold>
         //<editor-fold desc="Кошачьи ушки">
-        LongsocksRecipe = new ShapedRecipe(new NamespacedKey(plugin, "catears"), CreateItem(UmcpItem.CAT_EARS, 1));
-        LongsocksRecipe.shape("   ", "fsf", "fif");
-        LongsocksRecipe.setIngredient('f', Material.FEATHER);
-        LongsocksRecipe.setIngredient('s', Material.STICK);
-        LongsocksRecipe.setIngredient('i', Material.IRON_INGOT);
+        CatEarsRecipe = new ShapedRecipe(new NamespacedKey(plugin, "catears"), CreateItem(UmcpItem.CAT_EARS, 1));
+        CatEarsRecipe.shape("   ", "fsf", "sis");
+        CatEarsRecipe.setIngredient('f', Material.FEATHER);
+        CatEarsRecipe.setIngredient('s', Material.STICK);
+        CatEarsRecipe.setIngredient('i', Material.IRON_INGOT);
         //</editor-fold>
     }
 
     static @NotNull ItemStack CreateItem(@NotNull UmcpItem umcpItem, int amount) {
         ItemStack item = new ItemStack(umcpItem.getMaterial(), amount);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(UmcpItem.SOCKS.getDisplayName());
-        meta.setLore(UmcpItem.SOCKS.getLore());
-        meta.setCustomModelData(UmcpItem.SOCKS.getCustomModelData());
+        meta.setDisplayName(umcpItem.getDisplayName());
+        meta.setLore(umcpItem.getLore());
+        meta.setCustomModelData(umcpItem.getCustomModelData());
         item.setItemMeta(meta);
         return item;
     }
