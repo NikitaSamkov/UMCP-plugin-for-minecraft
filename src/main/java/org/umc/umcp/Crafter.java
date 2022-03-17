@@ -16,6 +16,8 @@ public class Crafter {
     public static ItemStack Vape;
     public static ShapedRecipe VapeRecipe;
 
+    public static ItemStack Socks;
+    public static ShapedRecipe SocksRecipe;
     public static ItemStack Longsocks;
     public static ShapedRecipe LongsocksRecipe;
 
@@ -28,9 +30,14 @@ public class Crafter {
         VapeRecipe.setIngredient('w', Material.POTION);
         VapeRecipe.setIngredient('c', Material.COAL);
         //</editor-fold>
-        //<editor-fold desc="Чулки">
+        //<editor-fold desc="Чулки - нижняя часть">
+        SocksRecipe = new ShapedRecipe(new NamespacedKey(plugin, "socks"), Socks);
+        SocksRecipe.shape("   ", "w w", "w w");
+        SocksRecipe.setIngredient('w', Material.WHITE_WOOL);
+        //</editor-fold>
+        //<editor-fold desc="Чулки - верхняя часть">
         LongsocksRecipe = new ShapedRecipe(new NamespacedKey(plugin, "longsocks"), Longsocks);
-        LongsocksRecipe.shape("   ", "w w", "w w");
+        LongsocksRecipe.shape("w w", "w w", "w w");
         LongsocksRecipe.setIngredient('w', Material.WHITE_WOOL);
         //</editor-fold>
     }
@@ -46,13 +53,21 @@ public class Crafter {
         vapeMeta.addCustomEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 600, 0, false, false, true), true);
         Vape.setItemMeta(vapeMeta);
         //</editor-fold>
-        //<editor-fold desc="Чулки">
+        //<editor-fold desc="Чулки - нижняя часть">
+        Socks = new ItemStack(UmcpItem.SOCKS.getMaterial(), 1);
+        ItemMeta socksMeta = Socks.getItemMeta();
+        socksMeta.setDisplayName(UmcpItem.SOCKS.getDisplayName());
+        socksMeta.setLore(UmcpItem.SOCKS.getLore());
+        socksMeta.setCustomModelData(UmcpItem.SOCKS.getCustomModelData());
+        Socks.setItemMeta(socksMeta);
+        //</editor-fold>
+        //<editor-fold desc="Чулки - верхняя часть">
         Longsocks = new ItemStack(UmcpItem.LONGSOCKS.getMaterial(), 1);
-        ItemMeta socksMeta = Longsocks.getItemMeta();
-        socksMeta.setDisplayName(UmcpItem.LONGSOCKS.getDisplayName());
-        socksMeta.setLore(UmcpItem.LONGSOCKS.getLore());
-        socksMeta.setCustomModelData(UmcpItem.LONGSOCKS.getCustomModelData());
-        Longsocks.setItemMeta(socksMeta);
+        ItemMeta longSocksMeta = Longsocks.getItemMeta();
+        longSocksMeta.setDisplayName(UmcpItem.LONGSOCKS.getDisplayName());
+        longSocksMeta.setLore(UmcpItem.LONGSOCKS.getLore());
+        longSocksMeta.setCustomModelData(UmcpItem.LONGSOCKS.getCustomModelData());
+        Longsocks.setItemMeta(longSocksMeta);
         //</editor-fold>
     }
 }

@@ -49,8 +49,8 @@ public final class Main extends JavaPlugin {
         SetMaster.AddSet(new UmcpArmorSet(
                 null,
                 null,
-                null,
                 UmcpItem.LONGSOCKS,
+                UmcpItem.SOCKS,
                 Arrays.asList(new PotionEffect(PotionEffectType.SPEED, 100000, 1, false, false)), false
         ));
     }
@@ -77,6 +77,7 @@ public final class Main extends JavaPlugin {
         getServer().addRecipe(diamond);
 
         getServer().addRecipe(Crafter.VapeRecipe);
+        getServer().addRecipe(Crafter.SocksRecipe);
         getServer().addRecipe(Crafter.LongsocksRecipe);
     }
 }
