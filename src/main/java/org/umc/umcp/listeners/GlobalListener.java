@@ -18,9 +18,13 @@ import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.umc.umcp.Cooldowns;
 import org.umc.umcp.Crafter;
 import org.umc.umcp.Main;
+import org.umc.umcp.enums.CooldownType;
+import org.umc.umcp.enums.UmcpItem;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -39,8 +43,7 @@ public class GlobalListener implements Listener {
             if (item == null) {
                 continue;
             }
-            PotionMeta imeta = (PotionMeta) item.getItemMeta();
-            if (imeta.hasCustomModelData() && imeta.getCustomModelData() == Crafter.Vape.getItemMeta().getCustomModelData()) {
+            if (UmcpItem.VAPE.check(item)) {
                 e.setCancelled(true);
                 return;
             }
@@ -50,10 +53,11 @@ public class GlobalListener implements Listener {
     @EventHandler
     public void onItemUse(PlayerItemConsumeEvent e) {
         ItemStack item = e.getItem();
-        if (item.getType().equals(Material.POTION) && item.getItemMeta().getCustomModelData() == 1337) {
+        if (UmcpItem.VAPE.check(item)) {
             Player player = e.getPlayer();
             Location loc = player.getLocation();
             loc.setY(loc.getY() + 1);
+            //<editor-fold desc="Cloud creation">
             AreaEffectCloud steam = (AreaEffectCloud) player.getWorld().spawnEntity(loc, EntityType.AREA_EFFECT_CLOUD);
             steam.setColor(Color.fromRGB(255, 255, 255));
             steam.setRadius(10);
@@ -62,6 +66,11 @@ public class GlobalListener implements Listener {
             steam.setParticle(Particle.CLOUD);
             steam.setMetadata("isVapeSteam", new FixedMetadataValue(plugin, true));
             steam.addCustomEffect(new PotionEffect(PotionEffectType.WEAKNESS, 1, 0), false);
+            //</editor-fold>
+            if (!Cooldowns.UpdateWithDiff(player.getUniqueId(), CooldownType.VAPE, new Date(60000))) {
+                player.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 1200, 1));
+            }
+
         }
     }
 

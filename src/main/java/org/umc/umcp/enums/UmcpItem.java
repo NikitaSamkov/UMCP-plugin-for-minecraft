@@ -1,4 +1,4 @@
-package org.umc.umcp;
+package org.umc.umcp.enums;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -24,7 +24,7 @@ public enum UmcpItem {
     }
 
     public static Boolean check(@NotNull ItemStack itemStack, @NotNull UmcpItem umcpItem) {
-        return (itemStack.getType().equals(umcpItem.getMaterial()) && itemStack.getItemMeta().getCustomModelData() == umcpItem.getCustomModelData());
+        return (itemStack.getType().equals(umcpItem.getMaterial()) && itemStack.getItemMeta().hasCustomModelData() && itemStack.getItemMeta().getCustomModelData() == umcpItem.getCustomModelData());
     }
 
     public Material getMaterial() {
