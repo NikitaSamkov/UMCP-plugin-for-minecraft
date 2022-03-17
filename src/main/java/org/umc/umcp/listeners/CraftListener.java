@@ -27,18 +27,20 @@ public class CraftListener implements Listener {
             return;
         }
         Player player = (Player) e.getViewers().get(0);
-        ShapedRecipe recipe = (ShapedRecipe) e.getRecipe();
-        if (recipe.getKey().getKey().equals("vape")) {
+        String recipeKey = ((ShapedRecipe) e.getRecipe()).getKey().getKey();
+        if (recipeKey.equals("vape") || recipeKey.equals("socks") || recipeKey.equals("longsocks") || recipeKey.equals("catears")) {
             String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
             if (!institute.equals("ИРИТ-РТФ")) {
                 e.getInventory().setResult(new ItemStack(Material.AIR));
             } else {
-                ItemStack vape = Crafter.VapeRecipe.getResult();
-                PotionMeta vapeMeta = (PotionMeta) vape.getItemMeta();
-                Random r = new Random();
-                vapeMeta.setColor(Color.fromRGB(r.nextInt(255), r.nextInt(255), r.nextInt(255)));
-                vape.setItemMeta(vapeMeta);
-                e.getInventory().setResult(vape);
+                if (recipeKey.equals("vape")) {
+                    ItemStack vape = Crafter.VapeRecipe.getResult();
+                    PotionMeta vapeMeta = (PotionMeta) vape.getItemMeta();
+                    Random r = new Random();
+                    vapeMeta.setColor(Color.fromRGB(r.nextInt(255), r.nextInt(255), r.nextInt(255)));
+                    vape.setItemMeta(vapeMeta);
+                    e.getInventory().setResult(vape);
+                }
             }
         }
     }
