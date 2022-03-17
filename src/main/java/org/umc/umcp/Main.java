@@ -8,11 +8,15 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.umc.umcp.armorset.ArmorEquipEvent.ArmorListener;
 import org.umc.umcp.armorset.ArmorEquipEvent.DispenserArmorListener;
 import org.umc.umcp.armorset.SetMaster;
+import org.umc.umcp.armorset.UmcpArmorSet;
 import org.umc.umcp.commands.InstituteTabExecutor;
 import org.umc.umcp.connection.DBConnection;
+import org.umc.umcp.enums.UmcpItem;
 import org.umc.umcp.listeners.CraftListener;
 import org.umc.umcp.listeners.GlobalListener;
 import org.umc.umcp.listeners.PlayerChatListener;
@@ -42,6 +46,13 @@ public final class Main extends JavaPlugin {
 
     private void addSets() {
         SetMaster.SetPlugin(this);
+        SetMaster.AddSet(new UmcpArmorSet(
+                null,
+                null,
+                null,
+                UmcpItem.LONGSOCKS,
+                Arrays.asList(new PotionEffect(PotionEffectType.SPEED, 100000, 1, false, false)), false
+        ));
     }
 
     private void addArmorEquipEvent() {
@@ -65,7 +76,7 @@ public final class Main extends JavaPlugin {
         diamond.setIngredient('*', Material.GRASS_BLOCK);
         getServer().addRecipe(diamond);
 
-        this.getLogger().info(Crafter.VapeRecipe.toString());
         getServer().addRecipe(Crafter.VapeRecipe);
+        getServer().addRecipe(Crafter.LongsocksRecipe);
     }
 }

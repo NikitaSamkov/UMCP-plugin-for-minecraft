@@ -97,6 +97,5 @@ public class GlobalListener implements Listener {
     public void onArmorEquip(ArmorEquipEvent e) {
         ArmorEquipEvent.EquipMethod method = e.getMethod();
         SetMaster.CheckSets(e.getPlayer());
-        e.getPlayer().sendMessage("ehhhhhhh..... more cringe.....");
     }
 }
