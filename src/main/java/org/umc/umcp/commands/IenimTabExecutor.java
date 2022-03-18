@@ -140,7 +140,7 @@ public class IenimTabExecutor extends HelpSupport {
         player.getInventory().getItemInMainHand().setItemMeta(meta);
         player.sendMessage("Успешно зачаровано на " + arg + " " + (ench.getMaxLevel() + 1));
 
-        return false;
+        return true;
     }
 
     private @NotNull TextComponent GetClickableCommand(String text, String command) {

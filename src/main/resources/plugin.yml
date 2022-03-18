@@ -10,4 +10,4 @@ commands:
   institute:
     usage: §cпопробуйте /<command> help§f
   ienim:
-    usege: §cпопробуйте /<command> help§f (Могут использовать только учащиеся ИЕНиМ'а!)
+    usage: §cпопробуйте /<command> help§f (Могут использовать только учащиеся ИЕНиМ'а!)

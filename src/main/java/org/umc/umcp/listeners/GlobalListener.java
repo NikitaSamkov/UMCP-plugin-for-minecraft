@@ -4,12 +4,15 @@ import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.AreaEffectCloudApplyEvent;
+import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.inventory.BrewEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
@@ -31,6 +34,7 @@ import org.umc.umcp.enums.UmcpItem;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class GlobalListener implements Listener {
@@ -104,5 +108,21 @@ public class GlobalListener implements Listener {
     public void onArmorEquip(ArmorEquipEvent e) {
         ArmorEquipEvent.EquipMethod method = e.getMethod();
         SetMaster.CheckSets(e.getPlayer());
+    }
+
+    @EventHandler
+    public void onItemSpawn(PlayerDropItemEvent e) {
+        if (e.getItemDrop().getItemStack().hasItemMeta() &&
+                e.getItemDrop().getItemStack().getItemMeta().hasEnchants() &&
+                Main.conn.GetInstitute(e.getPlayer().getUniqueId().toString()).equals(InstitutesNames.IENIM.name)) {
+            Map<Enchantment, Integer> enchants = e.getItemDrop().getItemStack().getItemMeta().getEnchants();
+            for (Enchantment ench: enchants.keySet()) {
+                if (enchants.get(ench) > ench.getMaxLevel()) {
+                    e.getPlayer().sendMessage("Вы не можете выбросить свой инструмент!");
+                    e.setCancelled(true);
+                }
+            }
+
+        }
     }
 }
