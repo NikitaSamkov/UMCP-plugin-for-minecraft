@@ -14,6 +14,7 @@ import org.umc.umcp.armorset.ArmorEquipEvent.ArmorListener;
 import org.umc.umcp.armorset.ArmorEquipEvent.DispenserArmorListener;
 import org.umc.umcp.armorset.SetMaster;
 import org.umc.umcp.armorset.UmcpArmorSet;
+import org.umc.umcp.commands.IenimTabExecutor;
 import org.umc.umcp.commands.InstituteTabExecutor;
 import org.umc.umcp.connection.DBConnection;
 import org.umc.umcp.enums.UmcpItem;
@@ -36,6 +37,7 @@ public final class Main extends JavaPlugin {
         this.getLogger().info("Я ЖИВОЙ!!1!!");
         getCommand("test").setExecutor(new MyExecutor());
         getCommand("institute").setExecutor(new InstituteTabExecutor());
+        getCommand("ienim").setExecutor(new IenimTabExecutor());
         Bukkit.getServer().getPluginManager().registerEvents(new MyListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerChatListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new CraftListener(), this);

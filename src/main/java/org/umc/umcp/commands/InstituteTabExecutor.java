@@ -64,7 +64,6 @@ public class InstituteTabExecutor extends HelpSupport {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-
         List<String> path = new LinkedList<>(Arrays.asList(args));
         if (path.size() > 0)
             path.remove(path.size() - 1);
