@@ -1,5 +1,6 @@
 package org.umc.umcp.commands;
 
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -155,10 +156,15 @@ public class IenimTabExecutor extends HelpSupport {
     }
 
     private @NotNull TextComponent GetClickableEnchants(@NotNull List<Enchantment> enchants) {
-        TextComponent result = new TextComponent();
+        TextComponent result = new TextComponent("--------------------\n");
+        result.addExtra("Доступные зачарования (кликни):\n\n");
         for (Enchantment ench: enchants) {
-            result.addExtra(GetClickableCommand(ench));
+            TextComponent extra = GetClickableCommand(ench);
+            extra.setColor(ChatColor.BLUE);
+            result.addExtra(extra);
+            result.addExtra("\n\n");
         }
+        result.addExtra("--------------------");
         return result;
     }
 
