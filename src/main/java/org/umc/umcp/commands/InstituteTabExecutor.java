@@ -125,6 +125,10 @@ public class InstituteTabExecutor extends HelpSupport {
         }
         String lastInstitute = conn.GetInstitute(player.getUniqueId().toString());
         String instituteName = args[0];
+        if (lastInstitute.equals(instituteName)) {
+            sender.sendMessage("Вы уже в " + painter.get(instituteName) + "!");
+            return true;
+        }
         if (JoinInstitute(player.getUniqueId().toString(), instituteName)) {
             sender.sendMessage("Успешно сменен институт на " + painter.get(instituteName) + "!");
             if (lastInstitute.equals(InstitutesNames.IFKSIMP.name)) {
