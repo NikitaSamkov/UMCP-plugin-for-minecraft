@@ -20,6 +20,7 @@ import org.umc.umcp.connection.DBConnection;
 import org.umc.umcp.enums.UmcpItem;
 import org.umc.umcp.listeners.CraftListener;
 import org.umc.umcp.listeners.GlobalListener;
+import org.umc.umcp.listeners.IENIMListener;
 import org.umc.umcp.listeners.PlayerChatListener;
 
 import java.awt.*;
@@ -42,6 +43,7 @@ public final class Main extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerChatListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new CraftListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new GlobalListener(this), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new IENIMListener(), this);
         addCrafts();
         addSets();
     }
