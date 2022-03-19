@@ -17,6 +17,7 @@ import org.umc.umcp.armorset.UmcpArmorSet;
 import org.umc.umcp.commands.IenimTabExecutor;
 import org.umc.umcp.commands.InstituteTabExecutor;
 import org.umc.umcp.connection.DBConnection;
+import org.umc.umcp.enums.InstitutesNames;
 import org.umc.umcp.enums.UmcpItem;
 import org.umc.umcp.listeners.CraftListener;
 import org.umc.umcp.listeners.GlobalListener;
@@ -56,7 +57,8 @@ public final class Main extends JavaPlugin {
                 UmcpItem.LONGSOCKS,
                 UmcpItem.SOCKS,
                 Arrays.asList(new PotionEffect(PotionEffectType.SPEED, 100000, 1, false, false)),
-                false
+                false,
+                InstitutesNames.RTF
         ));
         SetMaster.AddSet(new UmcpArmorSet(
                 UmcpItem.SPORT_HELMET,
@@ -65,7 +67,8 @@ public final class Main extends JavaPlugin {
                 UmcpItem.SPORT_BOOTS,
                 Arrays.asList(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 100000, 0, false, false),
                         new PotionEffect(PotionEffectType.SPEED, 100000, 0, false, false)),
-                false
+                false,
+                InstitutesNames.IFKSIMP
         ));
     }
 

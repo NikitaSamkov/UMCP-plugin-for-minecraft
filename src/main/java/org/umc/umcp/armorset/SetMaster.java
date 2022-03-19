@@ -41,6 +41,9 @@ public class SetMaster {
         if (activeSets.containsKey(player.getUniqueId()) && activeSets.get(player.getUniqueId()).contains(set)) {
             return;
         }
+        if (set.getInstitute() != null && !set.getInstitute().name.equals(Main.conn.GetInstitute(player.getUniqueId().toString()))) {
+            return;
+        }
         if (!activeSets.containsKey(player.getUniqueId())) {
             activeSets.put(player.getUniqueId(), new ArrayList<>());
         }
@@ -64,7 +67,7 @@ public class SetMaster {
         }
     }
 
-    static void RemoveAllSets(Player player) {
+    public static void RemoveAllSets(Player player) {
         if (!activeSets.containsKey(player.getUniqueId())) {
             return;
         }

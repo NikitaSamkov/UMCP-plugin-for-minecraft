@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 import org.bukkit.entity.Player;
 import org.umc.umcp.Cooldowns;
 import org.umc.umcp.Main;
+import org.umc.umcp.armorset.SetMaster;
 import org.umc.umcp.commands.help.Help;
 import org.umc.umcp.commands.help.HelpSupport;
 import org.umc.umcp.connection.DBConnection;
@@ -129,6 +130,8 @@ public class InstituteTabExecutor extends HelpSupport {
             if (instituteName.equals(InstitutesNames.IFKSIMP.name)) {
                 player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(24);
             }
+            SetMaster.RemoveAllSets(player);
+            SetMaster.CheckSets(player);
             Cooldowns.Update(player.getUniqueId(), CooldownType.INSTITUTE_JOIN);
             return true;
         } else {
