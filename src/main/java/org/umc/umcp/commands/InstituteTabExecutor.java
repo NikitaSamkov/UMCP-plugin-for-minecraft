@@ -16,7 +16,10 @@ import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.umc.umcp.Cooldowns;
 import org.umc.umcp.Main;
 import org.umc.umcp.armorset.SetMaster;
@@ -129,6 +132,9 @@ public class InstituteTabExecutor extends HelpSupport {
             }
             if (instituteName.equals(InstitutesNames.IFKSIMP.name)) {
                 player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(24);
+            }
+            if (lastInstitute.equals(InstitutesNames.IENIM.name)) {
+                DowngradeOverloadedItems(player);
             }
             SetMaster.RemoveAllSets(player);
             SetMaster.CheckSets(player);
@@ -252,6 +258,22 @@ public class InstituteTabExecutor extends HelpSupport {
         }
         conn.Close();
         return false;
+    }
+
+    private void DowngradeOverloadedItems(Player player) {
+        for (ItemStack item: player.getInventory().getContents()) {
+            if (item != null && item.hasItemMeta() && item.getItemMeta().hasEnchants()) {
+                ItemMeta meta = item.getItemMeta();
+                Map<Enchantment, Integer> enchants = meta.getEnchants();
+                for (Enchantment ench: enchants.keySet()) {
+                    if (enchants.get(ench) > ench.getMaxLevel()) {
+                        meta.removeEnchant(ench);
+                        meta.addEnchant(ench, ench.getMaxLevel(), false);
+                        item.setItemMeta(meta);
+                    }
+                }
+            }
+        }
     }
 }
 

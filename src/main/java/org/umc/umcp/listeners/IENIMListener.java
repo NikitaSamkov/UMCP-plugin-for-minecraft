@@ -14,6 +14,7 @@ import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.umc.umcp.Main;
 import org.umc.umcp.enums.InstitutesNames;
 
@@ -21,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 public class IENIMListener implements Listener {
-    private Boolean EnchantmentOverload(ItemStack item) {
+    private @NotNull Boolean EnchantmentOverload(@NotNull ItemStack item) {
         if (item.hasItemMeta() &&
                 item.getItemMeta() != null &&
                 item.getItemMeta().hasEnchants()) {
