@@ -59,6 +59,11 @@ public class GlobalListener implements Listener {
         ItemStack item = e.getItem();
         if (UmcpItem.VAPE.check(item)) {
             Player player = e.getPlayer();
+            if (Main.conn.GetInstitute(player.getUniqueId().toString()).equals(InstitutesNames.RTF.name)) {
+                player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 600, 0, false, false));
+            } else {
+                player.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 600, 1, true, true));
+            }
             Location loc = player.getLocation();
             loc.setY(loc.getY() + 1);
             //<editor-fold desc="Cloud creation">

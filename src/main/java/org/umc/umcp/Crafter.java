@@ -4,6 +4,7 @@ import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -13,6 +14,8 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.umc.umcp.enums.UmcpItem;
+
+import java.util.Arrays;
 
 public class Crafter {
     public static ShapedRecipe VapeRecipe;
@@ -29,14 +32,13 @@ public class Crafter {
         ItemStack vape = CreateItem(UmcpItem.VAPE, 1);
         PotionMeta vapeMeta = (PotionMeta) vape.getItemMeta();
         vapeMeta.setColor(Color.fromRGB(255, 255, 255));
-        vapeMeta.addCustomEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 600, 0, false, false, true), true);
         vape.setItemMeta(vapeMeta);
 
         VapeRecipe = new ShapedRecipe(new NamespacedKey(plugin, "vape"), vape);
         VapeRecipe.shape(" s ", " w ", " c ");
         VapeRecipe.setIngredient('s', Material.SUGAR);
         VapeRecipe.setIngredient('w', Material.POTION);
-        VapeRecipe.setIngredient('c', Material.COAL);
+        VapeRecipe.setIngredient('c', new RecipeChoice.MaterialChoice(Arrays.asList(Material.COAL, Material.CHARCOAL)));
         //</editor-fold>
         //<editor-fold desc="Чулки - нижняя часть" defaultstate="collapsed">
         SocksRecipe = new ShapedRecipe(new NamespacedKey(plugin, "socks"), CreateItem(UmcpItem.SOCKS, 1));
