@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.AreaEffectCloudApplyEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
@@ -29,10 +30,7 @@ import org.umc.umcp.enums.CooldownType;
 import org.umc.umcp.enums.InstitutesNames;
 import org.umc.umcp.enums.UmcpItem;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class GlobalListener implements Listener {
     private Plugin plugin;
@@ -109,6 +107,7 @@ public class GlobalListener implements Listener {
 
     private Boolean EnchantmentOverload(ItemStack item) {
         if (item.hasItemMeta() &&
+                item.getItemMeta() != null &&
                 item.getItemMeta().hasEnchants()) {
             Map<Enchantment, Integer> enchants = item.getItemMeta().getEnchants();
             for (Enchantment ench: enchants.keySet()) {
@@ -183,6 +182,15 @@ public class GlobalListener implements Listener {
                 Main.conn.GetInstitute(e.getPlayer().getUniqueId().toString()).equals(InstitutesNames.IENIM.name)) {
             e.getPlayer().sendMessage("Вы безуспешно пытаетесь избавиться от своего инструмента");
             e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent e) {
+        Player player = e.getEntity().getPlayer();
+        if (Main.conn.GetInstitute(player.getUniqueId().toString()).equals(InstitutesNames.IENIM.name)) {
+            List<ItemStack> items = e.getDrops();
+            items.removeIf(this::EnchantmentOverload);
         }
     }
 }
