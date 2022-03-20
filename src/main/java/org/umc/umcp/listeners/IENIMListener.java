@@ -1,5 +1,6 @@
 package org.umc.umcp.listeners;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemFrame;
@@ -22,6 +23,9 @@ import java.util.List;
 import java.util.Map;
 
 public class IENIMListener implements Listener {
+    ConfigurationSection messages = Main.config.getConfigurationSection("ienim.messages");
+
+
     private @NotNull Boolean EnchantmentOverload(@NotNull ItemStack item) {
         if (item.hasItemMeta() &&
                 item.getItemMeta() != null &&
@@ -41,7 +45,7 @@ public class IENIMListener implements Listener {
     public void onItemDrop(PlayerDropItemEvent e) {
         if (EnchantmentOverload(e.getItemDrop().getItemStack()) &&
                 Main.conn.GetInstitute(e.getPlayer().getUniqueId().toString()).equals(InstitutesNames.IENIM.name)) {
-            e.getPlayer().sendMessage("Вы не можете выбросить свой инструмент!");
+            e.getPlayer().sendMessage(messages.getString("DropMessage"));
             e.setCancelled(true);
         }
     }
@@ -52,16 +56,12 @@ public class IENIMListener implements Listener {
             Player player = (Player) e.getView().getPlayer();
             if (e.getCursor() != null &&
                     EnchantmentOverload(e.getCursor()) &&
-                    !(e.getClickedInventory().getType().equals(InventoryType.PLAYER))) {
-                player.sendMessage("Вы безуспешно пытаетесь избавиться от своего инструмента");
-                e.setCancelled(true);
-                return;
-            }
-            if (!(e.getInventory().getType().equals(InventoryType.CRAFTING)) &&
-                    e.getClick().isShiftClick() &&
-                    e.getCurrentItem() != null &&
-                    EnchantmentOverload(e.getCurrentItem())) {
-                player.sendMessage("Вы безуспешно пытаетесь избавиться от своего инструмента");
+                    !(e.getClickedInventory().getType().equals(InventoryType.PLAYER)) ||
+                    (!(e.getInventory().getType().equals(InventoryType.CRAFTING)) &&
+                            e.getClick().isShiftClick() &&
+                            e.getCurrentItem() != null &&
+                            EnchantmentOverload(e.getCurrentItem()))) {
+                player.sendMessage(messages.getString("StoreMessage"));
                 e.setCancelled(true);
                 return;
             }
@@ -87,7 +87,7 @@ public class IENIMListener implements Listener {
         if (entity instanceof ItemFrame &&
                 Main.conn.GetInstitute(e.getPlayer().getUniqueId().toString()).equals(InstitutesNames.IENIM.name)
                 && EnchantmentOverload(e.getPlayer().getInventory().getItemInMainHand())) {
-            e.getPlayer().sendMessage("Вы безуспешно пытаетесь избавиться от своего инструмента");
+            e.getPlayer().sendMessage(messages.getString("FrameMessage"));
             e.setCancelled(true);
         }
 
@@ -97,7 +97,7 @@ public class IENIMListener implements Listener {
     public void onStandInteract(PlayerArmorStandManipulateEvent e) {
         if (EnchantmentOverload(e.getPlayerItem()) &&
                 Main.conn.GetInstitute(e.getPlayer().getUniqueId().toString()).equals(InstitutesNames.IENIM.name)) {
-            e.getPlayer().sendMessage("Вы безуспешно пытаетесь избавиться от своего инструмента");
+            e.getPlayer().sendMessage(messages.getString("StandMessage"));
             e.setCancelled(true);
         }
     }
