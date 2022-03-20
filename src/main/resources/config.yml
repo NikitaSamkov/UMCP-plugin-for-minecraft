@@ -6,12 +6,15 @@ test:
     finalTest: "complete"
 
 ienim:
+  params:
+    UpgradePower: 1
+
   commands:
     #описание базовой команды (/ienim)
     BaseDesc: "Команды института ИЕНиМ."
 
     #команда для повышения уровня чар (default: plus)
-    Upgrade: "hohli"
+    Upgrade: "plus"
 
     #описание команды для повышения уровня чар
     UpgradeDesc: "Преодолеть максимальный уровень зачарования одной чары предмета в руке на +1"

@@ -142,10 +142,10 @@ public class IenimTabExecutor extends HelpSupport {
             player.sendMessage(String.format(messages.getString("NotMaxLvl"), arg));
             return true;
         }
-
-        meta.addEnchant(ench, ench.getMaxLevel() + 1, true);
+        int power = Main.config.getInt("ienim.params.UpgradePower");
+        meta.addEnchant(ench, ench.getMaxLevel() + power, true);
         player.getInventory().getItemInMainHand().setItemMeta(meta);
-        player.sendMessage(String.format(messages.getString("UpgradeSuccess"), arg, ench.getMaxLevel() + 1));
+        player.sendMessage(String.format(messages.getString("UpgradeSuccess"), arg, ench.getMaxLevel() + power));
 
         return true;
     }
