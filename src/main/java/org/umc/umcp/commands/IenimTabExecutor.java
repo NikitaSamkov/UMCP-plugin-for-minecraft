@@ -81,8 +81,9 @@ public class IenimTabExecutor extends HelpSupport {
 
     @Override
     protected UmcpCommand GetTree() {
-        UmcpCommand tree = new UmcpCommand("ienim", this::NoCommand, "Команды института ИЕНиМ.", new LinkedList<>(Arrays.asList(
-                new UmcpCommand("plus", this::Plus, "Преодолеть максимальный уровень зачарования одной чары предмета в руке на +1")
+        ConfigurationSection commands = Main.config.getConfigurationSection("ienim.commands");
+        UmcpCommand tree = new UmcpCommand("ienim", this::NoCommand, commands.getString("BaseDesc"), new LinkedList<>(Arrays.asList(
+                new UmcpCommand(commands.getString("Upgrade"), this::Plus, commands.getString("UpgradeDesc"))
         )));
         return tree;
     }
@@ -156,8 +157,8 @@ public class IenimTabExecutor extends HelpSupport {
     }
 
     private @NotNull TextComponent GetClickableCommand(@NotNull Enchantment ench) {
-        return GetClickableCommand(String.format("[%s]", ench.getKey().getKey().toUpperCase(Locale.ROOT)),
-                String.format("/ienim plus %s", ench.getKey().getKey()));
+        return GetClickableCommand(String.format(messages.getString("PlusEnch"), ench.getKey().getKey().toUpperCase(Locale.ROOT)),
+                String.format("/ienim %s %s", Main.config.getString("ienim.commands.Upgrade"), ench.getKey().getKey()));
     }
 
     private @NotNull TextComponent GetClickableEnchants(@NotNull List<Enchantment> enchants) {
