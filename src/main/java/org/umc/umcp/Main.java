@@ -3,6 +3,7 @@ package org.umc.umcp;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -31,10 +32,12 @@ import java.util.List;
 
 public final class Main extends JavaPlugin {
     public static DBConnection conn = new DBConnection("jdbc:mysql://umcraft.scalacubes.org:2163/UMCraft?useSSL=false", "root", "4o168PPYSIdyjFU");
+    public static FileConfiguration config;
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
+        config = this.getConfig();
         addArmorEquipEvent();
         this.getLogger().info("Я ЖИВОЙ!!1!!");
         getCommand("test").setExecutor(new MyExecutor());
