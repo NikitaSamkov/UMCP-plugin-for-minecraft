@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.PotionMeta;
-import org.umc.umcp.Crafter;
+import org.umc.umcp.misc.Crafter;
 import org.umc.umcp.Main;
 
 import org.bukkit.Color;

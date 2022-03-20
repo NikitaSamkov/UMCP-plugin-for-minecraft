@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -28,16 +29,20 @@ public class IenimTabExecutor extends HelpSupport {
     private UmcpCommand commandTree;
     private Help helper;
 
+    //config
+    private ConfigurationSection messages;
+
     public IenimTabExecutor() {
         commandTree = GetTree();
         helper = new Help(commandTree);
+        messages = Main.config.getConfigurationSection("ienim.messages");
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         String institute = Main.conn.GetInstitute(((Player) sender).getUniqueId().toString());
         if (!institute.equals(InstitutesNames.IENIM.name)) {
-            sender.sendMessage("Чтобы использовать /ienim нужно вступить в ИЕНиМ!");
+            sender.sendMessage(messages.getString("NotIenim"));
             return true;
         }
         if (args.length < 1) {
@@ -86,7 +91,7 @@ public class IenimTabExecutor extends HelpSupport {
         Player player = (Player) commandSender;
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item.getType() == Material.AIR) {
-            commandSender.sendMessage("Возьми зачарованный предмет в руки, чтобы повысить его зачаровние!");
+            commandSender.sendMessage(messages.getString("HandsEmpty"));
             return true;
         }
         ItemMeta meta = item.getItemMeta();
@@ -95,7 +100,7 @@ public class IenimTabExecutor extends HelpSupport {
         }
 
         if (!meta.hasEnchants()) {
-            commandSender.sendMessage("У предмета должно быть хотя бы одно зачарование максимального уровня, чтобы преодолеть его!");
+            commandSender.sendMessage(messages.getString("NoMaxEnchants"));
             return true;
         }
 
@@ -103,7 +108,7 @@ public class IenimTabExecutor extends HelpSupport {
         List<Enchantment> upgrade = new ArrayList<>();
         for (Enchantment ench: enchants.keySet()) {
             if (enchants.get(ench) > ench.getMaxLevel()) {
-                commandSender.sendMessage("У предмета уже есть зачарование с уровнем, который выше макимального: " + ench.getKey().getKey());
+                commandSender.sendMessage(String.format(messages.getString("HasOverloaded"), ench.getKey().getKey()));
                 return true;
             }
             if (enchants.get(ench) == ench.getMaxLevel()) {
@@ -116,7 +121,7 @@ public class IenimTabExecutor extends HelpSupport {
         }
 
         if (upgrade.size() == 0) {
-            commandSender.sendMessage("У предмета должно быть хотя бы одно зачарование максимального уровня, чтобы преодолеть его!");
+            commandSender.sendMessage(messages.getString("NoMaxEnchants"));
             return true;
         }
 
@@ -133,13 +138,13 @@ public class IenimTabExecutor extends HelpSupport {
         Map<Enchantment, Integer> enchants = meta.getEnchants();
 
         if (enchants.get(ench) != ench.getMaxLevel()) {
-            player.sendMessage("Зачарование " + arg + " не максимального уровня!");
+            player.sendMessage(String.format(messages.getString("NotMaxLvl"), arg));
             return true;
         }
 
         meta.addEnchant(ench, ench.getMaxLevel() + 1, true);
         player.getInventory().getItemInMainHand().setItemMeta(meta);
-        player.sendMessage("Успешно зачаровано на " + arg + " " + (ench.getMaxLevel() + 1));
+        player.sendMessage(String.format(messages.getString("UpgradeSuccess"), arg, ench.getMaxLevel() + 1));
 
         return true;
     }
@@ -156,15 +161,15 @@ public class IenimTabExecutor extends HelpSupport {
     }
 
     private @NotNull TextComponent GetClickableEnchants(@NotNull List<Enchantment> enchants) {
-        TextComponent result = new TextComponent("--------------------\n");
-        result.addExtra("Доступные зачарования (кликни):\n\n");
+        TextComponent result = new TextComponent(messages.getString("PlusSeparator"));
+        result.addExtra(messages.getString("PlusMessage"));
         for (Enchantment ench: enchants) {
             TextComponent extra = GetClickableCommand(ench);
-            extra.setColor(ChatColor.BLUE);
+            extra.setColor(ChatColor.AQUA);
             result.addExtra(extra);
             result.addExtra("\n\n");
         }
-        result.addExtra("--------------------");
+        result.addExtra(messages.getString("PlusSeparator"));
         return result;
     }
 

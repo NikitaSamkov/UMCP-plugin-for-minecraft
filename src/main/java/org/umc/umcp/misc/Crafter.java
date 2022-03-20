@@ -1,4 +1,4 @@
-package org.umc.umcp;
+package org.umc.umcp.misc;
 
 import org.bukkit.Color;
 import org.bukkit.Material;

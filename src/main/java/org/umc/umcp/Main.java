@@ -24,6 +24,7 @@ import org.umc.umcp.listeners.CraftListener;
 import org.umc.umcp.listeners.GlobalListener;
 import org.umc.umcp.listeners.IENIMListener;
 import org.umc.umcp.listeners.PlayerChatListener;
+import org.umc.umcp.misc.Crafter;
 
 import java.awt.*;
 import java.util.ArrayList;

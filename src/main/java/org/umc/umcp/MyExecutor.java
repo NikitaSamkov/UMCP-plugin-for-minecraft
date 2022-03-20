@@ -14,7 +14,7 @@ public class MyExecutor implements TabExecutor
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] strings) {
-        String test = Main.config.getConfigurationSection("test").getString("subTest");
+        String test = Main.config.getConfigurationSection("test.subTest").getString("finalTest", "aboba");
         sender.sendMessage((test == null) ? "увы, null" : test);
         return true;
     }

@@ -1,4 +1,4 @@
-package org.umc.umcp;
+package org.umc.umcp.misc;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

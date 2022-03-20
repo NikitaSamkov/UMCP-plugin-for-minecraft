@@ -20,7 +20,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.umc.umcp.Cooldowns;
+import org.umc.umcp.misc.Cooldowns;
 import org.umc.umcp.Main;
 import org.umc.umcp.armorset.SetMaster;
 import org.umc.umcp.commands.help.Help;
