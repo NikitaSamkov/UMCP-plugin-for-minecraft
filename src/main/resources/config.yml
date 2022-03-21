@@ -1,9 +1,11 @@
 # ИМЕНА ПАРАМЕТРОВ НЕ МЕНЯТЬ!!!!!
 # ТОЛЬКО ЗНАЧЕНИЯ
+# НАЗВАНИЯ ПРЕДМЕТОВ ПИШЕМ В СООТВЕТСТВИИ С .propeties
+# ДЛЯ ЭКРАНИРОВАНИЯ ПИШЕМ СТРОКУ В КАВЫЧКАХ (например, для переносов строки (\n) или двоеточий)
 
 test:
   subTest:
-    finalTest: "complete"
+    finalTest: "complete\nsus"
 
 ienim:
   params:
@@ -62,4 +64,83 @@ ienim:
 
     #сообщение при попытке надеть на стойку для брони перегруженную броню
     StandMessage: "Вы безуспешно пытаетесь избавиться от своего инструмента"
+
+rtf:
+  items:
+    #Вейп
+    vape:
+      #имя
+      Name: "Вейп"
+      #описание
+      Desc:
+        - "Одноразовый вейп радиста."
+        - "Слишком частое употребление вредно для здоровья!"
+      #CustomModelData
+      ModelData: 1337
+    #Чулки: нижняя часть
+    socks:
+      #имя
+      Name: "Чулки радиста"
+      #описание
+      Desc:
+        - "..."
+      #CustomModelData
+      ModelData: 1
+    #Чулки: верхняя часть
+    longsocks:
+      #имя
+      Name: "Чулки радиста"
+      #описание
+      Desc:
+        - "..."
+      #CustomModelData
+      ModelData: 1
+    #Кошачьи ушки
+    catears:
+      #имя
+      Name: "Кошачьи ушки"
+      #описание
+      Desc:
+        - "..."
+      #CustomModelData
+      ModelData: 1
+
+ifksimp:
+  items:
+    #Спортивный шлем
+    sporthelmet:
+      #имя
+      Name: "Козырёк Абибас"
+      #описание
+      Desc:
+        - "..."
+      #CustomModelData
+      ModelData: 1
+    #Спортивная куртка
+    sportchestplate:
+      #имя
+      Name: "Куртка Адик даст"
+      #описание
+      Desc:
+        - "..."
+      #CustomModelData
+      ModelData: 1
+    #Спортивный шлем
+    sportleggings:
+      #имя
+      Name: "Спортивные штаны Бабидас"
+      #описание
+      Desc:
+        - "..."
+      #CustomModelData
+      ModelData: 1
+    #Спортивный шлем
+    sportboots:
+      #имя
+      Name: "Фирменные кроссовки Адибас"
+      #описание
+      Desc:
+        - "..."
+      #CustomModelData
+      ModelData: 1
 
