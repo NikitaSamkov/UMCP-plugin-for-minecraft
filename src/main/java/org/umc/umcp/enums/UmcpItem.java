@@ -10,15 +10,15 @@ import java.util.Arrays;
 import java.util.List;
 
 public enum UmcpItem {
-    VAPE("rtf.items.vape.Name", "rtf.items.vape.Desc", Material.POTION, "rtf.items.vape.ModelData"),
-    SOCKS("rtf.items.socks.Name", "rtf.items.socks.Desc", Material.GOLDEN_BOOTS, "rtf.items.socks.ModelData"),
-    LONGSOCKS("rtf.items.longsocks.Name", "rtf.items.longsocks.Desc", Material.GOLDEN_LEGGINGS, "rtf.items.longsocks.ModelData"),
-    CAT_EARS("rtf.items.catears.Name", "rtf.items.catears.Desc", Material.LEATHER_HELMET, "rtf.items.catears.ModelData"),
+    VAPE("rtf", "vape", Material.POTION),
+    SOCKS("rtf", "socks", Material.GOLDEN_BOOTS),
+    LONGSOCKS("rtf", "longsocks", Material.GOLDEN_LEGGINGS),
+    CAT_EARS("rtf", "catears", Material.LEATHER_HELMET),
 
-    SPORT_HELMET("ifksimp.items.sporthelmet.Name", "ifksimp.items.sporthelmet.Desc", Material.DIAMOND_HELMET, "ifksimp.items.sporthelmet.ModelData"),
-    SPORT_CHESTPLATE("ifksimp.items.sportchestplate.Name", "ifksimp.items.sportchestplate.Desc", Material.DIAMOND_CHESTPLATE, "ifksimp.items.sportchestplate.ModelData"),
-    SPORT_LEGGINGS("ifksimp.items.sportleggings.Name", "ifksimp.items.sportleggings.Desc", Material.DIAMOND_LEGGINGS, "ifksimp.items.sportleggings.ModelData"),
-    SPORT_BOOTS("ifksimp.items.sportboots.Name", "ifksimp.items.sportboots.Desc", Material.DIAMOND_BOOTS, "ifksimp.items.sportboots.ModelData");
+    SPORT_HELMET("ifksimp", "sporthelmet", Material.DIAMOND_HELMET),
+    SPORT_CHESTPLATE("ifksimp", "sportchestplate", Material.DIAMOND_CHESTPLATE),
+    SPORT_LEGGINGS("ifksimp", "sportleggings", Material.DIAMOND_LEGGINGS),
+    SPORT_BOOTS("ifksimp", "sportboots", Material.DIAMOND_BOOTS);
 
     private final String displayName;
     private final List<String> lore;
@@ -35,6 +35,13 @@ public enum UmcpItem {
 
     private UmcpItem(String namePath, String lorePath, Material material, String cmdPath) {
         this(Main.config.getString(namePath), Main.config.getStringList(lorePath), material, Main.config.getInt(cmdPath));
+    }
+
+    private UmcpItem(String institutePath, String itemPath, Material material) {
+        this(String.format("%s.items.%s.Name", institutePath, itemPath),
+                String.format("%s.items.%s.Desc", institutePath, itemPath),
+                material,
+                String.format("%s.items.%s.ModelData", institutePath, itemPath));
     }
 
     public static Boolean check(@NotNull ItemStack itemStack, @NotNull UmcpItem umcpItem) {
