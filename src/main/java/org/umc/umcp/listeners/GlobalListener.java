@@ -2,27 +2,20 @@ package org.umc.umcp.listeners;
 
 import org.bukkit.Color;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.Particle;
-import org.bukkit.enchantments.Enchantment;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.AreaEffectCloudApplyEvent;
-import org.bukkit.event.entity.ItemSpawnEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.umc.umcp.misc.Cooldowns;
-import org.umc.umcp.misc.Crafter;
 import org.umc.umcp.Main;
 import org.umc.umcp.armorset.ArmorEquipEvent.ArmorEquipEvent;
 import org.umc.umcp.armorset.SetMaster;
@@ -34,9 +27,11 @@ import java.util.*;
 
 public class GlobalListener implements Listener {
     private Plugin plugin;
+    private final ConfigurationSection rtfParams;
 
     public GlobalListener(Plugin plugin) {
         this.plugin = plugin;
+        rtfParams = Main.config.getConfigurationSection("rtf.params");
     }
 
 
@@ -59,25 +54,34 @@ public class GlobalListener implements Listener {
         ItemStack item = e.getItem();
         if (UmcpItem.VAPE.check(item)) {
             Player player = e.getPlayer();
+
             if (Main.conn.GetInstitute(player.getUniqueId().toString()).equals(InstitutesNames.RTF.name)) {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 600, 0, false, false));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE,
+                        rtfParams.getInt("VapeDuration"),
+                        rtfParams.getInt("VapeAmplifier"),
+                        false, false));
             } else {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 600, 1, true, true));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.POISON,
+                        rtfParams.getInt("VapePoisonDuration"),
+                        rtfParams.getInt("VapePoisonAmplifier"),
+                        true, true));
             }
+
             Location loc = player.getLocation();
-            loc.setY(loc.getY() + 1);
-            //<editor-fold desc="Cloud creation">
+            loc.setY(loc.getY() + rtfParams.getInt("SteamHeight"));
+            //<editor-fold desc="Cloud creation" defaultstate="collapsed">
             AreaEffectCloud steam = (AreaEffectCloud) player.getWorld().spawnEntity(loc, EntityType.AREA_EFFECT_CLOUD);
             steam.setColor(Color.fromRGB(255, 255, 255));
-            steam.setRadius(10);
+            steam.setRadius(rtfParams.getInt("SteamRadius"));
             steam.setSource(player);
-            steam.setDuration(1);
+            steam.setDuration(rtfParams.getInt("SteamDuration"));
             steam.setParticle(Particle.CLOUD);
             steam.setMetadata("isVapeSteam", new FixedMetadataValue(plugin, true));
             steam.addCustomEffect(new PotionEffect(PotionEffectType.WEAKNESS, 1, 0), false);
             //</editor-fold>
             if (!Cooldowns.UpdateWithDiff(player.getUniqueId(), CooldownType.VAPE)) {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 1200, 1));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.POISON,
+                        rtfParams.getInt("VapePenaltyDuration"), rtfParams.getInt("VapePenaltyAmplifier")));
             }
 
         }
@@ -92,7 +96,9 @@ public class GlobalListener implements Listener {
                     Player player = (Player) entity;
                     String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
                     if (!Objects.equals(institute, InstitutesNames.RTF.name)) {
-                        player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 200, 24));
+                        player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,
+                                rtfParams.getInt("SteamBlindnessDuration"),
+                                rtfParams.getInt("SteamBlindnessAmplifier")));
                     }
                 }
             }
