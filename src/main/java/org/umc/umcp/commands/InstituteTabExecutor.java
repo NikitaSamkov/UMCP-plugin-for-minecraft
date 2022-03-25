@@ -16,6 +16,7 @@ import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -39,6 +40,7 @@ public class InstituteTabExecutor extends HelpSupport {
     private UmcpCommand commandTree;
     private Help helper;
     private Boolean haveCooldown;
+    private ConfigurationSection messages;
 
     public InstituteTabExecutor() {
         conn = Main.conn;
@@ -47,6 +49,7 @@ public class InstituteTabExecutor extends HelpSupport {
         painter = Painter.GetPainter(new ArrayList<>(institutes.keySet()));
         helper = new Help(commandTree);
         haveCooldown = true;
+        messages = Main.config.getConfigurationSection("urfu.messages");
     }
 
     @Override
@@ -86,14 +89,15 @@ public class InstituteTabExecutor extends HelpSupport {
 
     protected UmcpCommand GetTree() {
         List<String> institutesList = institutes.keySet().stream().sorted().collect(Collectors.toList());
+        ConfigurationSection source = Main.config.getConfigurationSection("urfu.commands");
         UmcpCommand tree = new UmcpCommand("urfu", this::NoCommand,
-                "База для команд поступления в один из институтов", new LinkedList<>(Arrays.asList(
-                new UmcpCommand("join", this::Join, "Поступить в один из институтов", null, institutesList),
-                new UmcpCommand("info", this::Info, "Узнать, об институте", null, institutesList, true),
-                new UmcpCommand("list", this::InstitutesList, "Посмотреть список всех институтов"),
+                source.getString("BaseDesc"), new LinkedList<>(Arrays.asList(
+                new UmcpCommand(source.getString("join.Name"), this::Join, source.getString("join.Desc"), null, institutesList),
+                new UmcpCommand(source.getString("info.Name"), this::Info, source.getString("info.Desc"), null, institutesList, true),
+                new UmcpCommand(source.getString("list.Name"), this::InstitutesList, source.getString("list.Desc")),
                 new UmcpCommand("cooldown", this::SwitchCooldown, "", null, new LinkedList<>(Arrays.asList("ON", "OFF")))
         )));
-        tree.GetSubcommand("info").arguments.add("me");
+        tree.GetSubcommand(source.getString("info.Name")).arguments.add("me");
         return tree;
     }
 
@@ -104,10 +108,12 @@ public class InstituteTabExecutor extends HelpSupport {
             msg.addExtra(GetInteractiveInstitute(institute));
             msg.addExtra("\n");
         }
-        msg.addExtra("Подробную информацию об институте можно получить, кликнув по его названию или с помощью команды ");
-        TextComponent cmd = new TextComponent("/institute info <название института>");
+        msg.addExtra(messages.getString("list.ClickHelp"));
+        TextComponent cmd = new TextComponent(String.format("/urfu %s %s",
+                Main.config.getString("urfu.commands.info.Name"), messages.getString("list.InstituteNameHelp")));
         cmd.setColor(ChatColor.GREEN);
-        cmd.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/institute info "));
+        cmd.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,
+                String.format("/urfu %s ", Main.config.getString("urfu.commands.info.Name"))));
         msg.addExtra(cmd);
         sender.spigot().sendMessage(msg);
         return true;
@@ -118,19 +124,21 @@ public class InstituteTabExecutor extends HelpSupport {
             return false;
         if (!(sender instanceof Player)) return false;
 
+        ConfigurationSection jm = messages.getConfigurationSection("join");
+
         Player player = (Player) sender;
         if (haveCooldown && !Cooldowns.IsCooldownEnded(player.getUniqueId(), CooldownType.INSTITUTE_JOIN)) {
-            sender.sendMessage("Вы можете менять институт не чаще, чем раз в 2 дня!");
+            sender.sendMessage(jm.getString("Cooldown"));
             return true;
         }
         String lastInstitute = conn.GetInstitute(player.getUniqueId().toString());
         String instituteName = args[0];
         if (lastInstitute.equals(instituteName)) {
-            sender.sendMessage("Вы уже в " + painter.get(instituteName) + "!");
+            sender.sendMessage(String.format(jm.getString("AlreadyInTarget"), painter.get(instituteName)));
             return true;
         }
         if (JoinInstitute(player.getUniqueId().toString(), instituteName)) {
-            sender.sendMessage("Успешно сменен институт на " + painter.get(instituteName) + "!");
+            sender.sendMessage(String.format(jm.getString("JoinSuccess"), painter.get(instituteName)));
             if (lastInstitute.equals(InstituteNames.IFKSIMP.name)) {
                 player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
             }
@@ -145,7 +153,7 @@ public class InstituteTabExecutor extends HelpSupport {
             Cooldowns.Update(player.getUniqueId(), CooldownType.INSTITUTE_JOIN);
             return true;
         } else {
-            sender.sendMessage("Произошла ошибка: проверьте правильность написания названия института (даже подсказки есть)");
+            sender.sendMessage(jm.getString("JoinError"));
             return false;
         }
     }
@@ -190,31 +198,33 @@ public class InstituteTabExecutor extends HelpSupport {
         String institute = conn.GetInstitute(player.getUniqueId().toString());
         TextComponent msg;
         if (institute != null) {
-            msg = new TextComponent("Вы сейчас состоите в институте ");
+            msg = new TextComponent(messages.getString("info.MeFirst"));
             msg.addExtra(GetInteractiveInstitute(institute));
-            msg.addExtra("!");
+            msg.addExtra(messages.getString("info.MeLast"));
         } else {
-            msg = new TextComponent("Вы сейчас не состоите ни в каком институте, поступите в него командой ");
-            TextComponent extra = new TextComponent("\"/institute join <название института>\"");
-            extra.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/institute join "));
+            msg = new TextComponent(messages.getString("info.MeNoneFirst"));
+            TextComponent extra = new TextComponent(String.format("/urfu %s %s",
+                    Main.config.getString("urfu.commands.join.Name"), messages.getString("info.MeNoneCommandArg")));
+            extra.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, String.format("/urfu %s ",
+                    Main.config.getString("urfu.commands.join.Name"))));
             extra.setColor(ChatColor.GREEN);
             msg.addExtra(extra);
-            msg.addExtra("!");
+            msg.addExtra(messages.getString("info.MeNoneLast"));
         }
         player.spigot().sendMessage(msg);
         return true;
     }
 
     private boolean InfoPlayer(Player player, Player target) {
-        TextComponent msg = new TextComponent("Игрок ");
+        TextComponent msg = new TextComponent(messages.getString("info.PlayerFirst"));
 
         TextComponent targetName = new TextComponent(target.getName());
         targetName.setColor(ChatColor.AQUA);
 
         msg.addExtra(targetName);
-        msg.addExtra(" учится в институте ");
+        msg.addExtra(messages.getString("info.PlayerMid"));
         msg.addExtra(GetInteractiveInstitute(conn.GetInstitute(target.getUniqueId().toString())));
-        msg.addExtra("!");
+        msg.addExtra(messages.getString("info.PlayerLast"));
         player.spigot().sendMessage(msg);
         return true;
 
@@ -223,10 +233,10 @@ public class InstituteTabExecutor extends HelpSupport {
     private boolean InfoInstitute(Player player, String instituteName) {
         if (!painter.containsKey(instituteName) || !institutes.containsKey(instituteName))
             return false;
-        player.sendMessage(String.format("-----------------------\n" +
+        player.sendMessage(String.format(messages.getString("info.InstituteDelimer") + "\n" +
                 "%s\n" +
                 "%s\n" +
-                "-----------------------",
+                messages.getString("info.InstituteDelimer"),
                 painter.get(instituteName), institutes.get(instituteName).get("description")));
         return true;
     }
@@ -234,7 +244,8 @@ public class InstituteTabExecutor extends HelpSupport {
     private TextComponent GetInteractiveInstitute(String name) {
         TextComponent institute = new TextComponent(painter.get(name));
         institute.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(institutes.get(name).get("description")).create()));
-        institute.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/institute info " + name));
+        institute.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, String.format("/urfu %s %s",
+                Main.config.getString("urfu.commands.info.Name"), name)));
         return institute;
     }
 
@@ -247,7 +258,8 @@ public class InstituteTabExecutor extends HelpSupport {
             }
             int iid = instituteID.getInt("id");
             instituteID.close();
-            ResultSet players = conn.MakeQuery(String.format("select uuid, name from players inner join institutes i on i.id = institute where uuid='%s'", uuid));
+            ResultSet players = conn.MakeQuery(
+                    String.format("select uuid, name from players inner join institutes i on i.id = institute where uuid='%s'", uuid));
             SimpleDateFormat fdate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String date = fdate.format(new Date());
             if (players.next()) {
