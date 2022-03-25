@@ -12,6 +12,15 @@ database:
   login: "root"
   password: "4o168PPYSIdyjFU"
 
+cooldowns:
+  #кулдауны
+  #форма записи: "d:h:m:s:ms"
+  #где d - дни, h - часы, m - минуты, s - секунды, ms - миллисекунды
+  #использовать только целые числа
+  vape: "0:0:1:0:0"
+  join: "2:0:0:0:0"
+
+
 ienim:
   params:
     UpgradePower: 1
