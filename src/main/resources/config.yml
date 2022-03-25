@@ -7,6 +7,11 @@ test:
   subTest:
     finalTest: "complete\nsus"
 
+database:
+  url: "jdbc:mysql://umcraft.scalacubes.org:2163/UMCraft?useSSL=false"
+  login: "root"
+  password: "4o168PPYSIdyjFU"
+
 ienim:
   params:
     UpgradePower: 1

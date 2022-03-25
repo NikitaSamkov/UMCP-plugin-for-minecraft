@@ -45,7 +45,8 @@ public enum UmcpItem {
     }
 
     public static Boolean check(@NotNull ItemStack itemStack, @NotNull UmcpItem umcpItem) {
-        return (itemStack.getType().equals(umcpItem.getMaterial()) && itemStack.getItemMeta().hasCustomModelData() && itemStack.getItemMeta().getCustomModelData() == umcpItem.getCustomModelData());
+        return (itemStack.getType().equals(umcpItem.getMaterial()) && itemStack.getItemMeta().hasCustomModelData() &&
+                itemStack.getItemMeta().getCustomModelData() == umcpItem.getCustomModelData());
     }
 
     public Material getMaterial() {

@@ -32,13 +32,14 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class Main extends JavaPlugin {
-    public static DBConnection conn = new DBConnection("jdbc:mysql://umcraft.scalacubes.org:2163/UMCraft?useSSL=false", "root", "4o168PPYSIdyjFU");
+    public static DBConnection conn;
     public static FileConfiguration config;
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
         config = this.getConfig();
+        conn = new DBConnection(config.getString("database.url"), config.getString("database.login"), config.getString("database.password"));
         addArmorEquipEvent();
         this.getLogger().info("Я ЖИВОЙ!!1!!");
         getCommand("test").setExecutor(new MyExecutor());
