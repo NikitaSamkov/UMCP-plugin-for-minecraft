@@ -45,7 +45,7 @@ public final class Main extends JavaPlugin {
         this.getLogger().info("Я ЖИВОЙ!!1!!");
         Painter.PreparePaints();
         getCommand("test").setExecutor(new MyExecutor());
-        getCommand("institute").setExecutor(new InstituteTabExecutor());
+        getCommand("urfu").setExecutor(new InstituteTabExecutor());
         getCommand("ienim").setExecutor(new IenimTabExecutor());
         Bukkit.getServer().getPluginManager().registerEvents(new MyListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerChatListener(), this);

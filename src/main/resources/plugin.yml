@@ -7,7 +7,7 @@ description: nu i vyser
 commands:
   test:
     usage: /<command>
-  institute:
+  urfu:
     usage: §cпопробуйте /<command> help§f
   ienim:
     usage: §cпопробуйте /<command> help§f (Могут использовать только учащиеся ИЕНиМ'а!)

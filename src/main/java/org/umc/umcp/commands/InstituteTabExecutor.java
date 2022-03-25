@@ -86,7 +86,7 @@ public class InstituteTabExecutor extends HelpSupport {
 
     protected UmcpCommand GetTree() {
         List<String> institutesList = institutes.keySet().stream().sorted().collect(Collectors.toList());
-        UmcpCommand tree = new UmcpCommand("institute", this::NoCommand,
+        UmcpCommand tree = new UmcpCommand("urfu", this::NoCommand,
                 "База для команд поступления в один из институтов", new LinkedList<>(Arrays.asList(
                 new UmcpCommand("join", this::Join, "Поступить в один из институтов", null, institutesList),
                 new UmcpCommand("info", this::Info, "Узнать, об институте", null, institutesList, true),
