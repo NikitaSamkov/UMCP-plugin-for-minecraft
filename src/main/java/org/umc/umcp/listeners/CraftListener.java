@@ -13,7 +13,7 @@ import org.umc.umcp.misc.Crafter;
 import org.umc.umcp.Main;
 
 import org.bukkit.Color;
-import org.umc.umcp.enums.InstitutesNames;
+import org.umc.umcp.enums.InstituteNames;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
@@ -31,7 +31,7 @@ public class CraftListener implements Listener {
 
         if (Arrays.asList("vape", "socks", "longsocks", "catears").contains(recipeKey)) {
             String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
-            if (!institute.equals(InstitutesNames.RTF.name)) {
+            if (!institute.equals(InstituteNames.RTF.name)) {
                 e.getInventory().setResult(new ItemStack(Material.AIR));
             } else {
                 if (recipeKey.equals("vape")) {
@@ -47,7 +47,7 @@ public class CraftListener implements Listener {
 
         if (Arrays.asList("sporthelmet", "sportchestplate", "sportleggings", "sportboots").contains(recipeKey)) {
             String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
-            if (!institute.equals(InstitutesNames.IFKSIMP.name)) {
+            if (!institute.equals(InstituteNames.IFKSIMP.name)) {
                 e.getInventory().setResult(new ItemStack(Material.AIR));
             }
         }

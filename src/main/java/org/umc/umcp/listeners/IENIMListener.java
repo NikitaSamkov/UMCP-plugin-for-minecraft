@@ -17,7 +17,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.umc.umcp.Main;
-import org.umc.umcp.enums.InstitutesNames;
+import org.umc.umcp.enums.InstituteNames;
 
 import java.util.List;
 import java.util.Map;
@@ -44,7 +44,7 @@ public class IENIMListener implements Listener {
     @EventHandler
     public void onItemDrop(PlayerDropItemEvent e) {
         if (EnchantmentOverload(e.getItemDrop().getItemStack()) &&
-                Main.conn.GetInstitute(e.getPlayer().getUniqueId().toString()).equals(InstitutesNames.IENIM.name)) {
+                Main.conn.GetInstitute(e.getPlayer().getUniqueId().toString()).equals(InstituteNames.IENIM.name)) {
             e.getPlayer().sendMessage(messages.getString("DropMessage"));
             e.setCancelled(true);
         }
@@ -52,7 +52,7 @@ public class IENIMListener implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
-        if (Main.conn.GetInstitute(e.getView().getPlayer().getUniqueId().toString()).equals(InstitutesNames.IENIM.name)) {
+        if (Main.conn.GetInstitute(e.getView().getPlayer().getUniqueId().toString()).equals(InstituteNames.IENIM.name)) {
             Player player = (Player) e.getView().getPlayer();
             if (e.getCursor() != null &&
                     EnchantmentOverload(e.getCursor()) &&
@@ -70,7 +70,7 @@ public class IENIMListener implements Listener {
 
     @EventHandler
     public void onInventoryDrag(InventoryDragEvent e) {
-        if (Main.conn.GetInstitute(e.getView().getPlayer().getUniqueId().toString()).equals(InstitutesNames.IENIM.name)) {
+        if (Main.conn.GetInstitute(e.getView().getPlayer().getUniqueId().toString()).equals(InstituteNames.IENIM.name)) {
             Player player = (Player) e.getView().getPlayer();
 
             if (e.getNewItems().size() > 0 &&
@@ -85,7 +85,7 @@ public class IENIMListener implements Listener {
     public void onPlacingItem(PlayerInteractEntityEvent e) {
         Entity entity = e.getRightClicked();
         if (entity instanceof ItemFrame &&
-                Main.conn.GetInstitute(e.getPlayer().getUniqueId().toString()).equals(InstitutesNames.IENIM.name)
+                Main.conn.GetInstitute(e.getPlayer().getUniqueId().toString()).equals(InstituteNames.IENIM.name)
                 && EnchantmentOverload(e.getPlayer().getInventory().getItemInMainHand())) {
             e.getPlayer().sendMessage(messages.getString("FrameMessage"));
             e.setCancelled(true);
@@ -96,7 +96,7 @@ public class IENIMListener implements Listener {
     @EventHandler
     public void onStandInteract(PlayerArmorStandManipulateEvent e) {
         if (EnchantmentOverload(e.getPlayerItem()) &&
-                Main.conn.GetInstitute(e.getPlayer().getUniqueId().toString()).equals(InstitutesNames.IENIM.name)) {
+                Main.conn.GetInstitute(e.getPlayer().getUniqueId().toString()).equals(InstituteNames.IENIM.name)) {
             e.getPlayer().sendMessage(messages.getString("StandMessage"));
             e.setCancelled(true);
         }
@@ -105,7 +105,7 @@ public class IENIMListener implements Listener {
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent e) {
         Player player = e.getEntity().getPlayer();
-        if (Main.conn.GetInstitute(player.getUniqueId().toString()).equals(InstitutesNames.IENIM.name)) {
+        if (Main.conn.GetInstitute(player.getUniqueId().toString()).equals(InstituteNames.IENIM.name)) {
             List<ItemStack> items = e.getDrops();
             items.removeIf(this::EnchantmentOverload);
         }

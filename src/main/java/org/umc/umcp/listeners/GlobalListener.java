@@ -20,7 +20,7 @@ import org.umc.umcp.Main;
 import org.umc.umcp.armorset.ArmorEquipEvent.ArmorEquipEvent;
 import org.umc.umcp.armorset.SetMaster;
 import org.umc.umcp.enums.CooldownType;
-import org.umc.umcp.enums.InstitutesNames;
+import org.umc.umcp.enums.InstituteNames;
 import org.umc.umcp.enums.UmcpItem;
 
 import java.util.*;
@@ -55,7 +55,7 @@ public class GlobalListener implements Listener {
         if (UmcpItem.VAPE.check(item)) {
             Player player = e.getPlayer();
 
-            if (Main.conn.GetInstitute(player.getUniqueId().toString()).equals(InstitutesNames.RTF.name)) {
+            if (Main.conn.GetInstitute(player.getUniqueId().toString()).equals(InstituteNames.RTF.name)) {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE,
                         rtfParams.getInt("VapeDuration"),
                         rtfParams.getInt("VapeAmplifier"),
@@ -95,7 +95,7 @@ public class GlobalListener implements Listener {
                 if (entity instanceof Player) {
                     Player player = (Player) entity;
                     String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
-                    if (!Objects.equals(institute, InstitutesNames.RTF.name)) {
+                    if (!Objects.equals(institute, InstituteNames.RTF.name)) {
                         player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,
                                 rtfParams.getInt("SteamBlindnessDuration"),
                                 rtfParams.getInt("SteamBlindnessAmplifier")));

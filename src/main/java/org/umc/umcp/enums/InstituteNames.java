@@ -1,6 +1,6 @@
 package org.umc.umcp.enums;
 
-public enum InstitutesNames {
+public enum InstituteNames {
     IENIM("ИЕНиМ"),
     INMIT("ИНМиТ"),
     RTF("ИРИТ-РТФ"),
@@ -15,7 +15,7 @@ public enum InstitutesNames {
 
     public String name;
 
-    private InstitutesNames(String name) {
+    private InstituteNames(String name) {
         this.name = name;
     }
 }

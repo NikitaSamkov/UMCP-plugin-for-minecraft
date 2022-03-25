@@ -1,35 +1,39 @@
 package org.umc.umcp.commands;
 
+import org.umc.umcp.Main;
+import org.umc.umcp.enums.InstituteNames;
+
 import java.util.*;
 import java.util.function.Function;
 
 public class Painter {
-    private static final String[] defaultPaints = {"2", "3", "4", "5", "6", "7", "9", "a", "b", "c", "d", "e", "f"};
+    private static final Map<String, String> defaultPaints = new HashMap<>();
 
-    public static Map<String, String> GetPainter(List<String> elements, String[] paints, Function<String, String> decorations) {
-        List<String> painted = PaintElements(elements,
-                (paints == null) ? defaultPaints : paints,
-                (decorations == null) ? (String s) -> s : decorations);
+    public static void PreparePaints() {
+        defaultPaints.put(InstituteNames.IENIM.name, Main.config.getString("ienim.color"));
+        defaultPaints.put(InstituteNames.INMIT.name, Main.config.getString("inmit.color"));
+        defaultPaints.put(InstituteNames.RTF.name, Main.config.getString("rtf.color"));
+        defaultPaints.put(InstituteNames.ISA.name, Main.config.getString("isa.color"));
+        defaultPaints.put(InstituteNames.IFKSIMP.name, Main.config.getString("ifksimp.color"));
+        defaultPaints.put(InstituteNames.INFO.name, Main.config.getString("info.color"));
+        defaultPaints.put(InstituteNames.HTI.name, Main.config.getString("hti.color"));
+        defaultPaints.put(InstituteNames.UGI.name, Main.config.getString("ugi.color"));
+        defaultPaints.put(InstituteNames.INEU.name, Main.config.getString("ineu.color"));
+        defaultPaints.put(InstituteNames.URALENIN.name, Main.config.getString("uralenin.color"));
+        defaultPaints.put(InstituteNames.FTI.name, Main.config.getString("fti.color"));
+        defaultPaints.put(null, Main.config.getString("abit.color"));
+    }
 
+    public static Map<String, String> GetPainter(List<String> elements, Function<String, String> decorations) {
         Map<String, String> painter = new HashMap<>();
-        for (int i = 0; i < elements.size(); i++)
-            painter.put(elements.get(i), painted.get(i));
+        for (String e: elements) {
+            String paint = defaultPaints.containsKey(e) ? defaultPaints.get(e) : defaultPaints.get(null);
+            painter.put(e, String.format("§%s%s§f", paint, decorations.apply(e)));
+        }
         return painter;
     }
 
-    public static Map<String, String> GetPainter(List<String> elements, String[] paints) {
-        return GetPainter(elements, paints, null);
-    }
-
     public static Map<String, String> GetPainter(List<String> elements) {
-        return GetPainter(elements, null, null);
-    }
-
-    private static List<String> PaintElements(List<String> elements, String[] paints, Function<String, String> decorations) {
-        List<String> result = new ArrayList<>();
-        for (int i = 0; i < elements.size(); i++) {
-            result.add("§" + paints[i % paints.length] + decorations.apply(elements.get(i)) + "§f");
-        }
-        return result;
+        return GetPainter(elements, (String s) -> s);
     }
 }

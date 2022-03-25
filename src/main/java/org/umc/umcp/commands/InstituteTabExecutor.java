@@ -29,7 +29,7 @@ import org.umc.umcp.connection.DBConnection;
 
 import net.md_5.bungee.api.chat.TextComponent;
 import org.umc.umcp.enums.CooldownType;
-import org.umc.umcp.enums.InstitutesNames;
+import org.umc.umcp.enums.InstituteNames;
 
 public class InstituteTabExecutor extends HelpSupport {
 
@@ -131,13 +131,13 @@ public class InstituteTabExecutor extends HelpSupport {
         }
         if (JoinInstitute(player.getUniqueId().toString(), instituteName)) {
             sender.sendMessage("Успешно сменен институт на " + painter.get(instituteName) + "!");
-            if (lastInstitute.equals(InstitutesNames.IFKSIMP.name)) {
+            if (lastInstitute.equals(InstituteNames.IFKSIMP.name)) {
                 player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
             }
-            if (instituteName.equals(InstitutesNames.IFKSIMP.name)) {
+            if (instituteName.equals(InstituteNames.IFKSIMP.name)) {
                 player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(24);
             }
-            if (lastInstitute.equals(InstitutesNames.IENIM.name)) {
+            if (lastInstitute.equals(InstituteNames.IENIM.name)) {
                 DowngradeOverloadedItems(player);
             }
             SetMaster.RemoveAllSets(player);

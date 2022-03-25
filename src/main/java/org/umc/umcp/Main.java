@@ -17,8 +17,9 @@ import org.umc.umcp.armorset.SetMaster;
 import org.umc.umcp.armorset.UmcpArmorSet;
 import org.umc.umcp.commands.IenimTabExecutor;
 import org.umc.umcp.commands.InstituteTabExecutor;
+import org.umc.umcp.commands.Painter;
 import org.umc.umcp.connection.DBConnection;
-import org.umc.umcp.enums.InstitutesNames;
+import org.umc.umcp.enums.InstituteNames;
 import org.umc.umcp.enums.UmcpItem;
 import org.umc.umcp.listeners.CraftListener;
 import org.umc.umcp.listeners.GlobalListener;
@@ -42,6 +43,7 @@ public final class Main extends JavaPlugin {
         conn = new DBConnection(config.getString("database.url"), config.getString("database.login"), config.getString("database.password"));
         addArmorEquipEvent();
         this.getLogger().info("Я ЖИВОЙ!!1!!");
+        Painter.PreparePaints();
         getCommand("test").setExecutor(new MyExecutor());
         getCommand("institute").setExecutor(new InstituteTabExecutor());
         getCommand("ienim").setExecutor(new IenimTabExecutor());
@@ -63,7 +65,7 @@ public final class Main extends JavaPlugin {
                 UmcpItem.SOCKS,
                 Arrays.asList(new PotionEffect(PotionEffectType.SPEED, 100000, 1, false, false)),
                 false,
-                InstitutesNames.RTF
+                InstituteNames.RTF
         ));
         SetMaster.AddSet(new UmcpArmorSet(
                 UmcpItem.SPORT_HELMET,
@@ -73,7 +75,7 @@ public final class Main extends JavaPlugin {
                 Arrays.asList(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 100000, 0, false, false),
                         new PotionEffect(PotionEffectType.SPEED, 100000, 0, false, false)),
                 false,
-                InstitutesNames.IFKSIMP
+                InstituteNames.IFKSIMP
         ));
     }
 

@@ -5,7 +5,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 import org.jetbrains.annotations.NotNull;
-import org.umc.umcp.enums.InstitutesNames;
+import org.umc.umcp.enums.InstituteNames;
 import org.umc.umcp.enums.UmcpItem;
 
 import java.util.List;
@@ -17,13 +17,13 @@ public class UmcpArmorSet {
     private final UmcpItem boots;
     private final List<PotionEffect> effects;
     private final Boolean strict;
-    private final InstitutesNames institute;
+    private final InstituteNames institute;
 
     public UmcpArmorSet(UmcpItem helmet, UmcpItem chestplate, UmcpItem leggings, UmcpItem boots, List<PotionEffect> effects, Boolean strictSet) {
         this(helmet, chestplate, leggings, boots, effects, strictSet, null);
     }
 
-    public UmcpArmorSet(UmcpItem helmet, UmcpItem chestplate, UmcpItem leggings, UmcpItem boots, List<PotionEffect> effects, Boolean strictSet, InstitutesNames institute) {
+    public UmcpArmorSet(UmcpItem helmet, UmcpItem chestplate, UmcpItem leggings, UmcpItem boots, List<PotionEffect> effects, Boolean strictSet, InstituteNames institute) {
         this.helmet = helmet;
         this.chestplate = chestplate;
         this.leggings = leggings;
@@ -55,7 +55,7 @@ public class UmcpArmorSet {
         return effects;
     }
 
-    public InstitutesNames getInstitute() {
+    public InstituteNames getInstitute() {
         return institute;
     }
 }

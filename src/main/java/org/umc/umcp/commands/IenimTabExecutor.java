@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import org.umc.umcp.Main;
 import org.umc.umcp.commands.help.Help;
 import org.umc.umcp.commands.help.HelpSupport;
-import org.umc.umcp.enums.InstitutesNames;
+import org.umc.umcp.enums.InstituteNames;
 
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -41,7 +41,7 @@ public class IenimTabExecutor extends HelpSupport {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         String institute = Main.conn.GetInstitute(((Player) sender).getUniqueId().toString());
-        if (!institute.equals(InstitutesNames.IENIM.name)) {
+        if (!institute.equals(InstituteNames.IENIM.name)) {
             sender.sendMessage(messages.getString("NotIenim"));
             return true;
         }
