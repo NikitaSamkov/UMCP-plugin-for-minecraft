@@ -52,7 +52,7 @@ public class CraftListener implements Listener {
             }
         }
 
-        if (Arrays.asList("bomb").contains(recipeKey)) {
+        if (Arrays.asList("bomb", "adrenaline", "burn", "monster", "redbull").contains(recipeKey)) {
             String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
             if (!institute.equals(InstituteNames.URALENIN.name)) {
                 e.getInventory().setResult(new ItemStack(Material.AIR));
