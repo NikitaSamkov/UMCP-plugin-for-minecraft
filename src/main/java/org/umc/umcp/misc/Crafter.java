@@ -24,6 +24,7 @@ public class Crafter {
     public static ShapedRecipe CatEarsRecipe;
     public static ShapedRecipe AdrenalineRecipe;
     public static ShapedRecipe BurnRecipe;
+    public static ShapedRecipe MonsterRecipe;
 
     public static ShapelessRecipe SportHelmetRecipe;
     public static ShapelessRecipe SportChestplateRecipe;
@@ -81,6 +82,13 @@ public class Crafter {
         BurnRecipe.setIngredient('p', Material.BLAZE_POWDER);
         BurnRecipe.setIngredient('w', Material.POTION);
         BurnRecipe.setIngredient('i', Material.IRON_INGOT);
+        //</editor-fold>
+        //<editor-fold desc="Монстр" defaultstate="collapsed">
+        MonsterRecipe = new ShapedRecipe(new NamespacedKey(plugin, "monster"), CreateItem(UmcpItem.MONSTER, 1));
+        MonsterRecipe.shape(" r ", " w ", " i ");
+        MonsterRecipe.setIngredient('r', Material.REDSTONE);
+        MonsterRecipe.setIngredient('w', Material.POTION);
+        MonsterRecipe.setIngredient('i', Material.IRON_INGOT);
         //</editor-fold>
 
         //<editor-fold desc="Козырёк 'Абибас'" defaultstate="collapsed">

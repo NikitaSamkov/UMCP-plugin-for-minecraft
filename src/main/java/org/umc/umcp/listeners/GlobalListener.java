@@ -94,32 +94,41 @@ public class GlobalListener implements Listener {
 
         }
 
-        if (UmcpItem.ADRENALINE.check(item)) {
-            Player player = e.getPlayer();
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,
-                    Main.config.getInt("uralenin.params.adrenaline.Speed.Duration"),
-                    Main.config.getInt("uralenin.params.adrenaline.Speed.Amplifier"),
-                    true, true));
-            player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION,
-                    Main.config.getInt("uralenin.params.adrenaline.Regen.Duration"),
-                    Main.config.getInt("uralenin.params.adrenaline.Regen.Amplifier"),
-                    true, true));
-            if (!Cooldowns.UpdateWithDiff(player.getUniqueId(), CooldownType.ENERGETICS)) {
-                Cooldowns.Clear(player.getUniqueId());
-                player.setHealth(0);
-            }
-        }
+        if (UmcpItem.ADRENALINE.check(item) ||
+                UmcpItem.BURN.check(item) ||
+                UmcpItem.MONSTER.check(item) ||
+                UmcpItem.REDBULL.check(item)) {
 
-        if (UmcpItem.BURN.check(item)) {
             Player player = e.getPlayer();
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,
-                    Main.config.getInt("uralenin.params.burn.Speed.Duration"),
-                    Main.config.getInt("uralenin.params.burn.Speed.Amplifier"),
-                    true, true));
-            player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE,
-                    Main.config.getInt("uralenin.params.burn.Fireresist.Duration"),
-                    Main.config.getInt("uralenin.params.burn.Fireresist.Amplifier"),
-                    true, true));
+            if (UmcpItem.ADRENALINE.check(item)) {
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,
+                        Main.config.getInt("uralenin.params.adrenaline.Speed.Duration"),
+                        Main.config.getInt("uralenin.params.adrenaline.Speed.Amplifier"),
+                        true, true));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION,
+                        Main.config.getInt("uralenin.params.adrenaline.Regen.Duration"),
+                        Main.config.getInt("uralenin.params.adrenaline.Regen.Amplifier"),
+                        true, true));
+            }
+
+            if (UmcpItem.BURN.check(item)) {
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,
+                        Main.config.getInt("uralenin.params.burn.Speed.Duration"),
+                        Main.config.getInt("uralenin.params.burn.Speed.Amplifier"),
+                        true, true));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE,
+                        Main.config.getInt("uralenin.params.burn.Fireresist.Duration"),
+                        Main.config.getInt("uralenin.params.burn.Fireresist.Amplifier"),
+                        true, true));
+            }
+
+            if (UmcpItem.MONSTER.check(item)) {
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,
+                        Main.config.getInt("uralenin.params.moster.Speed.Duration"),
+                        Main.config.getInt("uralenin.params.moster.Speed.Amplifier"),
+                        true, true));
+            }
+
             if (!Cooldowns.UpdateWithDiff(player.getUniqueId(), CooldownType.ENERGETICS)) {
                 Cooldowns.Clear(player.getUniqueId());
                 player.setHealth(0);
