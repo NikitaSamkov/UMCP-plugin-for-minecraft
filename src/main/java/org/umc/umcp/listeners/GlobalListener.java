@@ -45,7 +45,9 @@ public class GlobalListener implements Listener {
             if (item == null) {
                 continue;
             }
-            if (UmcpItem.VAPE.check(item)) {
+            if (item.hasItemMeta() && item.getItemMeta().hasCustomModelData() &&
+                    (UmcpItem.VAPE.check(item) ||
+                            UmcpItem.ADRENALINE.check(item))) {
                 e.setCancelled(true);
                 return;
             }
@@ -87,6 +89,22 @@ public class GlobalListener implements Listener {
                         rtfParams.getInt("VapePenaltyDuration"), rtfParams.getInt("VapePenaltyAmplifier")));
             }
 
+        }
+
+        if (UmcpItem.ADRENALINE.check(item)) {
+            Player player = e.getPlayer();
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,
+                    Main.config.getInt("uralenin.params.AdrenalineSpeed.Duration"),
+                    Main.config.getInt("uralenin.params.AdrenalineSpeed.Amplifier"),
+                    true, true));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION,
+                    Main.config.getInt("uralenin.params.AdrenalineRegen.Duration"),
+                    Main.config.getInt("uralenin.params.AdrenalineRegen.Amplifier"),
+                    true, true));
+            if (!Cooldowns.UpdateWithDiff(player.getUniqueId(), CooldownType.ENERGETICS)) {
+                Cooldowns.Clear(player.getUniqueId());
+                player.setHealth(0);
+            }
         }
     }
 

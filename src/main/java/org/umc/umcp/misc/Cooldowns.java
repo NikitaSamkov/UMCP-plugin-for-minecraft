@@ -62,4 +62,8 @@ public class Cooldowns {
         }
         return null;
     }
+
+    public static void Clear(UUID uuid) {
+        cooldowns.remove(uuid);
+    }
 }

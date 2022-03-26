@@ -21,6 +21,8 @@ public class Crafter {
     public static ShapedRecipe SocksRecipe;
     public static ShapedRecipe LongsocksRecipe;
     public static ShapedRecipe CatEarsRecipe;
+    public static ShapedRecipe AdrenalineRecipe;
+
     public static ShapelessRecipe SportHelmetRecipe;
     public static ShapelessRecipe SportChestplateRecipe;
     public static ShapelessRecipe SportLeggingsRecipe;
@@ -57,6 +59,15 @@ public class Crafter {
         CatEarsRecipe.setIngredient('s', Material.STICK);
         CatEarsRecipe.setIngredient('i', Material.IRON_INGOT);
         //</editor-fold>
+        //<editor-fold desc="Адреналин" defaultstate="collapsed">
+        ItemStack adrenaline = CreateItem(UmcpItem.ADRENALINE, 1);
+        AdrenalineRecipe = new ShapedRecipe(new NamespacedKey(plugin, "adrenaline"), adrenaline);
+        AdrenalineRecipe.shape(" l ", " w ", " g ");
+        AdrenalineRecipe.setIngredient('l', Material.LAPIS_LAZULI);
+        AdrenalineRecipe.setIngredient('w', Material.POTION);
+        AdrenalineRecipe.setIngredient('g', Material.GOLD_INGOT);
+        //</editor-fold>
+
         //<editor-fold desc="Козырёк 'Абибас'" defaultstate="collapsed">
         SportHelmetRecipe = new ShapelessRecipe(new NamespacedKey(plugin, "sporthelmet"), CreateItem(UmcpItem.SPORT_HELMET, 1));
         SportHelmetRecipe.addIngredient(Material.IRON_HELMET);
@@ -91,11 +102,11 @@ public class Crafter {
                 Main.config.getInt("uralenin.params.BombColor.G"),
                 Main.config.getInt("uralenin.params.BombColor.B")));
         dirtyBomb.setItemMeta(dirtyBombMeta);
-        SportBootsRecipe = new ShapelessRecipe(new NamespacedKey(plugin, "bomb"), dirtyBomb);
-        SportBootsRecipe.addIngredient(Material.GLASS_BOTTLE);
-        SportBootsRecipe.addIngredient(Material.BROWN_DYE);
-        SportBootsRecipe.addIngredient(Material.BROWN_DYE);
-        SportBootsRecipe.addIngredient(Material.BROWN_DYE);
+        BombRecipe = new ShapelessRecipe(new NamespacedKey(plugin, "bomb"), dirtyBomb);
+        BombRecipe.addIngredient(Material.GLASS_BOTTLE);
+        BombRecipe.addIngredient(Material.BROWN_DYE);
+        BombRecipe.addIngredient(Material.BROWN_DYE);
+        BombRecipe.addIngredient(Material.BROWN_DYE);
         //</editor-fold>
     }
 

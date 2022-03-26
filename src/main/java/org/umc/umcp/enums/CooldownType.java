@@ -7,8 +7,9 @@ import org.umc.umcp.Main;
 import java.util.Date;
 
 public enum CooldownType {
-    VAPE(Main.config.getString("cooldowns.vape.Time"), Main.config.getInt("cooldowns.vape.AcceptableCount")),
-    INSTITUTE_JOIN(Main.config.getString("cooldowns.join.Time"), Main.config.getInt("cooldowns.join.AcceptableCount"));
+    VAPE("vape"),
+    INSTITUTE_JOIN("join"),
+    ENERGETICS("energetics");
 
     public Date time;
     public int acceptableCount;
@@ -33,5 +34,10 @@ public enum CooldownType {
         this.time = new Date((((Integer.parseInt(params[0]) * 24L + Integer.parseInt(params[1])) * 60L +
                 Integer.parseInt(params[2])) * 60L + Integer.parseInt(params[3])) * 1000L + Integer.parseInt(params[4]));
         this.acceptableCount = acceptableCount;
+    }
+
+    private CooldownType(@NotNull String cooldownConfigName) {
+        this(Main.config.getString(String.format("cooldowns.%s.Time", cooldownConfigName)),
+                Main.config.getInt(String.format("cooldowns.%s.AcceptableCount", cooldownConfigName)));
     }
 }

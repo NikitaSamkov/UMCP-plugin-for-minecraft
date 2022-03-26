@@ -20,7 +20,11 @@ public enum UmcpItem {
     SPORT_LEGGINGS("ifksimp", "sportleggings", Material.DIAMOND_LEGGINGS),
     SPORT_BOOTS("ifksimp", "sportboots", Material.DIAMOND_BOOTS),
 
-    DIRTY_BOMB("uralenin", "bomb", Material.LINGERING_POTION);
+    DIRTY_BOMB("uralenin", "bomb", Material.LINGERING_POTION),
+    ADRENALINE("uralenin", "adrenaline", Material.POTION),
+    BURN("uralenin", "burn", Material.POTION),
+    MONSTER("uralenin", "monster", Material.POTION),
+    REDBULL("uralenin", "redbull", Material.POTION);
 
     private final String displayName;
     private final List<String> lore;

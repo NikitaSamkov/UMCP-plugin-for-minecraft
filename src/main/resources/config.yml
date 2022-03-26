@@ -21,13 +21,16 @@ cooldowns:
   #использовать только целые числа
   #AcceptableCount
   #допустимое количество использований в период кулдауна
-  #пример: если энергетик можно использовать не больше 3 раз в 1 минуту, то Time будет 0:0:1:0:0, а AcceptedCount будет равно 3
+  #пример: если энергетик можно использовать не больше 3 раз в 10 минут, то Time будет 0:0:10:0:0, а AcceptedCount будет равно 3
   vape:
     Time: "0:0:1:0:0"
     AcceptableCount: 1
   join:
     Time: "2:0:0:0:0"
     AcceptableCount: 1
+  energetics:
+    Time: "0:0:10:0:0"
+    AcceptableCount: 3
 
 urfu:
   commands:
@@ -280,6 +283,20 @@ uralenin:
       #степень, считая от нуля
       Amplifier: 0
 
+    #параметры эффекта скорости от Адреналина
+    AdrenalineSpeed:
+      #длительность (в тиках)
+      Duration: 1200
+      #степень, считая от нуля
+      Amplifier: 1
+
+    #параметры эффекта восстановления от Адреналина
+    AdrenalineRegen:
+      #длительность (в тиках)
+      Duration: 200
+      #степень, считая от нуля
+      Amplifier: 0
+
   items:
     #бомба-вонючка
     bomb:
@@ -289,6 +306,42 @@ uralenin:
       Desc: "..."
       #CustomModelData
       ModelData: 1
+
+    #Адреналин
+    adrenaline:
+      #название
+      Name: "Адреналин"
+      #описание
+      Desc: "..."
+      #CustomModelData
+      ModelData: 5
+
+    #Бёрн
+    burn:
+      #название
+      Name: "Бёрн"
+      #описание
+      Desc: "..."
+      #CustomModelData
+      ModelData: 6
+
+    #Монстр
+    monster:
+      #название
+      Name: "Монстр"
+      #описание
+      Desc: "..."
+      #CustomModelData
+      ModelData: 7
+
+    #Рэдбулл
+    redbull:
+      #название
+      Name: "Рэдбулл"
+      #описание
+      Desc: "..."
+      #CustomModelData
+      ModelData: 8
 
 ienim:
   color: "c"
