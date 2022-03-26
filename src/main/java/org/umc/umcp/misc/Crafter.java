@@ -10,6 +10,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
 import org.jetbrains.annotations.NotNull;
 import org.umc.umcp.Main;
 import org.umc.umcp.enums.UmcpItem;
@@ -22,6 +23,7 @@ public class Crafter {
     public static ShapedRecipe LongsocksRecipe;
     public static ShapedRecipe CatEarsRecipe;
     public static ShapedRecipe AdrenalineRecipe;
+    public static ShapedRecipe BurnRecipe;
 
     public static ShapelessRecipe SportHelmetRecipe;
     public static ShapelessRecipe SportChestplateRecipe;
@@ -30,6 +32,13 @@ public class Crafter {
     public static ShapelessRecipe BombRecipe;
 
     public static void CreateCrafts(Plugin plugin) {
+        //<editor-fold desc="Создание бутылки воды" defaultstate="collapsed">
+        ItemStack waterbottle = new ItemStack(Material.POTION, 1);
+        PotionMeta waterbottleMeta = (PotionMeta) waterbottle.getItemMeta();
+        waterbottleMeta.setBasePotionData(new PotionData(PotionType.WATER));
+        waterbottle.setItemMeta(waterbottleMeta);
+        //</editor-fold>
+
         //<editor-fold desc="Вейп" defaultstate="collapsed">
         ItemStack vape = CreateItem(UmcpItem.VAPE, 1);
         PotionMeta vapeMeta = (PotionMeta) vape.getItemMeta();
@@ -60,12 +69,18 @@ public class Crafter {
         CatEarsRecipe.setIngredient('i', Material.IRON_INGOT);
         //</editor-fold>
         //<editor-fold desc="Адреналин" defaultstate="collapsed">
-        ItemStack adrenaline = CreateItem(UmcpItem.ADRENALINE, 1);
-        AdrenalineRecipe = new ShapedRecipe(new NamespacedKey(plugin, "adrenaline"), adrenaline);
+        AdrenalineRecipe = new ShapedRecipe(new NamespacedKey(plugin, "adrenaline"), CreateItem(UmcpItem.ADRENALINE, 1));
         AdrenalineRecipe.shape(" l ", " w ", " g ");
         AdrenalineRecipe.setIngredient('l', Material.LAPIS_LAZULI);
-        AdrenalineRecipe.setIngredient('w', Material.POTION);
+        AdrenalineRecipe.setIngredient('w', new RecipeChoice.ExactChoice(waterbottle));
         AdrenalineRecipe.setIngredient('g', Material.GOLD_INGOT);
+        //</editor-fold>
+        //<editor-fold desc="Бёрн" defaultstate="collapsed">
+        BurnRecipe = new ShapedRecipe(new NamespacedKey(plugin, "burn"), CreateItem(UmcpItem.BURN, 1));
+        BurnRecipe.shape(" p ", " w ", " i ");
+        BurnRecipe.setIngredient('p', Material.BLAZE_POWDER);
+        BurnRecipe.setIngredient('w', Material.POTION);
+        BurnRecipe.setIngredient('i', Material.IRON_INGOT);
         //</editor-fold>
 
         //<editor-fold desc="Козырёк 'Абибас'" defaultstate="collapsed">
@@ -98,9 +113,9 @@ public class Crafter {
         PotionMeta dirtyBombMeta = (PotionMeta) dirtyBomb.getItemMeta();
         dirtyBombMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
         dirtyBombMeta.setColor(Color.fromRGB(
-                Main.config.getInt("uralenin.params.BombColor.R"),
-                Main.config.getInt("uralenin.params.BombColor.G"),
-                Main.config.getInt("uralenin.params.BombColor.B")));
+                Main.config.getInt("uralenin.params.bomb.Color.R"),
+                Main.config.getInt("uralenin.params.bomb.Color.G"),
+                Main.config.getInt("uralenin.params.bomb.Color.B")));
         dirtyBomb.setItemMeta(dirtyBombMeta);
         BombRecipe = new ShapelessRecipe(new NamespacedKey(plugin, "bomb"), dirtyBomb);
         BombRecipe.addIngredient(Material.GLASS_BOTTLE);

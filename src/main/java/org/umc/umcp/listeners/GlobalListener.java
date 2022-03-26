@@ -47,7 +47,10 @@ public class GlobalListener implements Listener {
             }
             if (item.hasItemMeta() && item.getItemMeta().hasCustomModelData() &&
                     (UmcpItem.VAPE.check(item) ||
-                            UmcpItem.ADRENALINE.check(item))) {
+                            UmcpItem.ADRENALINE.check(item) ||
+                            UmcpItem.BURN.check(item) ||
+                            UmcpItem.MONSTER.check(item) ||
+                            UmcpItem.REDBULL.check(item))) {
                 e.setCancelled(true);
                 return;
             }
@@ -94,12 +97,28 @@ public class GlobalListener implements Listener {
         if (UmcpItem.ADRENALINE.check(item)) {
             Player player = e.getPlayer();
             player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,
-                    Main.config.getInt("uralenin.params.AdrenalineSpeed.Duration"),
-                    Main.config.getInt("uralenin.params.AdrenalineSpeed.Amplifier"),
+                    Main.config.getInt("uralenin.params.adrenaline.Speed.Duration"),
+                    Main.config.getInt("uralenin.params.adrenaline.Speed.Amplifier"),
                     true, true));
             player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION,
-                    Main.config.getInt("uralenin.params.AdrenalineRegen.Duration"),
-                    Main.config.getInt("uralenin.params.AdrenalineRegen.Amplifier"),
+                    Main.config.getInt("uralenin.params.adrenaline.Regen.Duration"),
+                    Main.config.getInt("uralenin.params.adrenaline.Regen.Amplifier"),
+                    true, true));
+            if (!Cooldowns.UpdateWithDiff(player.getUniqueId(), CooldownType.ENERGETICS)) {
+                Cooldowns.Clear(player.getUniqueId());
+                player.setHealth(0);
+            }
+        }
+
+        if (UmcpItem.BURN.check(item)) {
+            Player player = e.getPlayer();
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,
+                    Main.config.getInt("uralenin.params.burn.Speed.Duration"),
+                    Main.config.getInt("uralenin.params.burn.Speed.Amplifier"),
+                    true, true));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE,
+                    Main.config.getInt("uralenin.params.burn.Fireresist.Duration"),
+                    Main.config.getInt("uralenin.params.burn.Fireresist.Amplifier"),
                     true, true));
             if (!Cooldowns.UpdateWithDiff(player.getUniqueId(), CooldownType.ENERGETICS)) {
                 Cooldowns.Clear(player.getUniqueId());
@@ -133,14 +152,14 @@ public class GlobalListener implements Listener {
                     }
                 }
                 entity.addPotionEffect(new PotionEffect(PotionEffectType.POISON,
-                        uraleninParams.getInt("BombPoison.Duration"),
-                        uraleninParams.getInt("BombPoison.Amplifier")));
+                        uraleninParams.getInt("bomb.Poison.Duration"),
+                        uraleninParams.getInt("bomb.Poison.Amplifier")));
                 entity.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION,
-                        uraleninParams.getInt("BombNausea.Duration"),
-                        uraleninParams.getInt("BombNausea.Amplifier")));
+                        uraleninParams.getInt("bomb.Nausea.Duration"),
+                        uraleninParams.getInt("bomb.Nausea.Amplifier")));
                 entity.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS,
-                        uraleninParams.getInt("BombWeakness.Duration"),
-                        uraleninParams.getInt("BombWeakness.Amplifier")));
+                        uraleninParams.getInt("bomb.Weakness.Duration"),
+                        uraleninParams.getInt("bomb.Weakness.Amplifier")));
             }
         }
     }
@@ -162,9 +181,11 @@ public class GlobalListener implements Listener {
             Location loc = e.getEntity().getLocation();
             AreaEffectCloud dirtyCloud = (AreaEffectCloud) e.getEntity().getWorld().spawnEntity(loc, EntityType.AREA_EFFECT_CLOUD);
             dirtyCloud.setColor(Color.fromRGB(
-                    uraleninParams.getInt("BombColor.R"), uraleninParams.getInt("BombColor.G"), uraleninParams.getInt("BombColor.B")));
-            dirtyCloud.setRadius(uraleninParams.getInt("BombRadius"));
-            dirtyCloud.setDuration(uraleninParams.getInt("BombDuration"));
+                    uraleninParams.getInt("bomb.Color.R"),
+                    uraleninParams.getInt("bomb.Color.G"),
+                    uraleninParams.getInt("bomb.Color.B")));
+            dirtyCloud.setRadius(uraleninParams.getInt("bomb.Radius"));
+            dirtyCloud.setDuration(uraleninParams.getInt("bomb.Duration"));
             dirtyCloud.addCustomEffect(new PotionEffect(PotionEffectType.WEAKNESS, 0, 0), false);
             dirtyCloud.setMetadata("isDirtyCloud", new FixedMetadataValue(plugin, true));
             e.setCancelled(true);
