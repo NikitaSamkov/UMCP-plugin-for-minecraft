@@ -129,6 +129,21 @@ public class GlobalListener implements Listener {
                         true, true));
             }
 
+            if (UmcpItem.REDBULL.check(item)) {
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,
+                        Main.config.getInt("uralenin.params.redbull.Speed.Duration"),
+                        Main.config.getInt("uralenin.params.redbull.Speed.Amplifier"),
+                        true, true));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE,
+                        Main.config.getInt("uralenin.params.redbull.Fireresist.Duration"),
+                        Main.config.getInt("uralenin.params.redbull.Fireresist.Amplifier"),
+                        true, true));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION,
+                        Main.config.getInt("uralenin.params.redbull.Regen.Duration"),
+                        Main.config.getInt("uralenin.params.redbull.Regen.Amplifier"),
+                        true, true));
+            }
+
             if (!Cooldowns.UpdateWithDiff(player.getUniqueId(), CooldownType.ENERGETICS)) {
                 Cooldowns.Clear(player.getUniqueId());
                 player.setHealth(0);

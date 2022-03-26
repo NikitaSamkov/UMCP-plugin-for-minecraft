@@ -25,6 +25,7 @@ public class Crafter {
     public static ShapedRecipe AdrenalineRecipe;
     public static ShapedRecipe BurnRecipe;
     public static ShapedRecipe MonsterRecipe;
+    public static ShapedRecipe RedbullRecipe;
 
     public static ShapelessRecipe SportHelmetRecipe;
     public static ShapelessRecipe SportChestplateRecipe;
@@ -80,15 +81,22 @@ public class Crafter {
         BurnRecipe = new ShapedRecipe(new NamespacedKey(plugin, "burn"), CreateItem(UmcpItem.BURN, 1));
         BurnRecipe.shape(" p ", " w ", " i ");
         BurnRecipe.setIngredient('p', Material.BLAZE_POWDER);
-        BurnRecipe.setIngredient('w', Material.POTION);
+        BurnRecipe.setIngredient('w', new RecipeChoice.ExactChoice(waterbottle));
         BurnRecipe.setIngredient('i', Material.IRON_INGOT);
         //</editor-fold>
         //<editor-fold desc="Монстр" defaultstate="collapsed">
         MonsterRecipe = new ShapedRecipe(new NamespacedKey(plugin, "monster"), CreateItem(UmcpItem.MONSTER, 1));
         MonsterRecipe.shape(" r ", " w ", " i ");
         MonsterRecipe.setIngredient('r', Material.REDSTONE);
-        MonsterRecipe.setIngredient('w', Material.POTION);
+        MonsterRecipe.setIngredient('w', new RecipeChoice.ExactChoice(waterbottle));
         MonsterRecipe.setIngredient('i', Material.IRON_INGOT);
+        //</editor-fold>
+        //<editor-fold desc="Рэдбулл" defaultstate="collapsed">
+        RedbullRecipe = new ShapedRecipe(new NamespacedKey(plugin, "redbull"), CreateItem(UmcpItem.REDBULL, 1));
+        RedbullRecipe.shape(" l ", " w ", " d ");
+        RedbullRecipe.setIngredient('l', Material.LAPIS_LAZULI);
+        RedbullRecipe.setIngredient('w', Material.WATER_BUCKET);
+        RedbullRecipe.setIngredient('d', Material.DIAMOND);
         //</editor-fold>
 
         //<editor-fold desc="Козырёк 'Абибас'" defaultstate="collapsed">

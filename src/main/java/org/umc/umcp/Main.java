@@ -42,6 +42,7 @@ public final class Main extends JavaPlugin {
         config = this.getConfig();
         conn = new DBConnection(config.getString("database.url"), config.getString("database.login"), config.getString("database.password"));
         addArmorEquipEvent();
+        addSets();
         this.getLogger().info("Я ЖИВОЙ!!1!!");
         Painter.PreparePaints();
         getCommand("test").setExecutor(new MyExecutor());
@@ -53,7 +54,6 @@ public final class Main extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new GlobalListener(this), this);
         Bukkit.getServer().getPluginManager().registerEvents(new IENIMListener(), this);
         addCrafts();
-        addSets();
     }
 
     private void addSets() {
@@ -113,5 +113,6 @@ public final class Main extends JavaPlugin {
         getServer().addRecipe(Crafter.AdrenalineRecipe);
         getServer().addRecipe(Crafter.BurnRecipe);
         getServer().addRecipe(Crafter.MonsterRecipe);
+        getServer().addRecipe(Crafter.RedbullRecipe);
     }
 }
