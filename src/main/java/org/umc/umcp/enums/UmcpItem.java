@@ -18,7 +18,9 @@ public enum UmcpItem {
     SPORT_HELMET("ifksimp", "sporthelmet", Material.DIAMOND_HELMET),
     SPORT_CHESTPLATE("ifksimp", "sportchestplate", Material.DIAMOND_CHESTPLATE),
     SPORT_LEGGINGS("ifksimp", "sportleggings", Material.DIAMOND_LEGGINGS),
-    SPORT_BOOTS("ifksimp", "sportboots", Material.DIAMOND_BOOTS);
+    SPORT_BOOTS("ifksimp", "sportboots", Material.DIAMOND_BOOTS),
+
+    DIRTY_BOMB("uralenin", "bomb", Material.LINGERING_POTION);
 
     private final String displayName;
     private final List<String> lore;

@@ -3,16 +3,15 @@ package org.umc.umcp.misc;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.RecipeChoice;
-import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
+import org.umc.umcp.Main;
 import org.umc.umcp.enums.UmcpItem;
 
 import java.util.Arrays;
@@ -26,6 +25,7 @@ public class Crafter {
     public static ShapelessRecipe SportChestplateRecipe;
     public static ShapelessRecipe SportLeggingsRecipe;
     public static ShapelessRecipe SportBootsRecipe;
+    public static ShapelessRecipe BombRecipe;
 
     public static void CreateCrafts(Plugin plugin) {
         //<editor-fold desc="Вейп" defaultstate="collapsed">
@@ -81,6 +81,21 @@ public class Crafter {
         SportBootsRecipe.addIngredient(Material.BLACK_DYE);
         SportBootsRecipe.addIngredient(Material.STRING);
         SportBootsRecipe.addIngredient(Material.STRING);
+        //</editor-fold>
+        //<editor-fold desc="Банка с говном" defaultstate="collapsed">
+        ItemStack dirtyBomb = CreateItem(UmcpItem.DIRTY_BOMB, 1);
+        PotionMeta dirtyBombMeta = (PotionMeta) dirtyBomb.getItemMeta();
+        dirtyBombMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        dirtyBombMeta.setColor(Color.fromRGB(
+                Main.config.getInt("uralenin.params.BombColor.R"),
+                Main.config.getInt("uralenin.params.BombColor.G"),
+                Main.config.getInt("uralenin.params.BombColor.B")));
+        dirtyBomb.setItemMeta(dirtyBombMeta);
+        SportBootsRecipe = new ShapelessRecipe(new NamespacedKey(plugin, "bomb"), dirtyBomb);
+        SportBootsRecipe.addIngredient(Material.GLASS_BOTTLE);
+        SportBootsRecipe.addIngredient(Material.BROWN_DYE);
+        SportBootsRecipe.addIngredient(Material.BROWN_DYE);
+        SportBootsRecipe.addIngredient(Material.BROWN_DYE);
         //</editor-fold>
     }
 

@@ -8,6 +8,7 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.AreaEffectCloudApplyEvent;
+import org.bukkit.event.entity.LingeringPotionSplashEvent;
 import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
@@ -28,10 +29,12 @@ import java.util.*;
 public class GlobalListener implements Listener {
     private Plugin plugin;
     private final ConfigurationSection rtfParams;
+    private final ConfigurationSection uraleninParams;
 
     public GlobalListener(Plugin plugin) {
         this.plugin = plugin;
         rtfParams = Main.config.getConfigurationSection("rtf.params");
+        uraleninParams = Main.config.getConfigurationSection("uralenin.params");
     }
 
 
@@ -75,7 +78,7 @@ public class GlobalListener implements Listener {
             steam.setRadius(rtfParams.getInt("SteamRadius"));
             steam.setSource(player);
             steam.setDuration(rtfParams.getInt("SteamDuration"));
-            steam.setParticle(Particle.CLOUD);
+            steam.setParticle(Particle.CAMPFIRE_COSY_SMOKE);
             steam.setMetadata("isVapeSteam", new FixedMetadataValue(plugin, true));
             steam.addCustomEffect(new PotionEffect(PotionEffectType.WEAKNESS, 1, 0), false);
             //</editor-fold>
@@ -103,6 +106,25 @@ public class GlobalListener implements Listener {
                 }
             }
         }
+        if (e.getEntity().hasMetadata("isDirtyCloud") && e.getEntity().getMetadata("isDirtyCloud").get(0).asBoolean()) {
+            for (LivingEntity entity: e.getAffectedEntities()) {
+                if (entity instanceof Player) {
+                    Player player = (Player) entity;
+                    if (Main.conn.GetInstitute(player.getUniqueId().toString()).equals(InstituteNames.URALENIN.name)) {
+                        continue;
+                    }
+                }
+                entity.addPotionEffect(new PotionEffect(PotionEffectType.POISON,
+                        uraleninParams.getInt("BombPoison.Duration"),
+                        uraleninParams.getInt("BombPoison.Amplifier")));
+                entity.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION,
+                        uraleninParams.getInt("BombNausea.Duration"),
+                        uraleninParams.getInt("BombNausea.Amplifier")));
+                entity.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS,
+                        uraleninParams.getInt("BombWeakness.Duration"),
+                        uraleninParams.getInt("BombWeakness.Amplifier")));
+            }
+        }
     }
 
     @EventHandler
@@ -114,5 +136,20 @@ public class GlobalListener implements Listener {
     public void onArmorEquip(ArmorEquipEvent e) {
         ArmorEquipEvent.EquipMethod method = e.getMethod();
         SetMaster.CheckSets(e.getPlayer());
+    }
+
+    @EventHandler
+    public void onLingeringPotion(LingeringPotionSplashEvent e) {
+        if (UmcpItem.DIRTY_BOMB.check(e.getEntity().getItem())) {
+            Location loc = e.getEntity().getLocation();
+            AreaEffectCloud dirtyCloud = (AreaEffectCloud) e.getEntity().getWorld().spawnEntity(loc, EntityType.AREA_EFFECT_CLOUD);
+            dirtyCloud.setColor(Color.fromRGB(
+                    uraleninParams.getInt("BombColor.R"), uraleninParams.getInt("BombColor.G"), uraleninParams.getInt("BombColor.B")));
+            dirtyCloud.setRadius(uraleninParams.getInt("BombRadius"));
+            dirtyCloud.setDuration(uraleninParams.getInt("BombDuration"));
+            dirtyCloud.addCustomEffect(new PotionEffect(PotionEffectType.WEAKNESS, 0, 0), false);
+            dirtyCloud.setMetadata("isDirtyCloud", new FixedMetadataValue(plugin, true));
+            e.setCancelled(true);
+        }
     }
 }
