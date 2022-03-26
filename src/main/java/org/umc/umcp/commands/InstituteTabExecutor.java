@@ -127,7 +127,7 @@ public class InstituteTabExecutor extends HelpSupport {
         ConfigurationSection jm = messages.getConfigurationSection("join");
 
         Player player = (Player) sender;
-        if (haveCooldown && !Cooldowns.IsCooldownEnded(player.getUniqueId(), CooldownType.INSTITUTE_JOIN)) {
+        if (haveCooldown && !Cooldowns.CanUse(player.getUniqueId(), CooldownType.INSTITUTE_JOIN)) {
             sender.sendMessage(jm.getString("Cooldown"));
             return true;
         }
