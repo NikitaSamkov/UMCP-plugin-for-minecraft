@@ -3,6 +3,7 @@ package org.umc.umcp.connection;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.sql.Driver;
 
 public class DBConnection {
     private final String url;
@@ -20,9 +21,10 @@ public class DBConnection {
 
     public void Connect() {
         try {
+            Class.forName("java.sql.Driver");
             conn = DriverManager.getConnection(url, login, pass);
             stmt = conn.createStatement();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

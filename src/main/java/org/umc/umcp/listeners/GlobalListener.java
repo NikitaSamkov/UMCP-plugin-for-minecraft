@@ -149,6 +149,8 @@ public class GlobalListener implements Listener {
                 player.setHealth(0);
             }
         }
+
+
     }
 
     @EventHandler

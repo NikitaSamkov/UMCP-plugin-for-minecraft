@@ -21,6 +21,8 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.umc.umcp.misc.Cooldowns;
 import org.umc.umcp.Main;
 import org.umc.umcp.armorset.SetMaster;
@@ -133,21 +135,15 @@ public class InstituteTabExecutor extends HelpSupport {
         }
         String lastInstitute = conn.GetInstitute(player.getUniqueId().toString());
         String instituteName = args[0];
-        if (lastInstitute.equals(instituteName)) {
+        if (lastInstitute != null && lastInstitute.equals(instituteName)) {
             sender.sendMessage(String.format(jm.getString("AlreadyInTarget"), painter.get(instituteName)));
             return true;
         }
         if (JoinInstitute(player.getUniqueId().toString(), instituteName)) {
             sender.sendMessage(String.format(jm.getString("JoinSuccess"), painter.get(instituteName)));
-            if (lastInstitute.equals(InstituteNames.IFKSIMP.name)) {
-                player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
-            }
-            if (instituteName.equals(InstituteNames.IFKSIMP.name)) {
-                player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(24);
-            }
-            if (lastInstitute.equals(InstituteNames.IENIM.name)) {
-                DowngradeOverloadedItems(player);
-            }
+
+            CheckInstitutePerms(player, lastInstitute, instituteName);
+
             SetMaster.RemoveAllSets(player);
             SetMaster.CheckSets(player);
             Cooldowns.Update(player.getUniqueId(), CooldownType.INSTITUTE_JOIN);
@@ -260,16 +256,14 @@ public class InstituteTabExecutor extends HelpSupport {
             instituteID.close();
             ResultSet players = conn.MakeQuery(
                     String.format("select uuid, name from players inner join institutes i on i.id = institute where uuid='%s'", uuid));
-            SimpleDateFormat fdate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String date = fdate.format(new Date());
             if (players.next()) {
-                conn.MakeUpdate(String.format("update players set institute=%d, last_change='%s' where uuid='%s'", iid, date, uuid));
+                conn.MakeUpdate(String.format("update players set institute=%d where uuid='%s'", iid, uuid));
             } else {
-                conn.MakeUpdate(String.format("insert into players values ('%s', %d, '%s')", uuid, iid, date));
+                conn.MakeUpdate(String.format("insert into players values ('%s', %d)", uuid, iid));
             }
             conn.Close();
             return true;
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         conn.Close();
@@ -289,6 +283,28 @@ public class InstituteTabExecutor extends HelpSupport {
                     }
                 }
             }
+        }
+    }
+
+    private void CheckInstitutePerms(Player player, String lastInstitute, String newInstitute) {
+        if (lastInstitute == null) {
+            return;
+        }
+        if (lastInstitute.equals(InstituteNames.IFKSIMP.name)) {
+            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
+        }
+        if (newInstitute.equals(InstituteNames.IFKSIMP.name)) {
+            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(24);
+        }
+        if (lastInstitute.equals(InstituteNames.IENIM.name)) {
+            DowngradeOverloadedItems(player);
+        }
+        if (lastInstitute.equals(InstituteNames.INFO.name)) {
+            player.removePotionEffect(PotionEffectType.FIRE_RESISTANCE);
+        }
+        if (newInstitute.equals(InstituteNames.INFO.name)) {
+            player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, Integer.MAX_VALUE,
+                    Main.config.getInt("info.params.FireResistAmplifier")));
         }
     }
 }

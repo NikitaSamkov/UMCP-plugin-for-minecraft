@@ -63,7 +63,7 @@ public final class Main extends JavaPlugin {
                 null,
                 UmcpItem.LONGSOCKS,
                 UmcpItem.SOCKS,
-                Arrays.asList(new PotionEffect(PotionEffectType.SPEED, 100000, 1, false, false)),
+                Arrays.asList(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1, false, false)),
                 false,
                 InstituteNames.RTF
         ));
@@ -72,8 +72,8 @@ public final class Main extends JavaPlugin {
                 UmcpItem.SPORT_CHESTPLATE,
                 UmcpItem.SPORT_LEGGINGS,
                 UmcpItem.SPORT_BOOTS,
-                Arrays.asList(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 100000, 0, false, false),
-                        new PotionEffect(PotionEffectType.SPEED, 100000, 0, false, false)),
+                Arrays.asList(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, Integer.MAX_VALUE, 0, false, false),
+                        new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 0, false, false)),
                 false,
                 InstituteNames.IFKSIMP
         ));

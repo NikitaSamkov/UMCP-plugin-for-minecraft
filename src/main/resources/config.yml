@@ -9,8 +9,8 @@ test:
     finalTest: "complete\nsus"
 
 database:
-  url: "jdbc:mysql://umcraft.scalacubes.org:2163/UMCraft?useSSL=false"
-  login: "root"
+  url: "jdbc:mysql://212.22.92.21:3306/apexrnga_39045"
+  login: "apexrnga"
   password: "4o168PPYSIdyjFU"
 
 cooldowns:
@@ -114,6 +114,9 @@ urfu:
 
 info:
   color: "2"
+  params:
+    #сила эффекта огнестойкости
+    FireResistAmplifier: 0
 
 ineu:
   color: "3"
