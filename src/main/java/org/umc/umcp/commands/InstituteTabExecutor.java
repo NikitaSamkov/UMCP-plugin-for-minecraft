@@ -304,7 +304,7 @@ public class InstituteTabExecutor extends HelpSupport {
         }
         if (newInstitute.equals(InstituteNames.INFO.name)) {
             player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, Integer.MAX_VALUE,
-                    Main.config.getInt("info.params.FireResistAmplifier")));
+                    Main.config.getInt("info.params.FireResistAmplifier"), false, false));
         }
     }
 }

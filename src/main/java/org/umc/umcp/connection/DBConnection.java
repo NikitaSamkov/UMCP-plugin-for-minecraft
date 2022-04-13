@@ -1,5 +1,7 @@
 package org.umc.umcp.connection;
 
+import org.umc.umcp.enums.InstituteNames;
+
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -61,7 +63,7 @@ public class DBConnection {
             this.Connect();
             ResultSet result = this.MakeQuery(String.format("select name from institutes " +
                     "inner join players p on institutes.id = p.institute where p.uuid='%s'", uuid));
-            String name = null;
+            String name = InstituteNames.NONE.name;
             if (result.next()) {
                 name = result.getString("name");
             }
@@ -71,7 +73,7 @@ public class DBConnection {
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
-        return null;
+        return InstituteNames.NONE.name;
     }
 
     public Map<String, Map<String, String>> GetInstitutes() {

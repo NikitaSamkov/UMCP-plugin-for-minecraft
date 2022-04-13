@@ -3,6 +3,7 @@ package org.umc.umcp.armorset;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.umc.umcp.Main;
 
@@ -81,12 +82,8 @@ public class SetMaster {
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
             @Override
             public void run() {
-                List<UmcpArmorSet> added = new ArrayList<>();
-                for (UmcpArmorSet set: sets) {
-                    if (set.CheckSet(player)) {
-                        added.add(set);
-                    }
-                }
+                List<UmcpArmorSet> added = getSets(player);
+
                 if (added.size() == 0) {
                     RemoveAllSets(player);
                 }
@@ -95,5 +92,27 @@ public class SetMaster {
                 }
             }
         }, 1);
+    }
+
+    public static List<UmcpArmorSet> getSets(Player player) {
+        List<UmcpArmorSet> result = new ArrayList<>();
+        for (UmcpArmorSet set: sets) {
+            if (set.CheckSet(player)) {
+                result.add(set);
+            }
+        }
+        return result;
+    }
+
+    public static List<PotionEffectType> getEffects(Player player) {
+        List<UmcpArmorSet> playerSets = getSets(player);
+        List<PotionEffectType> result = new ArrayList<>();
+        for (UmcpArmorSet armorSet: playerSets) {
+            List<PotionEffect> potionEffects = armorSet.GetEffects();
+            for (PotionEffect potionEffect: potionEffects) {
+                result.add(potionEffect.getType());
+            }
+        }
+        return result;
     }
 }

@@ -8,6 +8,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.umc.umcp.Main;
 import org.umc.umcp.commands.Painter;
 import org.umc.umcp.connection.DBConnection;
+import org.umc.umcp.enums.InstituteNames;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,7 +28,7 @@ public class PlayerChatListener implements Listener {
     public void onAsyncPlayerChatEvent(AsyncPlayerChatEvent e) {
         Player player = e.getPlayer();
         String instituteName = Main.conn.GetInstitute(player.getUniqueId().toString());
-        if (instituteName == null) {
+        if (instituteName.equals(InstituteNames.NONE.name)) {
             instituteName = "абитуриент";
         }
         e.setFormat(String.format("%s %s", painter.get(instituteName), e.getFormat()));

@@ -2,12 +2,14 @@ package org.umc.umcp.listeners;
 
 import org.bukkit.Color;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.AreaEffectCloudApplyEvent;
+import org.bukkit.event.entity.EntityPotionEffectEvent;
 import org.bukkit.event.entity.LingeringPotionSplashEvent;
 import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.*;
@@ -62,7 +64,6 @@ public class GlobalListener implements Listener {
         ItemStack item = e.getItem();
         if (UmcpItem.VAPE.check(item)) {
             Player player = e.getPlayer();
-
             if (Main.conn.GetInstitute(player.getUniqueId().toString()).equals(InstituteNames.RTF.name)) {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE,
                         rtfParams.getInt("VapeDuration"),
@@ -149,8 +150,6 @@ public class GlobalListener implements Listener {
                 player.setHealth(0);
             }
         }
-
-
     }
 
     @EventHandler
@@ -192,7 +191,12 @@ public class GlobalListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
+        Player player = e.getPlayer();
         SetMaster.CheckSets(e.getPlayer());
+        if (Main.conn.GetInstitute(player.getUniqueId().toString()).equals(InstituteNames.INFO.name)) {
+            player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, Integer.MAX_VALUE,
+                    Main.config.getInt("info.params.FireResistAmplifier"), false, false));
+        }
     }
 
     @EventHandler
@@ -215,6 +219,34 @@ public class GlobalListener implements Listener {
             dirtyCloud.addCustomEffect(new PotionEffect(PotionEffectType.WEAKNESS, 0, 0), false);
             dirtyCloud.setMetadata("isDirtyCloud", new FixedMetadataValue(plugin, true));
             e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onPlayerRespawn(PlayerRespawnEvent e) {
+        Player player = e.getPlayer();
+        if (Main.conn.GetInstitute(player.getUniqueId().toString()).equals(InstituteNames.INFO.name)) {
+            player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, Integer.MAX_VALUE,
+                    Main.config.getInt("info.params.FireResistAmplifier"), false, false));
+        }
+    }
+
+    @EventHandler
+    public void onEffectChangeOrRemove(EntityPotionEffectEvent e) {
+        if (e.getAction().equals(EntityPotionEffectEvent.Action.ADDED)) {
+            return;
+        }
+        if (e.getEntity() instanceof Player) {
+            Player player = (Player) e.getEntity();
+            PotionEffectType effect = e.getModifiedType();
+            if (effect.equals(PotionEffectType.FIRE_RESISTANCE) && Main.conn.GetInstitute(player.getUniqueId().toString()).equals(InstituteNames.INFO.name)) {
+                player.sendMessage("cancelled!");
+                e.setCancelled(true);
+            }
+            if (SetMaster.getEffects(player).contains(effect)) {
+                player.sendMessage("cancelled!");
+                e.setCancelled(true);
+            }
         }
     }
 }

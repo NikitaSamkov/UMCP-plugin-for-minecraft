@@ -2,12 +2,9 @@ package org.umc.umcp;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -27,10 +24,7 @@ import org.umc.umcp.listeners.IENIMListener;
 import org.umc.umcp.listeners.PlayerChatListener;
 import org.umc.umcp.misc.Crafter;
 
-import java.awt.*;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public final class Main extends JavaPlugin {
     public static DBConnection conn;

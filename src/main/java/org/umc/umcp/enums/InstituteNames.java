@@ -11,7 +11,8 @@ public enum InstituteNames {
     UGI("УГИ"),
     INEU("ИНЭУ"),
     URALENIN("УралЭНИН"),
-    FTI("ФТИ");
+    FTI("ФТИ"),
+    NONE("None");
 
     public String name;
 
