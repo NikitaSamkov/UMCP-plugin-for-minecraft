@@ -243,7 +243,7 @@ public class GlobalListener implements Listener {
                     e.getOldEffect().getDuration() > 3600000) {
                 e.setCancelled(true);
             }
-            if (SetMaster.getEffects(player).contains(effect)) {
+            if (SetMaster.getEffects(player).contains(effect) && e.getOldEffect().getDuration() > 3600000) {
                 e.setCancelled(true);
             }
         }

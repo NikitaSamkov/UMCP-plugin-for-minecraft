@@ -25,6 +25,7 @@ public class SetMaster {
     static void AddEffects(Player player, List<PotionEffect> effects) {
         if (effects != null) {
             for (PotionEffect effect : effects) {
+                player.removePotionEffect(effect.getType());
                 player.addPotionEffect(effect);
             }
         }
