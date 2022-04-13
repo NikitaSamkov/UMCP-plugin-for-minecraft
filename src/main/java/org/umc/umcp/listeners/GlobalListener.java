@@ -233,18 +233,17 @@ public class GlobalListener implements Listener {
 
     @EventHandler
     public void onEffectChangeOrRemove(EntityPotionEffectEvent e) {
-        if (e.getAction().equals(EntityPotionEffectEvent.Action.ADDED)) {
-            return;
-        }
         if (e.getEntity() instanceof Player) {
+            if (e.getAction().equals(EntityPotionEffectEvent.Action.ADDED)) {
+                return;
+            }
             Player player = (Player) e.getEntity();
             PotionEffectType effect = e.getModifiedType();
-            if (effect.equals(PotionEffectType.FIRE_RESISTANCE) && Main.conn.GetInstitute(player.getUniqueId().toString()).equals(InstituteNames.INFO.name)) {
-                player.sendMessage("cancelled!");
+            if (effect.equals(PotionEffectType.FIRE_RESISTANCE) && Main.conn.GetInstitute(player.getUniqueId().toString()).equals(InstituteNames.INFO.name) &&
+                    e.getOldEffect().getDuration() > 3600000) {
                 e.setCancelled(true);
             }
             if (SetMaster.getEffects(player).contains(effect)) {
-                player.sendMessage("cancelled!");
                 e.setCancelled(true);
             }
         }

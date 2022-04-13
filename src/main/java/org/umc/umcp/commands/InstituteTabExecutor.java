@@ -303,6 +303,7 @@ public class InstituteTabExecutor extends HelpSupport {
             player.removePotionEffect(PotionEffectType.FIRE_RESISTANCE);
         }
         if (newInstitute.equals(InstituteNames.INFO.name)) {
+            player.removePotionEffect(PotionEffectType.FIRE_RESISTANCE);
             player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, Integer.MAX_VALUE,
                     Main.config.getInt("info.params.FireResistAmplifier"), false, false));
         }
