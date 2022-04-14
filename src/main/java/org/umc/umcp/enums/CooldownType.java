@@ -9,7 +9,8 @@ import java.util.Date;
 public enum CooldownType {
     VAPE("vape"),
     INSTITUTE_JOIN("join"),
-    ENERGETICS("energetics");
+    ENERGETICS("energetics"),
+    BEER("beer");
 
     public Date time;
     public int acceptableCount;

@@ -92,7 +92,7 @@ public class GlobalListener implements Listener {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.POISON,
                         rtfParams.getInt("VapePenaltyDuration"), rtfParams.getInt("VapePenaltyAmplifier")));
             }
-
+            return;
         }
 
         if (UmcpItem.ADRENALINE.check(item) ||
@@ -148,6 +148,28 @@ public class GlobalListener implements Listener {
             if (!Cooldowns.UpdateWithDiff(player.getUniqueId(), CooldownType.ENERGETICS)) {
                 Cooldowns.Clear(player.getUniqueId());
                 player.setHealth(0);
+            }
+            return;
+        }
+
+        if (UmcpItem.BEER.check(item) ||
+                UmcpItem.PORTER.check(item) ||
+                UmcpItem.RED_ALE.check(item) ||
+                UmcpItem.INMIT_BEER.check(item)) {
+            Player player = e.getPlayer();
+
+            if (!Cooldowns.UpdateWithDiff(player.getUniqueId(), CooldownType.BEER)) {
+                ConfigurationSection effectParams = Main.config.getConfigurationSection("cooldowns.beer.effects");
+                player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION,
+                        effectParams.getInt("nausea.Duration"),
+                        effectParams.getInt("nausea.Amplifier"),
+                        true,
+                        true));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS,
+                        effectParams.getInt("weakness.Duration"),
+                        effectParams.getInt("weakness.Amplifier"),
+                        true,
+                        true));
             }
         }
     }
