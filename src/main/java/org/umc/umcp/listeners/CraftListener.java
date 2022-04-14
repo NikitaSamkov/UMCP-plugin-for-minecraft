@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
+import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
@@ -16,10 +17,17 @@ import org.bukkit.Color;
 import org.umc.umcp.enums.InstituteNames;
 
 import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.Random;
+import java.util.*;
 
 public class CraftListener implements Listener {
+    private Map<InstituteNames, List<String>> keys = new HashMap<>();
+
+    public CraftListener() {
+        keys.put(InstituteNames.IFKSIMP, Arrays.asList("sporthelmet", "sportchestplate", "sportleggings", "sportboots"));
+        keys.put(InstituteNames.URALENIN, Arrays.asList("bomb", "adrenaline", "burn", "monster", "redbull"));
+        keys.put(InstituteNames.HTI, Arrays.asList("beer", "porter", "redale"));
+    }
+
     @EventHandler
     public void onCraftItem(PrepareItemCraftEvent e) {
         if (e.getRecipe() == null) {
@@ -28,7 +36,7 @@ public class CraftListener implements Listener {
         Player player = (Player) e.getViewers().get(0);
         String recipeKey = (e.getRecipe() instanceof ShapedRecipe) ? ((ShapedRecipe) e.getRecipe()).getKey().getKey() :
                 ((ShapelessRecipe) e.getRecipe()).getKey().getKey();
-
+        player.sendMessage(recipeKey);
         if (Arrays.asList("vape", "socks", "longsocks", "catears").contains(recipeKey)) {
             String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
             if (!institute.equals(InstituteNames.RTF.name)) {
@@ -43,19 +51,27 @@ public class CraftListener implements Listener {
                     e.getInventory().setResult(vape);
                 }
             }
+            return;
         }
 
-        if (Arrays.asList("sporthelmet", "sportchestplate", "sportleggings", "sportboots").contains(recipeKey)) {
-            String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
-            if (!institute.equals(InstituteNames.IFKSIMP.name)) {
-                e.getInventory().setResult(new ItemStack(Material.AIR));
+        CheckCrafts(recipeKey, player, e.getInventory());
+    }
+
+    private boolean CancelCraft(List<String> keys, String recipeKey, InstituteNames institute, Player player, CraftingInventory inv) {
+        if (keys.contains(recipeKey)) {
+            String playerInstitute = Main.conn.GetInstitute(player.getUniqueId().toString());
+            if (!playerInstitute.equals(institute.name)) {
+                inv.setResult(new ItemStack(Material.AIR));
+                return true;
             }
         }
+        return false;
+    }
 
-        if (Arrays.asList("bomb", "adrenaline", "burn", "monster", "redbull").contains(recipeKey)) {
-            String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
-            if (!institute.equals(InstituteNames.URALENIN.name)) {
-                e.getInventory().setResult(new ItemStack(Material.AIR));
+    private void CheckCrafts(String key, Player player, CraftingInventory inv) {
+        for (InstituteNames institute: keys.keySet()) {
+            if (CancelCraft(keys.get(institute), key, institute, player, inv)) {
+                return;
             }
         }
     }

@@ -4,6 +4,7 @@ import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -181,7 +182,8 @@ public class GlobalListener implements Listener {
                 ConfigurationSection params = Main.config.getConfigurationSection("hti.params." +
                         ((UmcpItem.BEER.check(item)) ? "beer" :
                                 (UmcpItem.PORTER.check(item)) ? "porter" : "red_ale"));
-                player.setHealth(player.getHealth() + params.getInt("Heal"));
+                player.setHealth(Math.min(player.getHealth() + params.getInt("Heal"),
+                        player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()));
                 player.setFoodLevel(player.getFoodLevel() + params.getInt("Hunger"));
             }
 
