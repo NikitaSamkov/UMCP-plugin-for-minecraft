@@ -52,7 +52,11 @@ public class GlobalListener implements Listener {
                             UmcpItem.ADRENALINE.check(item) ||
                             UmcpItem.BURN.check(item) ||
                             UmcpItem.MONSTER.check(item) ||
-                            UmcpItem.REDBULL.check(item))) {
+                            UmcpItem.REDBULL.check(item) ||
+                            UmcpItem.BEER.check(item) ||
+                            UmcpItem.PORTER.check(item) ||
+                            UmcpItem.RED_ALE.check(item) ||
+                            UmcpItem.INMIT_BEER.check(item))) {
                 e.setCancelled(true);
                 return;
             }
@@ -157,13 +161,22 @@ public class GlobalListener implements Listener {
                 UmcpItem.RED_ALE.check(item) ||
                 UmcpItem.INMIT_BEER.check(item)) {
             Player player = e.getPlayer();
-            
+
             if (UmcpItem.INMIT_BEER.check(item)) {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION,
-                        Main.config.getInt("inmit.params.beer.Duration"),
-                        Main.config.getInt("inmit.params.beer.Amplifier"),
-                        false,
-                        false));
+                ConfigurationSection params = Main.config.getConfigurationSection("inmit.params.beer");
+                if (Main.conn.GetInstitute(player.getUniqueId().toString()).equals(InstituteNames.INMIT.name)) {
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION,
+                            params.getInt("Duration"),
+                            params.getInt("Amplifier"),
+                            false,
+                            false));
+                } else {
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.POISON,
+                            params.getInt("Poison.Duration"),
+                            params.getInt("Poison.Amplifier"),
+                            true,
+                            true));
+                }
             } else {
                 ConfigurationSection params = Main.config.getConfigurationSection("hti.params." +
                         ((UmcpItem.BEER.check(item)) ? "beer" :
