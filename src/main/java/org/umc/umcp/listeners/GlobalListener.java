@@ -157,6 +157,20 @@ public class GlobalListener implements Listener {
                 UmcpItem.RED_ALE.check(item) ||
                 UmcpItem.INMIT_BEER.check(item)) {
             Player player = e.getPlayer();
+            
+            if (UmcpItem.INMIT_BEER.check(item)) {
+                player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION,
+                        Main.config.getInt("inmit.params.beer.Duration"),
+                        Main.config.getInt("inmit.params.beer.Amplifier"),
+                        false,
+                        false));
+            } else {
+                ConfigurationSection params = Main.config.getConfigurationSection("hti.params." +
+                        ((UmcpItem.BEER.check(item)) ? "beer" :
+                                (UmcpItem.PORTER.check(item)) ? "porter" : "red_ale"));
+                player.setHealth(player.getHealth() + params.getInt("Heal"));
+                player.setFoodLevel(player.getFoodLevel() + params.getInt("Hunger"));
+            }
 
             if (!Cooldowns.UpdateWithDiff(player.getUniqueId(), CooldownType.BEER)) {
                 ConfigurationSection effectParams = Main.config.getConfigurationSection("cooldowns.beer.effects");
