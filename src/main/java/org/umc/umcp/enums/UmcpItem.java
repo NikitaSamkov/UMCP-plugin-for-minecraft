@@ -24,7 +24,13 @@ public enum UmcpItem {
     ADRENALINE("uralenin", "adrenaline", Material.POTION),
     BURN("uralenin", "burn", Material.POTION),
     MONSTER("uralenin", "monster", Material.POTION),
-    REDBULL("uralenin", "redbull", Material.POTION);
+    REDBULL("uralenin", "redbull", Material.POTION),
+
+    BEER("hti", "beer", Material.POTION),
+    PORTER("hti", "porter", Material.POTION),
+    RED_ALE("hti", "red_ale", Material.POTION),
+
+    INMIT_BEER("inmit", "beer", Material.POTION);
 
     private final String displayName;
     private final List<String> lore;

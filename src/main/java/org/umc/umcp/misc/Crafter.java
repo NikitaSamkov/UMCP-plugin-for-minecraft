@@ -32,6 +32,9 @@ public class Crafter {
     public static ShapelessRecipe SportLeggingsRecipe;
     public static ShapelessRecipe SportBootsRecipe;
     public static ShapelessRecipe BombRecipe;
+    public static ShapelessRecipe BeerRecipe;
+    public static ShapelessRecipe PorterRecipe;
+    public static ShapelessRecipe RedAleRecipe;
 
     public static void CreateCrafts(Plugin plugin) {
         //<editor-fold desc="Создание бутылки воды" defaultstate="collapsed">
@@ -139,9 +142,29 @@ public class Crafter {
         BombRecipe.addIngredient(Material.BROWN_DYE);
         BombRecipe.addIngredient(Material.BROWN_DYE);
         //</editor-fold>
+        //<editor-fold desc="Обычное пшеничное пиво" defaultstate="collapsed">
+        BeerRecipe = new ShapelessRecipe(new NamespacedKey(plugin, "beer"), CreateItem(UmcpItem.BEER, 1));
+        BeerRecipe.addIngredient(new RecipeChoice.ExactChoice(waterbottle));
+        BeerRecipe.addIngredient(Material.WHEAT_SEEDS);
+        BeerRecipe.addIngredient(Material.BONE_MEAL);
+        //</editor-fold>
+        //<editor-fold desc="Портер" defaultstate="collapsed">
+        PorterRecipe = new ShapelessRecipe(new NamespacedKey(plugin, "porter"), CreateItem(UmcpItem.PORTER, 1));
+        PorterRecipe.addIngredient(new RecipeChoice.ExactChoice(waterbottle));
+        PorterRecipe.addIngredient(Material.WHEAT_SEEDS);
+        PorterRecipe.addIngredient(Material.BONE_MEAL);
+        PorterRecipe.addIngredient(new RecipeChoice.MaterialChoice(Arrays.asList(Material.COAL, Material.CHARCOAL)));
+        //</editor-fold>
+        //<editor-fold desc="Красный Эль" defaultstate="collapsed">
+        RedAleRecipe = new ShapelessRecipe(new NamespacedKey(plugin, "redale"), CreateItem(UmcpItem.RED_ALE, 1));
+        RedAleRecipe.addIngredient(new RecipeChoice.ExactChoice(waterbottle));
+        RedAleRecipe.addIngredient(Material.WHEAT_SEEDS);
+        RedAleRecipe.addIngredient(Material.BONE_MEAL);
+        RedAleRecipe.addIngredient(Material.REDSTONE);
+        //</editor-fold>
     }
 
-    static @NotNull ItemStack CreateItem(@NotNull UmcpItem umcpItem, int amount) {
+    public static @NotNull ItemStack CreateItem(@NotNull UmcpItem umcpItem, int amount) {
         ItemStack item = new ItemStack(umcpItem.getMaterial(), amount);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(umcpItem.getDisplayName());

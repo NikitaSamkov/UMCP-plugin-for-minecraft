@@ -250,6 +250,32 @@ rtf:
 hti:
   color: "a"
 
+  items:
+    #Обычное пшеничное пиво
+    beer:
+      #название
+      Name: "Обычное пшеничное пиво"
+      #описание
+      Desc: "..."
+      #CustomModelData
+      ModelData: 1
+    #Портер
+    porter:
+      #название
+      Name: "Портер"
+      #описание
+      Desc: "..."
+      #CustomModelData
+      ModelData: 3
+    #Красный Эль
+    red_ale:
+      #название
+      Name: "Красный Эль"
+      #описание
+      Desc: "..."
+      #CustomModelData
+      ModelData: 4
+
 uralenin:
   color: "b"
   params:
@@ -454,6 +480,16 @@ ienim:
 
 inmit:
   color: "d"
+
+  items:
+    #Пиво для ИнМИТа
+    beer:
+      #название
+      Name: "Пиво для ИнМИТа"
+      #описание
+      Desc: "..."
+      #CustomModelData
+      ModelData: 2
 
 #абитуриент
 abit:
