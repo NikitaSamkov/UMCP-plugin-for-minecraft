@@ -58,8 +58,23 @@ public class GlobalListener implements Listener {
                             UmcpItem.PORTER.check(item) ||
                             UmcpItem.RED_ALE.check(item) ||
                             UmcpItem.INMIT_BEER.check(item))) {
+                e.getContents().setIngredient(new ItemStack(Material.AIR));
                 e.setCancelled(true);
                 return;
+            }
+            //upgraded by HTI
+            if (item.hasItemMeta() && item.getItemMeta().hasCustomModelData() &&
+            item.getItemMeta().getCustomModelData() == 99) {
+                ItemStack ingredient = e.getContents().getIngredient();
+                if ((!ingredient.getType().equals(Material.GUNPOWDER) && !ingredient.getType().equals(Material.DRAGON_BREATH)) ||
+                        (ingredient.getType().equals(Material.GUNPOWDER) && !item.getType().equals(Material.POTION)) ||
+                        (ingredient.getType().equals(Material.DRAGON_BREATH) && !item.getType().equals(Material.SPLASH_POTION))) {
+                    continue;
+                }
+                ItemStack newPotion = (ingredient.getType().equals(Material.GUNPOWDER)) ?
+                        new ItemStack(Material.SPLASH_POTION) : new ItemStack(Material.LINGERING_POTION);
+                newPotion.setItemMeta(item.getItemMeta());
+                e.getContents().setItem(i, newPotion);
             }
         }
     }

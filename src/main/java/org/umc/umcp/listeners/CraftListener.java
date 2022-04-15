@@ -38,7 +38,6 @@ public class CraftListener implements Listener {
         Player player = (Player) e.getViewers().get(0);
         String recipeKey = (e.getRecipe() instanceof ShapedRecipe) ? ((ShapedRecipe) e.getRecipe()).getKey().getKey() :
                 ((ShapelessRecipe) e.getRecipe()).getKey().getKey();
-        player.sendMessage(recipeKey);
         if (Arrays.asList("vape", "socks", "longsocks", "catears").contains(recipeKey)) {
             String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
             if (!institute.equals(InstituteNames.RTF.name)) {
