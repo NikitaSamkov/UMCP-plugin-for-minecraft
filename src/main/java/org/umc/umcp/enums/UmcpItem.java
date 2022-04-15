@@ -29,6 +29,7 @@ public enum UmcpItem {
     BEER("hti", "beer", Material.POTION),
     PORTER("hti", "porter", Material.POTION),
     RED_ALE("hti", "red_ale", Material.POTION),
+    BETTER_POTION("hti", "better_potion", Material.POTION),
 
     INMIT_BEER("inmit", "beer", Material.POTION);
 

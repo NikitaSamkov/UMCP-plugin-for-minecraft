@@ -26,6 +26,7 @@ public class Crafter {
     public static ShapedRecipe BurnRecipe;
     public static ShapedRecipe MonsterRecipe;
     public static ShapedRecipe RedbullRecipe;
+    public static ShapedRecipe BetterPotionRecipe;
 
     public static ShapelessRecipe SportHelmetRecipe;
     public static ShapelessRecipe SportChestplateRecipe;
@@ -101,6 +102,14 @@ public class Crafter {
         RedbullRecipe.setIngredient('w', Material.WATER_BUCKET);
         RedbullRecipe.setIngredient('d', Material.DIAMOND);
         //</editor-fold>
+        //<editor-fold desc="Улучшенное зелье" defaultstate="collapsed">
+        BetterPotionRecipe = new ShapedRecipe(new NamespacedKey(plugin, "betterpotion"), CreateItem(UmcpItem.BETTER_POTION, 1));
+        BetterPotionRecipe.shape("wgw", "wpw", "wdw");
+        BetterPotionRecipe.setIngredient('w', Material.NETHER_WART);
+        BetterPotionRecipe.setIngredient('p', Material.POTION);
+        BetterPotionRecipe.setIngredient('g', Material.GOLD_INGOT);
+        BetterPotionRecipe.setIngredient('d', Material.DIAMOND);
+        //</editor-fold>
 
         //<editor-fold desc="Козырёк 'Абибас'" defaultstate="collapsed">
         SportHelmetRecipe = new ShapelessRecipe(new NamespacedKey(plugin, "sporthelmet"), CreateItem(UmcpItem.SPORT_HELMET, 1));
@@ -162,6 +171,7 @@ public class Crafter {
         RedAleRecipe.addIngredient(Material.BONE_MEAL);
         RedAleRecipe.addIngredient(Material.REDSTONE);
         //</editor-fold>
+
     }
 
     public static @NotNull ItemStack CreateItem(@NotNull UmcpItem umcpItem, int amount) {

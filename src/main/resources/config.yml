@@ -322,6 +322,15 @@ hti:
         - "..."
       #CustomModelData
       ModelData: 4
+    #Улучшенное зелье
+    better_potion:
+      #название
+      Name: "Улучшенное зелье"
+      #описание
+      Desc:
+        - "..."
+      #CustomModelData
+      ModelData: 99
 
 uralenin:
   color: "b"
