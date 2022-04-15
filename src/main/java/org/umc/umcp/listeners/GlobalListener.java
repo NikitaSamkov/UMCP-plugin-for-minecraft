@@ -216,6 +216,29 @@ public class GlobalListener implements Listener {
                         true));
             }
         }
+        if (item.getType().equals(Material.GOLDEN_APPLE)) {
+            Player player = e.getPlayer();
+            if (Main.conn.GetInstitute(player.getUniqueId().toString()).equals(InstituteNames.HTI.name)) {
+                ConfigurationSection params = Main.config.getConfigurationSection("hti.params.golden_apple");
+                player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION,
+                        2400 + params.getInt("AbsorbAdditionalDuration"),
+                        0,
+                        true,
+                        true));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION,
+                        100 + params.getInt("RegenAdditionalDuration"),
+                        1,
+                        true,
+                        true));
+            }
+        }
+        if (item.getType().equals(Material.GOLDEN_CARROT)) {
+            Player player = e.getPlayer();
+            if (Main.conn.GetInstitute(player.getUniqueId().toString()).equals(InstituteNames.HTI.name)) {
+                ConfigurationSection params = Main.config.getConfigurationSection("hti.params.golden_carrot");
+                player.setSaturation(player.getSaturation() + (float) params.getDouble("AdditionalSaturation"));
+            }
+        }
     }
 
     @EventHandler
