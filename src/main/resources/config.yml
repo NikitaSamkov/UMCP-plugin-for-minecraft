@@ -176,6 +176,16 @@ ineu:
 isa:
   color: "4"
 
+  items:
+    leviathan:
+      #имя
+      Name: "Левиафан"
+      #описание
+      Desc:
+        - "..."
+      #CustomModelData
+      ModelData: 1
+
 ifksimp:
   color: "5"
   items:

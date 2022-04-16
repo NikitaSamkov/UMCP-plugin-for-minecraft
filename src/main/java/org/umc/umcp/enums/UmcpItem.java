@@ -31,7 +31,9 @@ public enum UmcpItem {
     RED_ALE("hti", "red_ale", Material.POTION),
     BETTER_POTION("hti", "better_potion", Material.POTION),
 
-    INMIT_BEER("inmit", "beer", Material.POTION);
+    INMIT_BEER("inmit", "beer", Material.POTION),
+
+    LEVIATHAN("isa", "leviathan", Material.DIAMOND_AXE);
 
     private final String displayName;
     private final List<String> lore;
