@@ -5,6 +5,9 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -97,28 +100,15 @@ public class InstituteTabExecutor extends HelpSupport {
                 new UmcpCommand(source.getString("join.Name"), this::Join, source.getString("join.Desc"), null, institutesList),
                 new UmcpCommand(source.getString("info.Name"), this::Info, source.getString("info.Desc"), null, institutesList, true),
                 new UmcpCommand(source.getString("list.Name"), this::InstitutesList, source.getString("list.Desc")),
-                new UmcpCommand("cooldown", this::SwitchCooldown, "", null, new LinkedList<>(Arrays.asList("ON", "OFF")))
+                new UmcpCommand("cooldown", this::SwitchCooldown, "", null, new LinkedList<>(Arrays.asList("ON", "OFF"))),
+                new UmcpCommand(source.getString("kit.Name"), this::Kit, source.getString("kit.Desc"), null, new LinkedList<>(Arrays.asList(source.getString("kit.stroika.Name"))))
         )));
         tree.GetSubcommand(source.getString("info.Name")).arguments.add("me");
         return tree;
     }
 
-    private boolean InstitutesList(CommandSender sender, Command command, String label, String[] args) {
-        List<String> institutes = new ArrayList<>(painter.keySet());
-        TextComponent msg = new TextComponent();
-        for (String institute: institutes) {
-            msg.addExtra(GetInteractiveInstitute(institute));
-            msg.addExtra("\n");
-        }
-        msg.addExtra(messages.getString("list.ClickHelp"));
-        TextComponent cmd = new TextComponent(String.format("/urfu %s %s",
-                Main.config.getString("urfu.commands.info.Name"), messages.getString("list.InstituteNameHelp")));
-        cmd.setColor(ChatColor.GREEN);
-        cmd.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,
-                String.format("/urfu %s ", Main.config.getString("urfu.commands.info.Name"))));
-        msg.addExtra(cmd);
-        sender.spigot().sendMessage(msg);
-        return true;
+    private boolean NoCommand(CommandSender sender, Command command, String label, String[] args) {
+        return false;
     }
 
     private boolean Join(CommandSender sender, Command command, String label, String[] args) {
@@ -154,8 +144,39 @@ public class InstituteTabExecutor extends HelpSupport {
         }
     }
 
-    private boolean NoCommand(CommandSender sender, Command command, String label, String[] args) {
-        return false;
+    private boolean Info(CommandSender sender, Command command, String label, String[] args) {
+        if (args.length == 0)
+            return false;
+
+        Player player = (Player) sender;
+        Player target = Bukkit.getPlayer(args[0]);
+
+        if (args[0].equalsIgnoreCase("me") || Objects.equals(target, player)) {
+            return InfoMe(player);
+        }
+
+        if (target != null) {
+            return InfoPlayer(player, target);
+        }
+        return InfoInstitute(player, args[0]);
+    }
+
+    private boolean InstitutesList(CommandSender sender, Command command, String label, String[] args) {
+        List<String> institutes = new ArrayList<>(painter.keySet());
+        TextComponent msg = new TextComponent();
+        for (String institute: institutes) {
+            msg.addExtra(GetInteractiveInstitute(institute));
+            msg.addExtra("\n");
+        }
+        msg.addExtra(messages.getString("list.ClickHelp"));
+        TextComponent cmd = new TextComponent(String.format("/urfu %s %s",
+                Main.config.getString("urfu.commands.info.Name"), messages.getString("list.InstituteNameHelp")));
+        cmd.setColor(ChatColor.GREEN);
+        cmd.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,
+                String.format("/urfu %s ", Main.config.getString("urfu.commands.info.Name"))));
+        msg.addExtra(cmd);
+        sender.spigot().sendMessage(msg);
+        return true;
     }
 
     private boolean SwitchCooldown(CommandSender sender, Command command, String label, String[] args) {
@@ -173,21 +194,29 @@ public class InstituteTabExecutor extends HelpSupport {
         return false;
     }
 
-    private boolean Info(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length == 0)
+    private boolean Kit(CommandSender sender, Command command, String label, String[] args) {
+        if (args.length == 0) {
             return false;
-
+        }
         Player player = (Player) sender;
-        Player target = Bukkit.getPlayer(args[0]);
-
-        if (args[0].equalsIgnoreCase("me") || Objects.equals(target, player)) {
-            return InfoMe(player);
+        String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
+        ConfigurationSection kits = Main.config.getConfigurationSection("urfu.commands.kit");
+        ConfigurationSection messages = Main.config.getConfigurationSection("urfu.messages.kit");
+        if (args[0].equals(kits.getString("stroika.Name"))) {
+            if (!institute.equals(InstituteNames.ISA.name)) {
+                player.sendMessage(messages.getString("stroika.NotIsa"));
+                return true;
+            }
+            if (!Cooldowns.CanUse(player.getUniqueId(), CooldownType.KIT_STROIKA)) {
+                player.sendMessage(messages.getString("stroika.Cooldown"));
+                return true;
+            }
+            GiveKit(player, "stroika");
+            Cooldowns.Update(player.getUniqueId(), CooldownType.KIT_STROIKA);
+            return true;
         }
-
-        if (target != null) {
-            return InfoPlayer(player, target);
-        }
-        return InfoInstitute(player, args[0]);
+        player.sendMessage(messages.getString("NotFound"));
+        return true;
     }
 
     private boolean InfoMe(Player player) {
@@ -306,6 +335,22 @@ public class InstituteTabExecutor extends HelpSupport {
             player.removePotionEffect(PotionEffectType.FIRE_RESISTANCE);
             player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, Integer.MAX_VALUE,
                     Main.config.getInt("info.params.FireResistAmplifier"), false, false));
+        }
+    }
+
+    private void GiveKit(Player player, String kitid) {
+        World world = player.getWorld();
+        Location loc = player.getLocation();
+        for (String item: Main.config.getStringList(String.format("urfu.commands.kit.%s.Items", kitid))) {
+            String[] parsed = item.split(":");
+            Material material = Material.matchMaterial(parsed[0]);
+            if (material == null) {
+                continue;
+            }
+            ItemStack is = new ItemStack(material, Integer.parseInt(parsed[1]));
+            if (!player.getInventory().addItem(is).isEmpty()) {
+                world.dropItem(loc, is);
+            }
         }
     }
 }
