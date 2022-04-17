@@ -18,12 +18,14 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.umc.umcp.Main;
 import org.umc.umcp.enums.InstituteNames;
+import org.umc.umcp.enums.UmcpItem;
 
 import java.util.List;
 import java.util.Map;
 
 public class IENIMListener implements Listener {
-    ConfigurationSection messages = Main.config.getConfigurationSection("ienim.messages");
+    ConfigurationSection ienimMessages = Main.config.getConfigurationSection("ienim.messages");
+    ConfigurationSection isaMessages = Main.config.getConfigurationSection("isa.messages");
 
 
     private @NotNull Boolean EnchantmentOverload(@NotNull ItemStack item) {
@@ -41,10 +43,29 @@ public class IENIMListener implements Listener {
         return false;
     }
 
+    private Boolean CheckFor(ItemStack item) {
+        return (EnchantmentOverload(item) ||
+                UmcpItem.LEVIATHAN.check(item));
+    }
+
+    private ConfigurationSection GetMessages(Player player) {
+        String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
+        if (institute.equals(InstituteNames.IENIM.name)) {
+            return ienimMessages;
+        }
+        if (institute.equals(InstituteNames.ISA.name)) {
+            return isaMessages;
+        }
+        return null;
+    }
+
     @EventHandler
     public void onItemDrop(PlayerDropItemEvent e) {
-        if (EnchantmentOverload(e.getItemDrop().getItemStack()) &&
-                Main.conn.GetInstitute(e.getPlayer().getUniqueId().toString()).equals(InstituteNames.IENIM.name)) {
+        ItemStack drop = e.getItemDrop().getItemStack();
+        Player player = e.getPlayer();
+        if (CheckFor(drop)) {
+            ConfigurationSection messages = GetMessages(player);
+            if (messages == null) { return; }
             e.getPlayer().sendMessage(messages.getString("DropMessage"));
             e.setCancelled(true);
         }
@@ -52,41 +73,39 @@ public class IENIMListener implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
-        if (Main.conn.GetInstitute(e.getView().getPlayer().getUniqueId().toString()).equals(InstituteNames.IENIM.name)) {
-            Player player = (Player) e.getView().getPlayer();
-            if (e.getCursor() != null &&
-                    EnchantmentOverload(e.getCursor()) &&
-                    !(e.getClickedInventory().getType().equals(InventoryType.PLAYER)) ||
-                    (!(e.getInventory().getType().equals(InventoryType.CRAFTING)) &&
-                            e.getClick().isShiftClick() &&
-                            e.getCurrentItem() != null &&
-                            EnchantmentOverload(e.getCurrentItem()))) {
-                player.sendMessage(messages.getString("StoreMessage"));
-                e.setCancelled(true);
-                return;
-            }
+        Player player = (Player) e.getView().getPlayer();
+
+        if (e.getCursor() != null &&
+                CheckFor(e.getCursor()) &&
+                !(e.getClickedInventory().getType().equals(InventoryType.PLAYER)) ||
+                (!(e.getInventory().getType().equals(InventoryType.CRAFTING)) &&
+                        e.getClick().isShiftClick() &&
+                        e.getCurrentItem() != null &&
+                        CheckFor(e.getCurrentItem()))) {
+
+            ConfigurationSection messages = GetMessages(player);
+            if (messages == null) { return; }
+            player.sendMessage(messages.getString("StoreMessage"));
+            e.setCancelled(true);
+            return;
         }
     }
 
     @EventHandler
     public void onInventoryDrag(InventoryDragEvent e) {
-        if (Main.conn.GetInstitute(e.getView().getPlayer().getUniqueId().toString()).equals(InstituteNames.IENIM.name)) {
-            Player player = (Player) e.getView().getPlayer();
-
-            if (e.getNewItems().size() > 0 &&
-                    EnchantmentOverload((e.getNewItems().values().iterator().next()))) {
-                e.setCancelled(true);
-                return;
-            }
+        if (e.getNewItems().size() > 0 &&
+                CheckFor(e.getNewItems().values().iterator().next())) {
+            e.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onPlacingItem(PlayerInteractEntityEvent e) {
         Entity entity = e.getRightClicked();
-        if (entity instanceof ItemFrame &&
-                Main.conn.GetInstitute(e.getPlayer().getUniqueId().toString()).equals(InstituteNames.IENIM.name)
-                && EnchantmentOverload(e.getPlayer().getInventory().getItemInMainHand())) {
+        if (entity instanceof ItemFrame
+                && CheckFor(e.getPlayer().getInventory().getItemInMainHand())) {
+            ConfigurationSection messages = GetMessages(e.getPlayer());
+            if (messages == null) { return; }
             e.getPlayer().sendMessage(messages.getString("FrameMessage"));
             e.setCancelled(true);
         }
@@ -95,8 +114,9 @@ public class IENIMListener implements Listener {
 
     @EventHandler
     public void onStandInteract(PlayerArmorStandManipulateEvent e) {
-        if (EnchantmentOverload(e.getPlayerItem()) &&
-                Main.conn.GetInstitute(e.getPlayer().getUniqueId().toString()).equals(InstituteNames.IENIM.name)) {
+        if (CheckFor(e.getPlayerItem())) {
+            ConfigurationSection messages = GetMessages(e.getPlayer());
+            if (messages == null) { return; }
             e.getPlayer().sendMessage(messages.getString("StandMessage"));
             e.setCancelled(true);
         }
@@ -104,10 +124,7 @@ public class IENIMListener implements Listener {
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent e) {
-        Player player = e.getEntity().getPlayer();
-        if (Main.conn.GetInstitute(player.getUniqueId().toString()).equals(InstituteNames.IENIM.name)) {
-            List<ItemStack> items = e.getDrops();
-            items.removeIf(this::EnchantmentOverload);
-        }
+        List<ItemStack> items = e.getDrops();
+        items.removeIf(this::CheckFor);
     }
 }
