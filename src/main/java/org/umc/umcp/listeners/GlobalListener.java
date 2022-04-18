@@ -337,4 +337,30 @@ public class GlobalListener implements Listener {
             }
         }
     }
+
+    @EventHandler
+    public void onAnvil(PrepareAnvilEvent e) {
+        Player player = (Player) e.getView().getPlayer();
+        ItemStack item = e.getInventory().getItem(1);
+        if (item != null && item.getType().equals(Material.ENCHANTED_BOOK) &&
+                Main.conn.GetInstitute(player.getUniqueId().toString()).equals(InstituteNames.UGI.name)) {
+            e.getInventory().setRepairCost(1);
+        }
+    }
+
+    @EventHandler
+    public void onAnvilClick(InventoryClickEvent e) {
+        if (!e.getInventory().getType().equals(InventoryType.ANVIL)) {
+            return;
+        }
+        if (e.getSlotType().equals(InventoryType.SlotType.RESULT)) {
+            ItemStack secondItem = e.getInventory().getItem(1);
+            ItemStack result = e.getInventory().getItem(2);
+            Player player = (Player) e.getView().getPlayer();
+            if (result != null && secondItem != null && secondItem.getType().equals(Material.ENCHANTED_BOOK) &&
+                    Main.conn.GetInstitute(player.getUniqueId().toString()).equals(InstituteNames.UGI.name)) {
+                player.giveExpLevels(1);
+            }
+        }
+    }
 }
