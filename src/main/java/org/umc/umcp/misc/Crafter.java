@@ -27,6 +27,7 @@ public class Crafter {
     public static ShapedRecipe MonsterRecipe;
     public static ShapedRecipe RedbullRecipe;
     public static ShapedRecipe BetterPotionRecipe;
+    public static ShapedRecipe ThunderBowRecipe;
 
     public static ShapelessRecipe SportHelmetRecipe;
     public static ShapelessRecipe SportChestplateRecipe;
@@ -110,6 +111,15 @@ public class Crafter {
         BetterPotionRecipe.setIngredient('p', Material.POTION);
         BetterPotionRecipe.setIngredient('g', Material.GOLD_INGOT);
         BetterPotionRecipe.setIngredient('d', Material.DIAMOND);
+        //</editor-fold>
+        //<editor-fold desc="лук, который при попадании может бить молнией игрока" defaultstate="collapsed">
+        ItemStack thunderBow = CreateItem(UmcpItem.THUNDERBOW, 1);
+        thunderBow.setDurability((short) (Material.BOW.getMaxDurability() - 3));
+        ThunderBowRecipe = new ShapedRecipe(new NamespacedKey(plugin, "thunderbow"), thunderBow);
+        ThunderBowRecipe.shape("sws", "sbs", "sss");
+        ThunderBowRecipe.setIngredient('s', Material.SPRUCE_SAPLING);
+        ThunderBowRecipe.setIngredient('w', Material.WATER_BUCKET);
+        ThunderBowRecipe.setIngredient('b', Material.BOW);
         //</editor-fold>
 
         //<editor-fold desc="Козырёк 'Абибас'" defaultstate="collapsed">

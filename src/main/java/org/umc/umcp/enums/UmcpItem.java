@@ -35,7 +35,9 @@ public enum UmcpItem {
 
     LEVIATHAN("isa", "leviathan", Material.DIAMOND_AXE),
 
-    BOOK("ugi", "book", Material.SNOWBALL);
+    BOOK("ugi", "book", Material.SNOWBALL),
+
+    THUNDERBOW("fti", "thunderbow", Material.BOW);
 
     private final String displayName;
     private final List<String> lore;

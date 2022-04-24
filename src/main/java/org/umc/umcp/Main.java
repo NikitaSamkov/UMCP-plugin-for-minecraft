@@ -113,5 +113,6 @@ public final class Main extends JavaPlugin {
         getServer().addRecipe(Crafter.RedAleRecipe);
         getServer().addRecipe(Crafter.BetterPotionRecipe);
         getServer().addRecipe(Crafter.UgiBookRecipe);
+        getServer().addRecipe(Crafter.ThunderBowRecipe);
     }
 }
