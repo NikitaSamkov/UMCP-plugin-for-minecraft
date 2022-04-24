@@ -372,7 +372,9 @@ public class GlobalListener implements Listener {
             Player player = (Player) e.getEntity().getShooter();
             if (e.getEntity() instanceof Snowball &&
                     UmcpItem.BOOK.check(player.getInventory().getItemInMainHand())) {
-                e.getEntity().setMetadata("book", new FixedMetadataValue(plugin, true));
+                if (Main.conn.GetInstitute(player.getUniqueId().toString()).equals(InstituteNames.UGI.name)) {
+                    e.getEntity().setMetadata("book", new FixedMetadataValue(plugin, true));
+                }
             }
         }
     }
