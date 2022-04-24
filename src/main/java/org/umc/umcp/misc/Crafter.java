@@ -36,6 +36,7 @@ public class Crafter {
     public static ShapelessRecipe BeerRecipe;
     public static ShapelessRecipe PorterRecipe;
     public static ShapelessRecipe RedAleRecipe;
+    public static ShapelessRecipe UgiBookRecipe;
 
     public static void CreateCrafts(Plugin plugin) {
         //<editor-fold desc="Создание бутылки воды" defaultstate="collapsed">
@@ -171,7 +172,11 @@ public class Crafter {
         RedAleRecipe.addIngredient(Material.BONE_MEAL);
         RedAleRecipe.addIngredient(Material.REDSTONE);
         //</editor-fold>
-
+        //<editor-fold desc="Книга" defaultstate="collapsed">
+        UgiBookRecipe = new ShapelessRecipe(new NamespacedKey(plugin, "ugi_book"), CreateItem(UmcpItem.BOOK, 1));
+        UgiBookRecipe.addIngredient(Material.BOOK);
+        UgiBookRecipe.addIngredient(Material.IRON_NUGGET);
+        //</editor-fold>
     }
 
     public static @NotNull ItemStack CreateItem(@NotNull UmcpItem umcpItem, int amount) {

@@ -239,6 +239,14 @@ ifksimp:
 ugi:
   color: "6"
 
+  items:
+    #обычная книга
+    book:
+      Name: "Книга"
+      Desc:
+        - "..."
+      ModelData: 1
+
 fti:
   color: "7"
 

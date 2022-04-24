@@ -9,16 +9,17 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.AreaEffectCloudApplyEvent;
-import org.bukkit.event.entity.EntityPotionEffectEvent;
-import org.bukkit.event.entity.LingeringPotionSplashEvent;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.*;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.Vector;
 import org.umc.umcp.misc.Cooldowns;
 import org.umc.umcp.Main;
 import org.umc.umcp.armorset.ArmorEquipEvent.ArmorEquipEvent;
@@ -26,6 +27,7 @@ import org.umc.umcp.armorset.SetMaster;
 import org.umc.umcp.enums.CooldownType;
 import org.umc.umcp.enums.InstituteNames;
 import org.umc.umcp.enums.UmcpItem;
+import org.umc.umcp.misc.Crafter;
 
 import java.util.*;
 
@@ -360,6 +362,36 @@ public class GlobalListener implements Listener {
             if (result != null && secondItem != null && secondItem.getType().equals(Material.ENCHANTED_BOOK) &&
                     Main.conn.GetInstitute(player.getUniqueId().toString()).equals(InstituteNames.UGI.name)) {
                 player.giveExpLevels(1);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onProjectileLaunch(ProjectileLaunchEvent e) {
+        if (e.getEntity().getShooter() instanceof Player) {
+            Player player = (Player) e.getEntity().getShooter();
+            if (e.getEntity() instanceof Snowball &&
+                    UmcpItem.BOOK.check(player.getInventory().getItemInMainHand())) {
+                e.getEntity().setMetadata("book", new FixedMetadataValue(plugin, true));
+                e.getEntity().setBounce(true);
+                player.sendMessage("book");
+            }
+        }
+    }
+
+    @EventHandler
+    public void onProjectileHit(ProjectileHitEvent e) {
+        if (e.getEntity() instanceof Snowball &&
+                e.getEntity().hasMetadata("book") &&
+                e.getEntity().getMetadata("book").get(0).asBoolean()) {
+            Entity target = e.getHitEntity();
+            if (target instanceof Player) {
+                Player player = (Player) target;
+                player.damage(40);
+            }
+            if (target instanceof Mob) {
+                Mob mob = (Mob) target;
+                mob.damage(40);
             }
         }
     }
