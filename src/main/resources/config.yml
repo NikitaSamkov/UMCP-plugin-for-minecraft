@@ -269,6 +269,10 @@ ugi:
 fti:
   color: "7"
 
+  params:
+    #уровень эффекта "сила", начиная с нуля
+    StrengthAmplifier: 0
+
 rtf:
   color: "9"
   params:

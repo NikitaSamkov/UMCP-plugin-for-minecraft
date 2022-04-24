@@ -286,9 +286,13 @@ public class GlobalListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
         SetMaster.CheckSets(e.getPlayer());
-        if (Main.conn.GetInstitute(player.getUniqueId().toString()).equals(InstituteNames.INFO.name)) {
+        String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
+        if (institute.equals(InstituteNames.INFO.name)) {
             player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, Integer.MAX_VALUE,
                     Main.config.getInt("info.params.FireResistAmplifier"), false, false));
+        } else if (institute.equals(InstituteNames.FTI.name)) {
+            player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, Integer.MAX_VALUE,
+                    Main.config.getInt("fti.params.StrengthAmplifier"), false, false));
         }
     }
 
@@ -318,9 +322,13 @@ public class GlobalListener implements Listener {
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent e) {
         Player player = e.getPlayer();
-        if (Main.conn.GetInstitute(player.getUniqueId().toString()).equals(InstituteNames.INFO.name)) {
+        String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
+        if (institute.equals(InstituteNames.INFO.name)) {
             player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, Integer.MAX_VALUE,
                     Main.config.getInt("info.params.FireResistAmplifier"), false, false));
+        } else if (institute.equals(InstituteNames.FTI.name)) {
+            player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, Integer.MAX_VALUE,
+                    Main.config.getInt("fti.params.StrengthAmplifier"), false, false));
         }
     }
 
@@ -332,7 +340,9 @@ public class GlobalListener implements Listener {
             }
             Player player = (Player) e.getEntity();
             PotionEffectType effect = e.getModifiedType();
-            if (effect.equals(PotionEffectType.FIRE_RESISTANCE) && Main.conn.GetInstitute(player.getUniqueId().toString()).equals(InstituteNames.INFO.name) &&
+            String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
+            if (((effect.equals(PotionEffectType.FIRE_RESISTANCE) && institute.equals(InstituteNames.INFO.name)) ||
+                    (effect.equals(PotionEffectType.INCREASE_DAMAGE) && institute.equals(InstituteNames.FTI.name))) &&
                     e.getOldEffect().getDuration() > 3600000) {
                 e.setCancelled(true);
             }

@@ -336,6 +336,14 @@ public class InstituteTabExecutor extends HelpSupport {
             player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, Integer.MAX_VALUE,
                     Main.config.getInt("info.params.FireResistAmplifier"), false, false));
         }
+        if (lastInstitute.equals(InstituteNames.FTI.name)) {
+            player.removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
+        }
+        if (newInstitute.equals(InstituteNames.FTI.name)) {
+            player.removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
+            player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, Integer.MAX_VALUE,
+                    Main.config.getInt("fti.params.StrengthAmplifier"), false, false));
+        }
     }
 
     private void GiveKit(Player player, String kitid) {
