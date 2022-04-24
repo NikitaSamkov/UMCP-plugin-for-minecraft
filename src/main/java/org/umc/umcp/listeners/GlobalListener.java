@@ -387,11 +387,11 @@ public class GlobalListener implements Listener {
             Entity target = e.getHitEntity();
             if (target instanceof Player) {
                 Player player = (Player) target;
-                player.damage(40);
+                player.damage(Main.config.getInt("ugi.params.book.PlayerDamage"));
             }
             if (target instanceof Mob) {
                 Mob mob = (Mob) target;
-                mob.damage(40);
+                mob.damage(Main.config.getInt("ugi.params.book.MobDamage"));
             }
         }
     }
