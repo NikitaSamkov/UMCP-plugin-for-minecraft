@@ -394,15 +394,19 @@ public class GlobalListener implements Listener {
                 if (Main.conn.GetInstitute(player.getUniqueId().toString()).equals(InstituteNames.UGI.name)) {
                     e.getEntity().setMetadata("book", new FixedMetadataValue(plugin, true));
                 }
+            } else if (e.getEntity() instanceof Arrow &&
+                    UmcpItem.THUNDERBOW.check(player.getInventory().getItemInMainHand())) {
+                e.getEntity().setMetadata("thunderarrow", new FixedMetadataValue(plugin, true));
             }
         }
     }
 
     @EventHandler
     public void onProjectileHit(ProjectileHitEvent e) {
-        if (e.getEntity() instanceof Snowball &&
-                e.getEntity().hasMetadata("book") &&
-                e.getEntity().getMetadata("book").get(0).asBoolean()) {
+        Entity proj = e.getEntity();
+        if (proj instanceof Snowball &&
+                proj.hasMetadata("book") &&
+                proj.getMetadata("book").get(0).asBoolean()) {
             Entity target = e.getHitEntity();
             if (target instanceof Player) {
                 Player player = (Player) target;
@@ -412,6 +416,11 @@ public class GlobalListener implements Listener {
                 Mob mob = (Mob) target;
                 mob.damage(Main.config.getInt("ugi.params.book.MobDamage"));
             }
+        } else if (proj instanceof Arrow &&
+                proj.hasMetadata("thunderarrow") &&
+                proj.getMetadata("thunderarrow").get(0).asBoolean()) {
+            Entity target = e.getHitEntity();
+            LightningStrike ls = target.getWorld().strikeLightning(target.getLocation());
         }
     }
 
