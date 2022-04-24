@@ -1,5 +1,6 @@
 package org.umc.umcp.listeners;
 
+import com.google.common.collect.Lists;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -15,6 +16,7 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
@@ -392,6 +394,48 @@ public class GlobalListener implements Listener {
             if (target instanceof Mob) {
                 Mob mob = (Mob) target;
                 mob.damage(Main.config.getInt("ugi.params.book.MobDamage"));
+            }
+        }
+    }
+
+    @EventHandler
+    public void onVillagerInteract(PlayerInteractAtEntityEvent e) {
+        if (!(e.getRightClicked() instanceof Villager)) {
+            return;
+        }
+        Villager villager = (Villager) e.getRightClicked();
+        if (Main.conn.GetInstitute(e.getPlayer().getUniqueId().toString()).equals(InstituteNames.INEU.name)) {
+            if (villager.hasMetadata("ineu_trade") &&
+                    villager.getMetadata("ineu_trade").get(0).asBoolean()) {
+                return;
+            }
+            e.getPlayer().sendMessage("deal!");
+            List<MerchantRecipe> recipes = Lists.newArrayList(villager.getRecipes());
+            for (MerchantRecipe recipe: recipes) {
+                List<ItemStack> ings = recipe.getIngredients();
+                for (ItemStack ing: ings) {
+                    ing.setAmount((int) Math.ceil(ing.getAmount() * 0.1));
+                }
+                recipe.setIngredients(ings);
+            }
+            villager.setRecipes(recipes);
+            villager.setMetadata("ineu_trade", new FixedMetadataValue(plugin, true));
+        } else {
+            if (villager.hasMetadata("ineu_trade") &&
+                    villager.getMetadata("ineu_trade").get(0).asBoolean()) {
+                e.getPlayer().sendMessage("deal!");
+                List<MerchantRecipe> recipes = Lists.newArrayList(villager.getRecipes());
+                for (MerchantRecipe recipe: recipes) {
+                    List<ItemStack> ings = recipe.getIngredients();
+                    for (ItemStack ing: ings) {
+                        ing.setAmount((int) Math.ceil(ing.getAmount() * 10));
+                    }
+                    recipe.setIngredients(ings);
+                }
+                villager.setRecipes(recipes);
+                villager.setMetadata("ineu_trade", new FixedMetadataValue(plugin, false));
+            } else {
+                return;
             }
         }
     }
