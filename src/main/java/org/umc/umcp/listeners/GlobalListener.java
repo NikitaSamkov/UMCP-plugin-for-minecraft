@@ -373,8 +373,6 @@ public class GlobalListener implements Listener {
             if (e.getEntity() instanceof Snowball &&
                     UmcpItem.BOOK.check(player.getInventory().getItemInMainHand())) {
                 e.getEntity().setMetadata("book", new FixedMetadataValue(plugin, true));
-                e.getEntity().setBounce(true);
-                player.sendMessage("book");
             }
         }
     }
