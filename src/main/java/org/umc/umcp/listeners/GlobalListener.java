@@ -8,6 +8,7 @@ import org.bukkit.Particle;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.*;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -15,8 +16,10 @@ import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.GrindstoneInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
@@ -355,10 +358,14 @@ public class GlobalListener implements Listener {
     @EventHandler
     public void onAnvil(PrepareAnvilEvent e) {
         Player player = (Player) e.getView().getPlayer();
-        ItemStack item = e.getInventory().getItem(1);
-        if (item != null && item.getType().equals(Material.ENCHANTED_BOOK) &&
+        ItemStack item1 = e.getInventory().getItem(0);
+        ItemStack item2 = e.getInventory().getItem(1);
+        if (item2 != null && item2.getType().equals(Material.ENCHANTED_BOOK) &&
                 Main.conn.GetInstitute(player.getUniqueId().toString()).equals(InstituteNames.UGI.name)) {
             e.getInventory().setRepairCost(1);
+        }
+        if (item1 != null && UmcpItem.THUNDERBOW.check(item1)) {
+            e.setResult(new ItemStack(Material.AIR));
         }
     }
 
@@ -447,6 +454,16 @@ public class GlobalListener implements Listener {
             } else {
                 return;
             }
+        }
+    }
+
+    @EventHandler
+    public void onGrindstoneClick(InventoryClickEvent e) {
+        if (!e.getInventory().getType().equals(InventoryType.GRINDSTONE)) {
+            return;
+        }
+        if (e.getInventory().getItem(0) != null && UmcpItem.THUNDERBOW.check(e.getInventory().getItem(0))) {
+            e.getInventory().setItem(2, new ItemStack(Material.AIR));
         }
     }
 }
