@@ -409,7 +409,6 @@ public class GlobalListener implements Listener {
                     villager.getMetadata("ineu_trade").get(0).asBoolean()) {
                 return;
             }
-            e.getPlayer().sendMessage("deal!");
             List<MerchantRecipe> recipes = Lists.newArrayList(villager.getRecipes());
             for (MerchantRecipe recipe: recipes) {
                 List<ItemStack> ings = recipe.getIngredients();
@@ -423,7 +422,6 @@ public class GlobalListener implements Listener {
         } else {
             if (villager.hasMetadata("ineu_trade") &&
                     villager.getMetadata("ineu_trade").get(0).asBoolean()) {
-                e.getPlayer().sendMessage("deal!");
                 List<MerchantRecipe> recipes = Lists.newArrayList(villager.getRecipes());
                 for (MerchantRecipe recipe: recipes) {
                     List<ItemStack> ings = recipe.getIngredients();
