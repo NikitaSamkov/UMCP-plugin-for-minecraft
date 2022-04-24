@@ -413,7 +413,8 @@ public class GlobalListener implements Listener {
             for (MerchantRecipe recipe: recipes) {
                 List<ItemStack> ings = recipe.getIngredients();
                 for (ItemStack ing: ings) {
-                    ing.setAmount((int) Math.ceil(ing.getAmount() * 0.1));
+                    ing.setAmount((int) Math.ceil(ing.getAmount() *
+                            Main.config.getDouble("ineu.params.TradeMultiplier")));
                 }
                 recipe.setIngredients(ings);
             }
@@ -426,7 +427,8 @@ public class GlobalListener implements Listener {
                 for (MerchantRecipe recipe: recipes) {
                     List<ItemStack> ings = recipe.getIngredients();
                     for (ItemStack ing: ings) {
-                        ing.setAmount((int) Math.ceil(ing.getAmount() * 10));
+                        ing.setAmount((int) Math.ceil(ing.getAmount() /
+                                Main.config.getDouble("ineu.params.TradeMultiplier")));
                     }
                     recipe.setIngredients(ings);
                 }

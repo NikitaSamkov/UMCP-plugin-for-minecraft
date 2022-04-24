@@ -173,6 +173,9 @@ info:
 ineu:
   color: "3"
 
+  params:
+    TradeMultiplier: 0.8
+
 isa:
   color: "4"
 
