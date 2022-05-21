@@ -1,11 +1,13 @@
 package org.umc.umcp.listeners;
 
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.*;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
@@ -39,6 +41,8 @@ public class CraftListener implements Listener {
         Player player = (Player) e.getViewers().get(0);
         String recipeKey = (e.getRecipe() instanceof ShapedRecipe) ? ((ShapedRecipe) e.getRecipe()).getKey().getKey() :
                 ((ShapelessRecipe) e.getRecipe()).getKey().getKey();
+        ItemStack result = e.getRecipe().getResult();
+
         if (Arrays.asList("vape", "socks", "longsocks", "catears").contains(recipeKey)) {
             String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
             if (!institute.equals(InstituteNames.RTF.name)) {
@@ -126,6 +130,56 @@ public class CraftListener implements Listener {
                 newPotion.setItemMeta(newMeta);
                 e.getInventory().setResult(newPotion);
             }
+            return;
+        }
+
+        if (CheckMaterialForSubstrings(result,
+                Arrays.asList(
+                        "AXE",
+                        "SHOVEL",
+                        "FISHING_ROD",
+                        "HOE",
+                        "SWORD",
+                        "BOW",
+                        "TRIDENT",
+                        "HELMET",
+                        "CHESTPLATE",
+                        "LEGGINGS",
+                        "BOOTS",
+                        "SHEARS",
+                        "SHIELD"))) {
+            String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
+            if (institute.equals(InstituteNames.INMIT.name)) {
+                ItemMeta resultMeta = result.getItemMeta();
+                assert resultMeta != null;
+                resultMeta.addEnchant(Enchantment.DURABILITY, 1, true);
+                String material = result.getType().toString();
+                if (CheckMaterialForSubstrings(result, Arrays.asList("AXE", "SHOVEL", "SHEARS"))) {
+                    resultMeta.addEnchant(Enchantment.DIG_SPEED, 1, true);
+                }
+                else if (material.contains("FISHING_ROD")) {
+                    resultMeta.addEnchant(Enchantment.LUCK, 1, true);
+                    resultMeta.addEnchant(Enchantment.LURE, 1, true);
+                }
+                else if (material.contains("HOE")) {
+                    resultMeta.addEnchant(Enchantment.DIG_SPEED, 5, true);
+                }
+                else if (material.contains("SWORD")) {
+                    resultMeta.addEnchant(Enchantment.DAMAGE_ALL, 1, true);
+                    resultMeta.addEnchant(Enchantment.LOOT_BONUS_MOBS, 1, true);
+                }
+                else if (material.contains("CROSSBOW")) {
+                    resultMeta.addEnchant(Enchantment.QUICK_CHARGE, 1, true);
+                }
+                else if (material.contains("BOW")) {
+                    resultMeta.addEnchant(Enchantment.ARROW_DAMAGE, 1, true);
+                }
+                else if (CheckMaterialForSubstrings(result, Arrays.asList("HELMET", "CHESTPLATE", "LEGGINGS", "BOOTS"))) {
+                    resultMeta.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 1, true);
+                }
+                result.setItemMeta(resultMeta);
+                e.getInventory().setResult(result);
+            }
         }
 
         CheckCrafts(recipeKey, player, e.getInventory());
@@ -148,5 +202,15 @@ public class CraftListener implements Listener {
                 return;
             }
         }
+    }
+
+    private boolean CheckMaterialForSubstrings(ItemStack item, List<String> subs) {
+        String material = item.getType().toString();
+        for (String sub: subs) {
+            if (material.contains(sub)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
