@@ -21,24 +21,38 @@ import org.umc.umcp.enums.InstituteNames;
 
 import java.lang.reflect.Array;
 import java.util.*;
+import java.util.function.Function;
 
 public class CraftListener implements Listener {
     private Map<InstituteNames, List<String>> keys = new HashMap<>();
     private Map<PotionType, Integer[]> potions = new HashMap<>();
+    private Map<Material[], Function<ItemMeta, ItemMeta>> upgrades = new HashMap<>();
 
     public CraftListener() {
         keys.put(InstituteNames.IFKSIMP, Arrays.asList("sporthelmet", "sportchestplate", "sportleggings", "sportboots"));
         keys.put(InstituteNames.URALENIN, Arrays.asList("bomb", "adrenaline", "burn", "monster", "redbull"));
         keys.put(InstituteNames.HTI, Arrays.asList("beer", "porter", "redale"));
         keys.put(InstituteNames.UGI, Arrays.asList("ugi_book"));
+        FillUpgrades();
+    }
+
+    private void FillUpgrades() {
+        upgrades.put(new Material[]{
+                Material.OBSIDIAN, Material.OBSIDIAN, Material.OBSIDIAN,
+                Material.OBSIDIAN, Material.AIR, Material.OBSIDIAN,
+                Material.OBSIDIAN, Material.OBSIDIAN, Material.OBSIDIAN
+        }, itemMeta -> BuffEnchant(itemMeta, Enchantment.DURABILITY, 1));
     }
 
     @EventHandler
     public void onCraftItem(PrepareItemCraftEvent e) {
+        Player player = (Player) e.getViewers().get(0);
         if (e.getRecipe() == null) {
+            ItemStack[] matrix = e.getInventory().getMatrix();
+            player.sendMessage("checking for upgrades...");
+            CheckUpgrades(matrix, e.getInventory(), player);
             return;
         }
-        Player player = (Player) e.getViewers().get(0);
         String recipeKey = (e.getRecipe() instanceof ShapedRecipe) ? ((ShapedRecipe) e.getRecipe()).getKey().getKey() :
                 ((ShapelessRecipe) e.getRecipe()).getKey().getKey();
         ItemStack result = e.getRecipe().getResult();
@@ -204,6 +218,43 @@ public class CraftListener implements Listener {
         }
     }
 
+    private void CheckUpgrades(ItemStack[] matrix, CraftingInventory inv, Player player) {
+        if (matrix[4] == null) {
+            player.sendMessage("empty middle");
+            return;
+        }
+        int counter = 0;
+        for (Material[] recipe: upgrades.keySet()) {
+            counter++;
+            boolean skip = false;
+            for (int i = 0; i < 9; i++) {
+                if (i == 4) {
+                    continue;
+                }
+                if (matrix[i] == null || matrix[i].getType() != recipe[i]) {
+                    player.sendMessage(String.format("Recipe No%d error in %d slot", counter, i));
+                    skip = true;
+                    break;
+                }
+            }
+            if (skip) {
+                continue;
+            }
+            ItemStack result = new ItemStack(matrix[4].getType());
+            String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
+            if (!institute.equals(InstituteNames.INMIT.name) && !institute.equals(InstituteNames.UGI.name)) {
+                player.sendMessage("bad institute");
+                break;
+            }
+            if (institute.equals(InstituteNames.UGI.name) && !matrix[4].getType().equals(Material.BOOK)) {
+                player.sendMessage("not book");
+                break;
+            }
+            result.setItemMeta(upgrades.get(recipe).apply(matrix[4].getItemMeta()));
+            inv.setResult(result);
+        }
+    }
+
     private boolean CheckMaterialForSubstrings(ItemStack item, List<String> subs) {
         String material = item.getType().toString();
         for (String sub: subs) {
@@ -212,5 +263,14 @@ public class CraftListener implements Listener {
             }
         }
         return false;
+    }
+
+    private ItemMeta BuffEnchant(ItemMeta meta, Enchantment ench, int lvl) {
+        int lvlplus = 0;
+        if (meta.hasEnchant(ench)) {
+            lvlplus = meta.getEnchantLevel(ench);
+        }
+        meta.addEnchant(ench, lvl + lvlplus, false);
+        return meta;
     }
 }
