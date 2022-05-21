@@ -223,7 +223,26 @@ public class CraftListener implements Listener {
             player.sendMessage("empty middle");
             return;
         }
+        if (!CheckMaterialForSubstrings(matrix[4], Arrays.asList(
+                "AXE",
+                "SHOVEL",
+                "FISHING_ROD",
+                "HOE",
+                "SWORD",
+                "BOW",
+                "TRIDENT",
+                "HELMET",
+                "CHESTPLATE",
+                "LEGGINGS",
+                "BOOTS",
+                "SHEARS",
+                "SHIELD")) && !matrix[4].getType().equals(Material.BOOK)) {
+            player.sendMessage("bad type");
+            return;
+        }
         int counter = 0;
+        ItemStack result = new ItemStack(matrix[4].getType());
+        String institute = null;
         for (Material[] recipe: upgrades.keySet()) {
             counter++;
             boolean skip = false;
@@ -240,8 +259,9 @@ public class CraftListener implements Listener {
             if (skip) {
                 continue;
             }
-            ItemStack result = new ItemStack(matrix[4].getType());
-            String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
+            if (institute == null) {
+                institute = Main.conn.GetInstitute(player.getUniqueId().toString());
+            }
             if (!institute.equals(InstituteNames.INMIT.name) && !institute.equals(InstituteNames.UGI.name)) {
                 player.sendMessage("bad institute");
                 break;
@@ -250,8 +270,15 @@ public class CraftListener implements Listener {
                 player.sendMessage("not book");
                 break;
             }
+            if (institute.equals(InstituteNames.INMIT.name) && matrix[4].getType().equals(Material.BOOK)) {
+                player.sendMessage("book");
+                break;
+            }
             result.setItemMeta(upgrades.get(recipe).apply(matrix[4].getItemMeta()));
             inv.setResult(result);
+            if (!result.getType().equals(Material.BOOK)) {
+                break;
+            }
         }
     }
 
