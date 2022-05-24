@@ -262,6 +262,11 @@ public class CraftListener implements Listener {
                     e.getInventory().setResult(new ItemStack(Material.AIR));
                     return;
                 }
+                String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
+                if (!institute.equals(InstituteNames.HTI.name)) {
+                    e.getInventory().setResult(new ItemStack(Material.AIR));
+                    return;
+                }
                 ItemStack newPotion = e.getInventory().getResult();
                 PotionMeta newMeta = (PotionMeta) newPotion.getItemMeta();
 
