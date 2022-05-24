@@ -42,6 +42,186 @@ public class CraftListener implements Listener {
                 Material.OBSIDIAN, Material.AIR, Material.OBSIDIAN,
                 Material.OBSIDIAN, Material.OBSIDIAN, Material.OBSIDIAN
         }, itemMeta -> BuffEnchant(itemMeta, Enchantment.DURABILITY, 1));
+
+        upgrades.put(new Material[]{
+                Material.REDSTONE, Material.DIAMOND, Material.REDSTONE,
+                Material.REDSTONE, Material.AIR, Material.REDSTONE,
+                Material.REDSTONE, Material.DIAMOND, Material.REDSTONE
+        }, itemMeta -> BuffEnchant(itemMeta, Enchantment.DAMAGE_ALL, 1));
+
+        upgrades.put(new Material[]{
+                Material.REDSTONE, Material.GHAST_TEAR, Material.REDSTONE,
+                Material.REDSTONE, Material.AIR, Material.REDSTONE,
+                Material.REDSTONE, Material.REDSTONE, Material.REDSTONE
+        }, itemMeta -> BuffEnchant(itemMeta, Enchantment.DIG_SPEED, 1));
+
+        upgrades.put(new Material[]{
+                Material.COBWEB, Material.COBWEB, Material.COBWEB,
+                Material.COBWEB, Material.AIR, Material.COBWEB,
+                Material.COBWEB, Material.COBWEB, Material.COBWEB
+        }, itemMeta -> BuffEnchant(itemMeta, Enchantment.SILK_TOUCH, 1));
+
+        upgrades.put(new Material[]{
+                Material.LAPIS_LAZULI, Material.RABBIT_FOOT, Material.LAPIS_LAZULI,
+                Material.LAPIS_LAZULI, Material.AIR, Material.LAPIS_LAZULI,
+                Material.LAPIS_LAZULI, Material.LAPIS_LAZULI, Material.LAPIS_LAZULI
+        }, itemMeta -> BuffEnchant(itemMeta, Enchantment.LOOT_BONUS_BLOCKS, 1));
+
+        upgrades.put(new Material[]{
+                Material.TROPICAL_FISH, Material.REDSTONE, Material.TROPICAL_FISH,
+                Material.REDSTONE, Material.AIR, Material.REDSTONE,
+                Material.TROPICAL_FISH, Material.REDSTONE, Material.TROPICAL_FISH
+        }, itemMeta -> BuffEnchant(itemMeta, Enchantment.LUCK, 1));
+
+        upgrades.put(new Material[]{
+                Material.PUFFERFISH, Material.LAPIS_LAZULI, Material.PUFFERFISH,
+                Material.LAPIS_LAZULI, Material.AIR, Material.LAPIS_LAZULI,
+                Material.PUFFERFISH, Material.LAPIS_LAZULI, Material.PUFFERFISH
+        }, itemMeta -> BuffEnchant(itemMeta, Enchantment.LURE, 1));
+
+        upgrades.put(new Material[]{
+                Material.OBSIDIAN, Material.DIAMOND_BLOCK, Material.OBSIDIAN,
+                Material.ENDER_EYE, Material.AIR, Material.ENDER_EYE,
+                Material.OBSIDIAN, Material.NAUTILUS_SHELL, Material.OBSIDIAN
+        }, itemMeta -> BuffEnchant(itemMeta, Enchantment.MENDING, 1));
+
+        upgrades.put(new Material[]{
+                Material.OBSIDIAN, Material.IRON_INGOT, Material.OBSIDIAN,
+                Material.IRON_INGOT, Material.AIR, Material.IRON_INGOT,
+                Material.OBSIDIAN, Material.IRON_INGOT, Material.OBSIDIAN
+        }, itemMeta -> BuffEnchant(itemMeta, Enchantment.PROTECTION_ENVIRONMENTAL, 1));
+
+        upgrades.put(new Material[]{
+                Material.SLIME_BALL, Material.SLIME_BALL, Material.SLIME_BALL,
+                Material.SLIME_BALL, Material.AIR, Material.SLIME_BALL,
+                Material.SLIME_BALL, Material.SLIME_BALL, Material.SLIME_BALL
+        }, itemMeta -> BuffEnchant(itemMeta, Enchantment.PROTECTION_FALL, 1));
+
+        upgrades.put(new Material[]{
+                Material.GLASS, Material.TROPICAL_FISH, Material.GLASS,
+                Material.TROPICAL_FISH, Material.AIR, Material.TROPICAL_FISH,
+                Material.GLASS, Material.TROPICAL_FISH, Material.GLASS
+        }, itemMeta -> BuffEnchant(itemMeta, Enchantment.OXYGEN, 1));
+
+        upgrades.put(new Material[]{
+                Material.GLASS, Material.PUFFERFISH, Material.GLASS,
+                Material.PUFFERFISH, Material.AIR, Material.PUFFERFISH,
+                Material.GLASS, Material.PUFFERFISH, Material.GLASS
+        }, itemMeta -> BuffEnchant(itemMeta, Enchantment.WATER_WORKER, 1));
+
+        upgrades.put(new Material[]{
+                Material.SLIME_BALL, Material.DIAMOND_SWORD, Material.SLIME_BALL,
+                Material.SLIME_BALL, Material.AIR, Material.SLIME_BALL,
+                Material.SLIME_BALL, Material.GOLDEN_SWORD, Material.SLIME_BALL
+        }, itemMeta -> BuffEnchant(itemMeta, Enchantment.THORNS, 1));
+
+        upgrades.put(new Material[]{
+                Material.WATER_BUCKET, Material.TROPICAL_FISH, Material.WATER_BUCKET,
+                Material.TROPICAL_FISH, Material.AIR, Material.TROPICAL_FISH,
+                Material.WATER_BUCKET, Material.TROPICAL_FISH, Material.WATER_BUCKET
+        }, itemMeta -> BuffEnchant(itemMeta, Enchantment.DEPTH_STRIDER, 1));
+
+        upgrades.put(new Material[]{
+                Material.PACKED_ICE, Material.PACKED_ICE, Material.PACKED_ICE,
+                Material.PACKED_ICE, Material.AIR, Material.PACKED_ICE,
+                Material.PACKED_ICE, Material.PACKED_ICE, Material.PACKED_ICE
+        }, itemMeta -> BuffEnchant(itemMeta, Enchantment.FROST_WALKER, 1));
+
+        upgrades.put(new Material[]{
+                Material.BAMBOO, Material.PISTON, Material.BAMBOO,
+                Material.BAMBOO, Material.AIR, Material.BAMBOO,
+                Material.BAMBOO, Material.PISTON, Material.BAMBOO
+        }, itemMeta -> BuffEnchant(itemMeta, Enchantment.KNOCKBACK, 1));
+
+        upgrades.put(new Material[]{
+                Material.BLAZE_POWDER, Material.BLAZE_POWDER, Material.BLAZE_POWDER,
+                Material.BLAZE_POWDER, Material.AIR, Material.BLAZE_POWDER,
+                Material.BLAZE_POWDER, Material.BLAZE_POWDER, Material.BLAZE_POWDER
+        }, itemMeta -> BuffEnchant(itemMeta, Enchantment.FIRE_ASPECT, 1));
+
+        upgrades.put(new Material[]{
+                Material.BLAZE_POWDER, Material.BLAZE_POWDER, Material.BLAZE_POWDER,
+                Material.BLAZE_POWDER, Material.AIR, Material.BLAZE_POWDER,
+                Material.BLAZE_POWDER, Material.BLAZE_POWDER, Material.BLAZE_POWDER
+        }, itemMeta -> BuffEnchant(itemMeta, Enchantment.FIRE_ASPECT, 1));
+
+        upgrades.put(new Material[]{
+                Material.LAPIS_LAZULI, Material.LAPIS_LAZULI, Material.LAPIS_LAZULI,
+                Material.LAPIS_LAZULI, Material.AIR, Material.LAPIS_LAZULI,
+                Material.LAPIS_LAZULI, Material.RABBIT_FOOT, Material.LAPIS_LAZULI
+        }, itemMeta -> BuffEnchant(itemMeta, Enchantment.LOOT_BONUS_MOBS, 1));
+
+        upgrades.put(new Material[]{
+                Material.GOLD_INGOT, Material.TORCH, Material.GOLD_INGOT,
+                Material.IRON_INGOT, Material.AIR, Material.IRON_INGOT,
+                Material.GOLD_INGOT, Material.IRON_INGOT, Material.GOLD_INGOT
+        }, itemMeta -> BuffEnchant(itemMeta, Enchantment.SWEEPING_EDGE, 1));
+
+        upgrades.put(new Material[]{
+                Material.REDSTONE, Material.COOKED_BEEF, Material.REDSTONE,
+                Material.REDSTONE, Material.AIR, Material.REDSTONE,
+                Material.REDSTONE, Material.DIAMOND, Material.REDSTONE
+        }, itemMeta -> BuffEnchant(itemMeta, Enchantment.ARROW_DAMAGE, 1));
+
+        upgrades.put(new Material[]{
+                Material.BAMBOO, Material.BAMBOO, Material.BAMBOO,
+                Material.PISTON, Material.AIR, Material.PISTON,
+                Material.BAMBOO, Material.BAMBOO, Material.BAMBOO
+        }, itemMeta -> BuffEnchant(itemMeta, Enchantment.ARROW_KNOCKBACK, 1));
+
+        upgrades.put(new Material[]{
+                Material.BLAZE_ROD, Material.BLAZE_POWDER, Material.BLAZE_ROD,
+                Material.BLAZE_POWDER, Material.AIR, Material.BLAZE_POWDER,
+                Material.BLAZE_ROD, Material.BLAZE_POWDER, Material.BLAZE_ROD
+        }, itemMeta -> BuffEnchant(itemMeta, Enchantment.ARROW_FIRE, 1));
+
+        upgrades.put(new Material[]{
+                Material.GOLD_INGOT, Material.DIAMOND_BLOCK, Material.GOLD_INGOT,
+                Material.GOLD_INGOT, Material.AIR, Material.GOLD_INGOT,
+                Material.GOLD_INGOT, Material.EMERALD_BLOCK, Material.GOLD_INGOT
+        }, itemMeta -> BuffEnchant(itemMeta, Enchantment.ARROW_INFINITE, 1));
+
+        upgrades.put(new Material[]{
+                Material.COOKED_BEEF, Material.BONE, Material.COOKED_BEEF,
+                Material.COOKED_BEEF, Material.AIR, Material.COOKED_BEEF,
+                Material.COOKED_BEEF, Material.LEAD, Material.COOKED_BEEF
+        }, itemMeta -> BuffEnchant(itemMeta, Enchantment.LOYALTY, 1));
+
+        upgrades.put(new Material[]{
+                Material.COD, Material.NAUTILUS_SHELL, Material.COD,
+                Material.COD, Material.AIR, Material.COD,
+                Material.COD, Material.FISHING_ROD, Material.COD
+        }, itemMeta -> BuffEnchant(itemMeta, Enchantment.IMPALING, 1));
+
+        upgrades.put(new Material[]{
+                Material.SLIME_BALL, Material.LEAD, Material.SLIME_BALL,
+                Material.SLIME_BALL, Material.AIR, Material.SLIME_BALL,
+                Material.SLIME_BALL, Material.FISHING_ROD, Material.SLIME_BALL
+        }, itemMeta -> BuffEnchant(itemMeta, Enchantment.RIPTIDE, 1));
+
+        upgrades.put(new Material[]{
+                Material.QUARTZ_BLOCK, Material.DIAMOND_BLOCK, Material.QUARTZ_BLOCK,
+                Material.SNOW_BLOCK, Material.AIR, Material.SNOW_BLOCK,
+                Material.QUARTZ_BLOCK, Material.JUNGLE_SAPLING, Material.QUARTZ_BLOCK
+        }, itemMeta -> BuffEnchant(itemMeta, Enchantment.CHANNELING, 1));
+
+        upgrades.put(new Material[]{
+                Material.ARROW, Material.ARROW, Material.ARROW,
+                Material.CROSSBOW, Material.AIR, Material.CROSSBOW,
+                Material.ARROW, Material.ARROW, Material.ARROW
+        }, itemMeta -> BuffEnchant(itemMeta, Enchantment.MULTISHOT, 1));
+
+        upgrades.put(new Material[]{
+                Material.GLOWSTONE_DUST, Material.GHAST_TEAR, Material.GLOWSTONE_DUST,
+                Material.GLOWSTONE_DUST, Material.AIR, Material.GLOWSTONE_DUST,
+                Material.GLOWSTONE_DUST, Material.GLOWSTONE_DUST, Material.GLOWSTONE_DUST
+        }, itemMeta -> BuffEnchant(itemMeta, Enchantment.QUICK_CHARGE, 1));
+
+        upgrades.put(new Material[]{
+                Material.SPECTRAL_ARROW, Material.SPECTRAL_ARROW, Material.SPECTRAL_ARROW,
+                Material.SPECTRAL_ARROW, Material.AIR, Material.SPECTRAL_ARROW,
+                Material.SPECTRAL_ARROW, Material.SPECTRAL_ARROW, Material.SPECTRAL_ARROW
+        }, itemMeta -> BuffEnchant(itemMeta, Enchantment.PIERCING, 1));
     }
 
     @EventHandler
@@ -241,8 +421,6 @@ public class CraftListener implements Listener {
             return;
         }
         int counter = 0;
-        ItemStack result = new ItemStack(matrix[4].getType());
-        String institute = null;
         for (Material[] recipe: upgrades.keySet()) {
             counter++;
             boolean skip = false;
@@ -259,9 +437,8 @@ public class CraftListener implements Listener {
             if (skip) {
                 continue;
             }
-            if (institute == null) {
-                institute = Main.conn.GetInstitute(player.getUniqueId().toString());
-            }
+            ItemStack result = new ItemStack(matrix[4].getType());
+            String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
             if (!institute.equals(InstituteNames.INMIT.name) && !institute.equals(InstituteNames.UGI.name)) {
                 player.sendMessage("bad institute");
                 break;
@@ -276,9 +453,7 @@ public class CraftListener implements Listener {
             }
             result.setItemMeta(upgrades.get(recipe).apply(matrix[4].getItemMeta()));
             inv.setResult(result);
-            if (!result.getType().equals(Material.BOOK)) {
-                break;
-            }
+            break;
         }
     }
 
