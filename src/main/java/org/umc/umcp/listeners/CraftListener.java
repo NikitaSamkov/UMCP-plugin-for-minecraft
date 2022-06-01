@@ -9,10 +9,12 @@ import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
+import org.umc.umcp.enums.UmcpItem;
 import org.umc.umcp.misc.Crafter;
 import org.umc.umcp.Main;
 
@@ -298,17 +300,24 @@ public class CraftListener implements Listener {
         }
 
         if (recipeKey.contains("_upgrade")) {
+            if (UmcpItem.THUNDERBOW.check(e.getInventory().getMatrix()[4])) {
+                e.getInventory().setResult(new ItemStack(Material.AIR));
+                return;
+            }
             String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
             if ((!institute.equals(InstituteNames.INMIT.name) &&
                     !institute.equals(InstituteNames.UGI.name)) ||
                     (institute.equals(InstituteNames.UGI.name) &&
-                            !e.getInventory().getMatrix()[4].getType().equals(Material.BOOK)) ||
+                            !e.getInventory().getMatrix()[4].getType().equals(Material.BOOK) &&
+                            !e.getInventory().getMatrix()[4].getType().equals(Material.ENCHANTED_BOOK)) ||
                     (institute.equals(InstituteNames.INMIT.name) &&
-                            e.getInventory().getMatrix()[4].getType().equals(Material.BOOK))) {
+                            (e.getInventory().getMatrix()[4].getType().equals(Material.BOOK) ||
+                                    e.getInventory().getMatrix()[4].getType().equals(Material.ENCHANTED_BOOK)))) {
                 e.getInventory().setResult(new ItemStack(Material.AIR));
                 return;
             }
-            ItemStack res = new ItemStack(e.getInventory().getMatrix()[4].getType(), 1);
+            Material type = e.getInventory().getMatrix()[4].getType();
+            ItemStack res = new ItemStack(type.equals(Material.BOOK) ? Material.ENCHANTED_BOOK : type, 1);
             ItemMeta upgraded = upgrades.get(recipeKey).apply(e.getInventory().getMatrix()[4]);
             if (upgraded == null) {
                 e.getInventory().setResult(new ItemStack(Material.AIR));
@@ -353,19 +362,19 @@ public class CraftListener implements Listener {
 
     private ItemMeta BuffEnchant(ItemStack item, Enchantment ench, int lvl) {
         int lvlplus = 0;
-        if (!ench.canEnchantItem(item) && !item.getType().equals(Material.BOOK)) {
+        if (!ench.canEnchantItem(item) && !(item.getType().equals(Material.BOOK) || item.getType().equals(Material.ENCHANTED_BOOK))) {
             return null;
         }
-        if (item.getType().equals(Material.BOOK)) {
-            for (Enchantment enchantment: item.getEnchantments().keySet()) {
+
+        ItemMeta meta = item.getItemMeta();
+        if (meta.hasEnchant(ench)) {
+            lvlplus = meta.getEnchantLevel(ench);
+        } else {
+            for (Enchantment enchantment : item.getEnchantments().keySet()) {
                 if (ench.conflictsWith(enchantment)) {
                     return null;
                 }
             }
-        }
-        ItemMeta meta = item.getItemMeta();
-        if (meta.hasEnchant(ench)) {
-            lvlplus = meta.getEnchantLevel(ench);
         }
         meta.addEnchant(ench, lvl + lvlplus, false);
         return meta;
