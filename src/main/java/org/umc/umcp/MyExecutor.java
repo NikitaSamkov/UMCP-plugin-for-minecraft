@@ -1,5 +1,7 @@
 package org.umc.umcp;
 
+import com.earth2me.essentials.Essentials;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -8,6 +10,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.umc.umcp.enums.UmcpItem;
 import org.umc.umcp.misc.Crafter;
@@ -34,6 +37,11 @@ public class MyExecutor implements TabExecutor
                 meta.addEnchant(Enchantment.DURABILITY, 3, true);
                 leviathan.setItemMeta(meta);
                 player.getInventory().setItemInMainHand(leviathan);
+            }
+            if (strings[0].equals("money")) {
+                Economy economy = Main.getEconomy();
+                economy.depositPlayer(player, 5000);
+
             }
         }
         return true;

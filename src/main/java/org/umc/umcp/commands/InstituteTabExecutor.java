@@ -129,8 +129,14 @@ public class InstituteTabExecutor extends HelpSupport {
             sender.sendMessage(String.format(jm.getString("AlreadyInTarget"), painter.get(instituteName)));
             return true;
         }
+        if (Main.getEconomy().getBalance(player) < 5000) {
+            sender.sendMessage(jm.getString("NotEnoughMoney"));
+            return true;
+        }
         if (JoinInstitute(player.getUniqueId().toString(), instituteName)) {
             sender.sendMessage(String.format(jm.getString("JoinSuccess"), painter.get(instituteName)));
+            
+            Main.getEconomy().withdrawPlayer(player, 5000);
 
             CheckInstitutePerms(player, lastInstitute, instituteName);
 

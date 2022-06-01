@@ -11,3 +11,4 @@ commands:
     usage: §cпопробуйте /<command> help§f
   ienim:
     usage: §cпопробуйте /<command> help§f (Могут использовать только учащиеся ИЕНиМ'а!)
+depend: [Vault]

@@ -1,10 +1,12 @@
 package org.umc.umcp;
 
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -25,15 +27,25 @@ import org.umc.umcp.listeners.PlayerChatListener;
 import org.umc.umcp.misc.Crafter;
 
 import java.util.Arrays;
+import java.util.logging.Logger;
 
 public final class Main extends JavaPlugin {
     public static DBConnection conn;
     public static FileConfiguration config;
+    private static Economy econ = null;
+    private static final Logger log = Logger.getLogger("Minecraft");
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
         config = this.getConfig();
+
+        if (!setupEconomy() ) {
+            log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+
         conn = new DBConnection(config.getString("database.url"), config.getString("database.login"), config.getString("database.password"));
         addArmorEquipEvent();
         addSets();
@@ -115,5 +127,20 @@ public final class Main extends JavaPlugin {
         getServer().addRecipe(Crafter.UgiBookRecipe);
         getServer().addRecipe(Crafter.ThunderBowRecipe);
         Crafter.AddUpgrades(this);
+    }
+    private boolean setupEconomy() {
+        if (getServer().getPluginManager().getPlugin("Vault") == null) {
+            return false;
+        }
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp == null) {
+            return false;
+        }
+        econ = rsp.getProvider();
+        return econ != null;
+    }
+
+    public static Economy getEconomy() {
+        return econ;
     }
 }
