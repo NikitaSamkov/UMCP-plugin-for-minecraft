@@ -2,6 +2,7 @@ package org.umc.umcp;
 
 import com.earth2me.essentials.Essentials;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Statistic;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -40,8 +41,11 @@ public class MyExecutor implements TabExecutor
             }
             if (strings[0].equals("money")) {
                 Economy economy = Main.getEconomy();
-                economy.depositPlayer(player, 5000);
-
+                economy.depositPlayer(player, 2000);
+                player.sendMessage("got $2000!");
+            }
+            if (strings[0].equals("time")) {
+                player.sendMessage(String.format("you are %d sec on this server!", player.getStatistic(Statistic.PLAY_ONE_MINUTE) / 20));
             }
         }
         return true;
@@ -53,6 +57,8 @@ public class MyExecutor implements TabExecutor
         if (args.length == 1) {
             result.add("beer");
             result.add("leviathan");
+            result.add("money");
+            result.add("time");
         }
 
         return result;

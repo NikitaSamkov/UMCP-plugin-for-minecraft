@@ -96,6 +96,19 @@ urfu:
           - "dirt:37"
           - "diamond_axe:2"
 
+  #Стипендия
+  scholarship:
+    #размер стипендии
+    Amount: 2500
+    #кулдаун стипендии
+    Cooldown:
+      #Часы
+      Hours: 60
+      #Минуты
+      Minutes: 0
+      #Секунды
+      Seconds: 0
+
   #сообщения игроку при использовании той или иной команды
   messages:
     list:

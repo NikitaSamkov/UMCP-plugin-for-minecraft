@@ -3,7 +3,10 @@ package org.umc.umcp;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Server;
+import org.bukkit.Statistic;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -27,6 +30,7 @@ import org.umc.umcp.listeners.PlayerChatListener;
 import org.umc.umcp.misc.Crafter;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.logging.Logger;
 
 public final class Main extends JavaPlugin {
@@ -34,6 +38,8 @@ public final class Main extends JavaPlugin {
     public static FileConfiguration config;
     private static Economy econ = null;
     private static final Logger log = Logger.getLogger("Minecraft");
+    private static int scholarshipAmount;
+    private static int scholarshipCooldown;
 
     @Override
     public void onEnable() {
@@ -47,19 +53,31 @@ public final class Main extends JavaPlugin {
         }
 
         conn = new DBConnection(config.getString("database.url"), config.getString("database.login"), config.getString("database.password"));
+
         addArmorEquipEvent();
         addSets();
+
         this.getLogger().info("Я ЖИВОЙ!!1!!");
+
         Painter.PreparePaints();
+
         getCommand("test").setExecutor(new MyExecutor());
         getCommand("urfu").setExecutor(new InstituteTabExecutor());
         getCommand("ienim").setExecutor(new IenimTabExecutor());
+
         Bukkit.getServer().getPluginManager().registerEvents(new MyListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerChatListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new CraftListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new GlobalListener(this), this);
         Bukkit.getServer().getPluginManager().registerEvents(new IENIMListener(), this);
+
         addCrafts();
+
+        scholarshipAmount = config.getInt("urfu.scholarship.Amount");
+        scholarshipCooldown = ((config.getInt("urfu.scholarship.Cooldown.Hours") * 60 +
+                config.getInt("urfu.scholarship.Cooldown.Minutes")) * 60 +
+                config.getInt("urfu.scholarship.Cooldown.Seconds")) * 20;
+        CheckScholarship();
     }
 
     private void addSets() {
@@ -138,6 +156,31 @@ public final class Main extends JavaPlugin {
         }
         econ = rsp.getProvider();
         return econ != null;
+    }
+
+    private void CheckScholarship() {
+        Server server = this.getServer();
+        Collection<? extends Player> players = server.getOnlinePlayers();
+        server.getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+            @Override
+            public void run() {
+                log.info("Checking scholarship...");
+                log.info(String.format("founded %d players", players.size()));
+                for(Player p: players) {
+                    int ticks = p.getStatistic(Statistic.PLAY_ONE_MINUTE);
+                    if (ticks > scholarshipCooldown) {
+                        p.setStatistic(Statistic.PLAY_ONE_MINUTE, ticks - scholarshipCooldown);
+                        econ.depositPlayer(p, scholarshipAmount);
+                        p.sendMessage(String.format("Начислена стипендия в размере %d!", scholarshipAmount));
+                    } else {
+                        log.info(String.format(" Player %s can't get scholarship:", p.getDisplayName()));
+                        log.info(String.format("  %d ticks have", ticks));
+                        log.info(String.format("  %d ticks needed", scholarshipCooldown));
+                    }
+                }
+                CheckScholarship();
+            }
+        }, 12000L);
     }
 
     public static Economy getEconomy() {

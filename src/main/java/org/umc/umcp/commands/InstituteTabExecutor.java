@@ -4,10 +4,7 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -135,8 +132,9 @@ public class InstituteTabExecutor extends HelpSupport {
         }
         if (JoinInstitute(player.getUniqueId().toString(), instituteName)) {
             sender.sendMessage(String.format(jm.getString("JoinSuccess"), painter.get(instituteName)));
-            
+
             Main.getEconomy().withdrawPlayer(player, 5000);
+            player.setStatistic(Statistic.PLAY_ONE_MINUTE, 0);
 
             CheckInstitutePerms(player, lastInstitute, instituteName);
 
