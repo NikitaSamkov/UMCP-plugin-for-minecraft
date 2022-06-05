@@ -12,30 +12,4 @@ commands:
   ienim:
     usage: §cпопробуйте /<command> help§f (Могут использовать только учащиеся ИЕНиМ'а!)
 
-permissions:
-  umcp.nocooldown:
-    default: op
-    description: Using join command without cooldown
-  umcp.ienim:
-    default: false
-  umcp.inmit:
-    default: false
-  umcp.rtf:
-    default: false
-  umcp.isa:
-    default: false
-  umcp.ifksimp:
-    default: false
-  umcp.info:
-    default: false
-  umcp.hti:
-    default: false
-  umcp.ugi:
-    default: false
-  umcp.ineu:
-    default: false
-  umcp.uralenin:
-    default: false
-  umcp.fti:
-    default: false
-depend: [Vault]
+depend: [Vault, LuckPerms]

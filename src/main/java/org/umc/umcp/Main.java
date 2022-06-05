@@ -1,5 +1,8 @@
 package org.umc.umcp;
 
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.model.user.User;
+import net.luckperms.api.node.Node;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -31,6 +34,7 @@ import org.umc.umcp.misc.Crafter;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public final class Main extends JavaPlugin {
@@ -40,6 +44,7 @@ public final class Main extends JavaPlugin {
     private static final Logger log = Logger.getLogger("Minecraft");
     private static int scholarshipAmount;
     private static int scholarshipCooldown;
+    private static LuckPerms LPapi;
 
     @Override
     public void onEnable() {
@@ -52,12 +57,16 @@ public final class Main extends JavaPlugin {
             return;
         }
 
+        if (!setupLP() ) {
+            log.severe(String.format("[%s] - Disabled due to no LuckPerms dependency found!", getDescription().getName()));
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+
         conn = new DBConnection(config.getString("database.url"), config.getString("database.login"), config.getString("database.password"));
 
         addArmorEquipEvent();
         addSets();
-
-        this.getLogger().info("Я ЖИВОЙ!!1!!");
 
         Painter.PreparePaints();
 
@@ -70,6 +79,8 @@ public final class Main extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new CraftListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new GlobalListener(this), this);
         Bukkit.getServer().getPluginManager().registerEvents(new IENIMListener(), this);
+
+        this.getLogger().info("Я ЖИВОЙ!!1!!");
 
         addCrafts();
 
@@ -146,6 +157,7 @@ public final class Main extends JavaPlugin {
         getServer().addRecipe(Crafter.ThunderBowRecipe);
         Crafter.AddUpgrades(this);
     }
+
     private boolean setupEconomy() {
         if (getServer().getPluginManager().getPlugin("Vault") == null) {
             return false;
@@ -156,6 +168,18 @@ public final class Main extends JavaPlugin {
         }
         econ = rsp.getProvider();
         return econ != null;
+    }
+
+    private boolean setupLP() {
+        if (getServer().getPluginManager().getPlugin("LuckPerms") == null) {
+            return false;
+        }
+        RegisteredServiceProvider<LuckPerms> rsp = getServer().getServicesManager().getRegistration(LuckPerms.class);
+        if (rsp == null) {
+            return false;
+        }
+        LPapi = rsp.getProvider();
+        return LPapi != null;
     }
 
     private void CheckScholarship() {
@@ -185,5 +209,21 @@ public final class Main extends JavaPlugin {
 
     public static Economy getEconomy() {
         return econ;
+    }
+
+    public static LuckPerms getLPapi() {
+        return LPapi;
+    }
+
+    public static void addPermission(UUID uuid, String permission) {
+        LPapi.getUserManager().modifyUser(uuid, user -> {
+            user.data().add(Node.builder(permission).build());
+        });
+    }
+
+    public static void removePermission(UUID uuid, String permission) {
+        LPapi.getUserManager().modifyUser(uuid, user -> {
+            user.data().remove(Node.builder(permission).build());
+        });
     }
 }

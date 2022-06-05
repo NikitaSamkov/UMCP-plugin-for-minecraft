@@ -281,19 +281,24 @@ public class InstituteTabExecutor extends HelpSupport {
     private boolean JoinInstitute(String uuid, String instituteName) {
         try {
             conn.Connect();
-            ResultSet instituteID = conn.MakeQuery(String.format("select id from institutes where name='%s'", instituteName));
+            ResultSet instituteID = conn.MakeQuery(String.format("select id, permission from institutes where name='%s'", instituteName));
             if (!instituteID.next()) {
                 return false;
             }
             int iid = instituteID.getInt("id");
+            String newPerm = instituteID.getString("permission");
             instituteID.close();
             ResultSet players = conn.MakeQuery(
-                    String.format("select uuid, name from players inner join institutes i on i.id = institute where uuid='%s'", uuid));
+                    String.format("select uuid, name, permission from players inner join institutes i on i.id = institute where uuid='%s'", uuid));
             if (players.next()) {
+                String lastPerm = players.getString("permission");
+                Main.removePermission(UUID.fromString(uuid), String.format("group.%s", lastPerm));
+
                 conn.MakeUpdate(String.format("update players set institute=%d where uuid='%s'", iid, uuid));
             } else {
                 conn.MakeUpdate(String.format("insert into players values ('%s', %d)", uuid, iid));
             }
+            Main.addPermission(UUID.fromString(uuid), String.format("group.%s", newPerm));
             conn.Close();
             return true;
         } catch (Exception e) {
