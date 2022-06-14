@@ -188,19 +188,13 @@ public final class Main extends JavaPlugin {
         server.getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
             @Override
             public void run() {
-                log.info("Checking scholarship...");
-                log.info(String.format("founded %d players", players.size()));
                 for(Player p: players) {
                     int ticks = p.getStatistic(Statistic.PLAY_ONE_MINUTE);
                     if (ticks > scholarshipCooldown) {
                         p.setStatistic(Statistic.PLAY_ONE_MINUTE, ticks - scholarshipCooldown);
                         econ.depositPlayer(p, scholarshipAmount);
                         p.sendMessage(String.format("Начислена стипендия в размере %d!", scholarshipAmount));
-                    } else {
-                        log.info(String.format(" Player %s can't get scholarship:", p.getDisplayName()));
-                        log.info(String.format("  %d ticks have", ticks));
-                        log.info(String.format("  %d ticks needed", scholarshipCooldown));
-                    }
+                    } 
                 }
                 CheckScholarship();
             }
