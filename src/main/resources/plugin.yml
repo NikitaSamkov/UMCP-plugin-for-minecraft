@@ -12,4 +12,18 @@ commands:
   ienim:
     usage: §cпопробуйте /<command> help§f (Могут использовать только учащиеся ИЕНиМ'а!)
 
+permissions:
+  umcp.nocooldown:
+    description: No Cooldown for institute change
+    default: op
+  umcp.nojoinpay:
+    description: No payment for institute change
+    default: op
+  umcp.randomban:
+    description: Command for ban random online player for 3 days
+    default: op
+  umcp.ultrarandomban:
+    description: Command for ban 3 random online players for 3 days
+    default: op
+
 depend: [Vault, LuckPerms]

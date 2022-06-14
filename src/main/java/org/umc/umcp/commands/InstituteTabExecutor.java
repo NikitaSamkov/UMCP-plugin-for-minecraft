@@ -41,7 +41,6 @@ public class InstituteTabExecutor extends HelpSupport {
     private final Map<String, String> painter;
     private UmcpCommand commandTree;
     private Help helper;
-    private Boolean haveCooldown;
     private ConfigurationSection messages;
 
     public InstituteTabExecutor() {
@@ -50,7 +49,6 @@ public class InstituteTabExecutor extends HelpSupport {
         commandTree = GetTree();
         painter = Painter.GetPainter(new ArrayList<>(institutes.keySet()));
         helper = new Help(commandTree);
-        haveCooldown = true;
         messages = Main.config.getConfigurationSection("urfu.messages");
     }
 
@@ -97,7 +95,6 @@ public class InstituteTabExecutor extends HelpSupport {
                 new UmcpCommand(source.getString("join.Name"), this::Join, source.getString("join.Desc"), null, institutesList),
                 new UmcpCommand(source.getString("info.Name"), this::Info, source.getString("info.Desc"), null, institutesList, true),
                 new UmcpCommand(source.getString("list.Name"), this::InstitutesList, source.getString("list.Desc")),
-                new UmcpCommand("cooldown", this::SwitchCooldown, "", null, new LinkedList<>(Arrays.asList("ON", "OFF"))),
                 new UmcpCommand(source.getString("kit.Name"), this::Kit, source.getString("kit.Desc"), null, new LinkedList<>(Arrays.asList(source.getString("kit.stroika.Name"))))
         )));
         tree.GetSubcommand(source.getString("info.Name")).arguments.add("me");
@@ -116,7 +113,7 @@ public class InstituteTabExecutor extends HelpSupport {
         ConfigurationSection jm = messages.getConfigurationSection("join");
 
         Player player = (Player) sender;
-        if (haveCooldown && !Cooldowns.CanUse(player.getUniqueId(), CooldownType.INSTITUTE_JOIN)) {
+        if (!player.hasPermission("umcp.nocooldown") && !Cooldowns.CanUse(player.getUniqueId(), CooldownType.INSTITUTE_JOIN)) {
             sender.sendMessage(jm.getString("Cooldown"));
             return true;
         }
@@ -126,14 +123,16 @@ public class InstituteTabExecutor extends HelpSupport {
             sender.sendMessage(String.format(jm.getString("AlreadyInTarget"), painter.get(instituteName)));
             return true;
         }
-        if (Main.getEconomy().getBalance(player) < 5000) {
+        if (!player.hasPermission("umcp.nojoinpay") && Main.getEconomy().getBalance(player) < 5000) {
             sender.sendMessage(jm.getString("NotEnoughMoney"));
             return true;
         }
         if (JoinInstitute(player.getUniqueId().toString(), instituteName)) {
             sender.sendMessage(String.format(jm.getString("JoinSuccess"), painter.get(instituteName)));
 
-            Main.getEconomy().withdrawPlayer(player, 5000);
+            if (!player.hasPermission("umcp.nojoinpay")) {
+                Main.getEconomy().withdrawPlayer(player, 5000);
+            }
             player.setStatistic(Statistic.PLAY_ONE_MINUTE, 0);
 
             CheckInstitutePerms(player, lastInstitute, instituteName);
@@ -181,21 +180,6 @@ public class InstituteTabExecutor extends HelpSupport {
         msg.addExtra(cmd);
         sender.spigot().sendMessage(msg);
         return true;
-    }
-
-    private boolean SwitchCooldown(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length == 0) {
-            return false;
-        }
-        if (Objects.equals(args[0], "ON")) {
-            haveCooldown = true;
-            return true;
-        }
-        if (Objects.equals(args[0], "OFF")) {
-            haveCooldown = false;
-            return true;
-        }
-        return false;
     }
 
     private boolean Kit(CommandSender sender, Command command, String label, String[] args) {

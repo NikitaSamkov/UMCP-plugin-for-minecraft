@@ -103,7 +103,7 @@ urfu:
     #кулдаун стипендии
     Cooldown:
       #Часы
-      Hours: 60
+      Hours: 6
       #Минуты
       Minutes: 0
       #Секунды
