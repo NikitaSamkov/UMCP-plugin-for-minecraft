@@ -118,6 +118,10 @@ public class InstituteTabExecutor extends HelpSupport {
             return true;
         }
         String lastInstitute = conn.GetInstitute(player);
+        if (lastInstitute == null) {
+            return false;
+        }
+        Main.log.info("last inst - " + lastInstitute);
         String instituteName = args[0];
         if (lastInstitute != null && lastInstitute.equals(instituteName)) {
             sender.sendMessage(String.format(jm.getString("AlreadyInTarget"), painter.get(instituteName)));
@@ -267,11 +271,12 @@ public class InstituteTabExecutor extends HelpSupport {
             return false;
         }
         try {
+            Main.log.info("new institute name - " + instituteName);
             String newPerm = institutes.get(instituteName).get("permission");
-
+            Main.log.info("new permission group - " + newPerm);
             String currInst = conn.GetInstitute(player);
 
-            if (!currInst.equals(InstituteNames.NONE.name)) {
+            if (currInst != null) {
                 String lastPerm = institutes.get(currInst).get("permission");
                 Main.removePermission(player.getUniqueId(), String.format("group.%s", lastPerm));
             }

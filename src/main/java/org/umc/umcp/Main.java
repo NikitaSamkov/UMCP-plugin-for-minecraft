@@ -41,7 +41,7 @@ public final class Main extends JavaPlugin {
     public static DBConnection conn;
     public static FileConfiguration config;
     private static Economy econ = null;
-    private static final Logger log = Logger.getLogger("Minecraft");
+    public static final Logger log = Logger.getLogger("Minecraft");
     private static int scholarshipAmount;
     private static int scholarshipCooldown;
     private static LuckPerms LPapi;

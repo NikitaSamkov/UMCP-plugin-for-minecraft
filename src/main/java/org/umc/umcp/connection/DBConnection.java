@@ -47,44 +47,44 @@ public class DBConnection {
         institutes.put("ИСА", new HashMap<>());
         institutes.get("ИСА").put("description", "1. Имеют договоренности с производителями стройматериалов и могут вызывать раз в два неигровых дня /kit stroika, в котором будут содержаться полезные для строительства ресурсы.\n" +
                 "2. В своем институте могут купить Левиафан - топор с уникальными чарами. Предмет исчезает при смерти, нельзя убрать из инвентаря.");
-        institutes.get("ИЕНиМ").put("permission", "isa");
+        institutes.get("ИСА").put("permission", "isa");
 
         institutes.put("ИФКСиМП", new HashMap<>());
         institutes.get("ИФКСиМП").put("description", "1. Сразу после попадания в институт, игрок получает два дополнительных сердца.\n" +
                 "2. Есть уникальный для института крафт спортивок. Это сет брони, который обладает такими уровнями защиты и прочности, что и алмазная броня. Выглядит как спортивная форма. При ношении полного сета, игрок получает эффекты \"Сила I\", \"Скорость I\".");
-        institutes.get("ИЕНиМ").put("permission", "ifksimp");
+        institutes.get("ИФКСиМП").put("permission", "ifksimp");
 
         institutes.put("ИНФО", new HashMap<>());
         institutes.get("ИНФО").put("description", "1. Сразу после попадания в институт, игрок получает эффект огнестойкости.\n" +
                 "2. Так как своего здания не имеет, располагается в подвале бара KillFish, в котором имеет доступ к покупке уникальных зелий.");
-        institutes.get("ИЕНиМ").put("permission", "info");
+        institutes.get("ИНФО").put("permission", "info");
 
         institutes.put("ХТИ", new HashMap<>());
         institutes.get("ХТИ").put("description", "1. Могут сами создавать уникальные зелья, у которых эффект на +1 лучше, чем те зелья, которые доступны другим институтам (Кроме ИНФО). Например, могут сделать \"Силу III\", \"Мгновенный урон III\".\n" +
                 "2. Могут делать пиво.\n" +
                 "3. Их золотые яблоки действуют дольше обычного, а золотая морковь дает больше насыщенности.");
-        institutes.get("ИЕНиМ").put("permission", "hti");
+        institutes.get("ХТИ").put("permission", "hti");
 
         institutes.put("УГИ", new HashMap<>());
         institutes.get("УГИ").put("description", "1. На зачарование предметов в кузнице с использованием книг не тратится опыт.\n" +
                 "2. Могут создавать зачарованные книги.\n" +
                 "3. Могут создавать книги, которые можно кидать как снежки и они будут наносить урон.");
-        institutes.get("ИЕНиМ").put("permission", "ugi");
+        institutes.get("УГИ").put("permission", "ugi");
 
         institutes.put("ИНЭУ", new HashMap<>());
         institutes.get("ИНЭУ").put("description", "1. В своем институте могут продавать алмазы вдвое дороже, чем на спавне.\n" +
                 "2. При обмене с жителями получают очень выгодные условия обмена. (Скидки)");
-        institutes.get("ИЕНиМ").put("permission", "ineu");
+        institutes.get("ИНЭУ").put("permission", "ineu");
 
         institutes.put("УралЭНИН", new HashMap<>());
         institutes.get("УралЭНИН").put("description", "1. Имеют доступ к крафту энергетиков - напитков, которые на минуту дают скорость II и восстановление II. При употреблении напитка чаще, чем 3 раза в 10 минут наступает смерть.\n" +
                 "2. После инцидента в лифте, получили возможность делать уникальные бомбочки едкого газа, которые отравляют окружающих игроков.");
-        institutes.get("ИЕНиМ").put("permission", "uralenin");
+        institutes.get("УралЭНИН").put("permission", "uralenin");
 
         institutes.put("ФТИ", new HashMap<>());
         institutes.get("ФТИ").put("description", "1. Из-за отсутствия женщин они в злости много били по стене и их руки стали настолько сильными, что сразу после вступления в институт они получают эффект \"Силы I\".\n" +
                 "2. Научились управлять погодой. Могут создать такой лук, который при попадании может бить молнией игрока. Ломается за три использования.");
-        institutes.get("ИЕНиМ").put("permission", "fti");
+        institutes.get("ФТИ").put("permission", "fti");
     }
 
 //    public void Connect() {
@@ -148,7 +148,7 @@ public class DBConnection {
                 return iname;
             }
         }
-        return InstituteNames.NONE.name;
+        return null;
     }
 
     public Map<String, Map<String, String>> GetInstitutes() {
