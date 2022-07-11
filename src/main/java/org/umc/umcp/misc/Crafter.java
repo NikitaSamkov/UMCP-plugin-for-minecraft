@@ -40,6 +40,30 @@ public class Crafter {
     public static ShapelessRecipe RedAleRecipe;
     public static ShapelessRecipe UgiBookRecipe;
 
+    public static void AddCrafts(Plugin plugin) {
+        CreateCrafts(plugin);
+        plugin.getServer().addRecipe(Crafter.VapeRecipe);
+        plugin.getServer().addRecipe(Crafter.SocksRecipe);
+        plugin.getServer().addRecipe(Crafter.LongsocksRecipe);
+        plugin.getServer().addRecipe(Crafter.CatEarsRecipe);
+        plugin.getServer().addRecipe(Crafter.SportHelmetRecipe);
+        plugin.getServer().addRecipe(Crafter.SportChestplateRecipe);
+        plugin.getServer().addRecipe(Crafter.SportLeggingsRecipe);
+        plugin.getServer().addRecipe(Crafter.SportBootsRecipe);
+        plugin.getServer().addRecipe(Crafter.BombRecipe);
+        plugin.getServer().addRecipe(Crafter.AdrenalineRecipe);
+        plugin.getServer().addRecipe(Crafter.BurnRecipe);
+        plugin.getServer().addRecipe(Crafter.MonsterRecipe);
+        plugin.getServer().addRecipe(Crafter.RedbullRecipe);
+        plugin.getServer().addRecipe(Crafter.BeerRecipe);
+        plugin.getServer().addRecipe(Crafter.PorterRecipe);
+        plugin.getServer().addRecipe(Crafter.RedAleRecipe);
+        plugin.getServer().addRecipe(Crafter.BetterPotionRecipe);
+        plugin.getServer().addRecipe(Crafter.UgiBookRecipe);
+        plugin.getServer().addRecipe(Crafter.ThunderBowRecipe);
+        AddUpgrades(plugin);
+    }
+
     public static void CreateCrafts(Plugin plugin) {
         //<editor-fold desc="Создание бутылки воды" defaultstate="collapsed">
         ItemStack waterbottle = new ItemStack(Material.POTION, 1);

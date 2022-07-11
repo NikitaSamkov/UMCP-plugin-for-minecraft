@@ -156,8 +156,7 @@ public class CraftListener implements Listener {
         ItemStack result = e.getRecipe().getResult();
 
         if (Arrays.asList("vape", "socks", "longsocks", "catears").contains(recipeKey)) {
-            String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
-            if (!institute.equals(InstituteNames.RTF.name)) {
+            if (!player.hasPermission(String.format("group.%s", InstituteNames.RTF.permission))) {
                 e.getInventory().setResult(new ItemStack(Material.AIR));
             } else {
                 if (recipeKey.equals("vape")) {
@@ -180,8 +179,7 @@ public class CraftListener implements Listener {
                     e.getInventory().setResult(new ItemStack(Material.AIR));
                     return;
                 }
-                String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
-                if (!institute.equals(InstituteNames.HTI.name)) {
+                if (!player.hasPermission(String.format("group.%s", InstituteNames.HTI.permission))) {
                     e.getInventory().setResult(new ItemStack(Material.AIR));
                     return;
                 }
@@ -265,8 +263,7 @@ public class CraftListener implements Listener {
                         "BOOTS",
                         "SHEARS",
                         "SHIELD"))) {
-            String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
-            if (institute.equals(InstituteNames.INMIT.name)) {
+            if (!player.hasPermission(String.format("group.%s", InstituteNames.INMIT.permission))) {
                 ItemMeta resultMeta = result.getItemMeta();
                 assert resultMeta != null;
                 resultMeta.addEnchant(Enchantment.DURABILITY, 1, true);
@@ -304,13 +301,13 @@ public class CraftListener implements Listener {
                 e.getInventory().setResult(new ItemStack(Material.AIR));
                 return;
             }
-            String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
-            if ((!institute.equals(InstituteNames.INMIT.name) &&
-                    !institute.equals(InstituteNames.UGI.name)) ||
-                    (institute.equals(InstituteNames.UGI.name) &&
+            boolean inmit = player.hasPermission(String.format("group.%s", InstituteNames.IENIM.permission));
+            boolean ugi = player.hasPermission(String.format("group.%s", InstituteNames.UGI.permission));
+            if ((!inmit && !ugi) ||
+                    (ugi &&
                             !e.getInventory().getMatrix()[4].getType().equals(Material.BOOK) &&
                             !e.getInventory().getMatrix()[4].getType().equals(Material.ENCHANTED_BOOK)) ||
-                    (institute.equals(InstituteNames.INMIT.name) &&
+                    (inmit &&
                             (e.getInventory().getMatrix()[4].getType().equals(Material.BOOK) ||
                                     e.getInventory().getMatrix()[4].getType().equals(Material.ENCHANTED_BOOK)))) {
                 e.getInventory().setResult(new ItemStack(Material.AIR));
@@ -333,8 +330,7 @@ public class CraftListener implements Listener {
 
     private boolean CancelCraft(List<String> keys, String recipeKey, InstituteNames institute, Player player, CraftingInventory inv) {
         if (keys.contains(recipeKey)) {
-            String playerInstitute = Main.conn.GetInstitute(player.getUniqueId().toString());
-            if (!playerInstitute.equals(institute.name)) {
+            if (!player.hasPermission(String.format("group.%s", institute.permission))) {
                 inv.setResult(new ItemStack(Material.AIR));
                 return true;
             }

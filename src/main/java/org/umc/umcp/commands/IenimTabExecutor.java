@@ -40,8 +40,7 @@ public class IenimTabExecutor extends HelpSupport {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        String institute = Main.conn.GetInstitute(((Player) sender).getUniqueId().toString());
-        if (!institute.equals(InstituteNames.IENIM.name)) {
+        if (!sender.hasPermission(String.format("group.%s", InstituteNames.IENIM.permission))) {
             sender.sendMessage(messages.getString("NotIenim"));
             return true;
         }

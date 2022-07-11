@@ -91,7 +91,7 @@ public class GlobalListener implements Listener {
         ItemStack item = e.getItem();
         if (UmcpItem.VAPE.check(item)) {
             Player player = e.getPlayer();
-            if (Main.conn.GetInstitute(player.getUniqueId().toString()).equals(InstituteNames.RTF.name)) {
+            if (player.hasPermission(String.format("group.%s", InstituteNames.RTF.permission))) {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE,
                         rtfParams.getInt("VapeDuration"),
                         rtfParams.getInt("VapeAmplifier"),
@@ -187,7 +187,7 @@ public class GlobalListener implements Listener {
 
             if (UmcpItem.INMIT_BEER.check(item)) {
                 ConfigurationSection params = Main.config.getConfigurationSection("inmit.params.beer");
-                if (Main.conn.GetInstitute(player.getUniqueId().toString()).equals(InstituteNames.INMIT.name)) {
+                if (player.hasPermission(String.format("group.%s", InstituteNames.INMIT.permission))) {
                     player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION,
                             params.getInt("Duration"),
                             params.getInt("Amplifier"),
@@ -225,7 +225,7 @@ public class GlobalListener implements Listener {
         }
         if (item.getType().equals(Material.GOLDEN_APPLE)) {
             Player player = e.getPlayer();
-            if (Main.conn.GetInstitute(player.getUniqueId().toString()).equals(InstituteNames.HTI.name)) {
+            if (player.hasPermission(String.format("group.%s", InstituteNames.HTI.permission))) {
                 ConfigurationSection params = Main.config.getConfigurationSection("hti.params.golden_apple");
                 player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION,
                         2400 + params.getInt("AbsorbAdditionalDuration"),
@@ -241,7 +241,7 @@ public class GlobalListener implements Listener {
         }
         if (item.getType().equals(Material.GOLDEN_CARROT)) {
             Player player = e.getPlayer();
-            if (Main.conn.GetInstitute(player.getUniqueId().toString()).equals(InstituteNames.HTI.name)) {
+            if (player.hasPermission(String.format("group.%s", InstituteNames.HTI.permission))) {
                 ConfigurationSection params = Main.config.getConfigurationSection("hti.params.golden_carrot");
                 player.setSaturation(player.getSaturation() + (float) params.getDouble("AdditionalSaturation"));
             }
@@ -255,8 +255,7 @@ public class GlobalListener implements Listener {
             for (LivingEntity entity: entities) {
                 if (entity instanceof Player) {
                     Player player = (Player) entity;
-                    String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
-                    if (!Objects.equals(institute, InstituteNames.RTF.name)) {
+                    if (!player.hasPermission(String.format("group.%s", InstituteNames.RTF.permission))) {
                         player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,
                                 rtfParams.getInt("SteamBlindnessDuration"),
                                 rtfParams.getInt("SteamBlindnessAmplifier")));
@@ -268,7 +267,7 @@ public class GlobalListener implements Listener {
             for (LivingEntity entity: e.getAffectedEntities()) {
                 if (entity instanceof Player) {
                     Player player = (Player) entity;
-                    if (Main.conn.GetInstitute(player.getUniqueId().toString()).equals(InstituteNames.URALENIN.name)) {
+                    if (player.hasPermission(String.format("group.%s", InstituteNames.URALENIN.permission))) {
                         continue;
                     }
                 }
@@ -289,11 +288,10 @@ public class GlobalListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
         SetMaster.CheckSets(e.getPlayer());
-        String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
-        if (institute.equals(InstituteNames.INFO.name)) {
+        if (player.hasPermission(String.format("group.%s", InstituteNames.INFO.permission))) {
             player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, Integer.MAX_VALUE,
                     Main.config.getInt("info.params.FireResistAmplifier"), false, false));
-        } else if (institute.equals(InstituteNames.FTI.name)) {
+        } else if (player.hasPermission(String.format("group.%s", InstituteNames.FTI.permission))) {
             player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, Integer.MAX_VALUE,
                     Main.config.getInt("fti.params.StrengthAmplifier"), false, false));
         }
@@ -325,11 +323,10 @@ public class GlobalListener implements Listener {
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent e) {
         Player player = e.getPlayer();
-        String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
-        if (institute.equals(InstituteNames.INFO.name)) {
+        if (player.hasPermission(String.format("group.%s", InstituteNames.INFO.permission))) {
             player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, Integer.MAX_VALUE,
                     Main.config.getInt("info.params.FireResistAmplifier"), false, false));
-        } else if (institute.equals(InstituteNames.FTI.name)) {
+        } else if (player.hasPermission(String.format("group.%s", InstituteNames.FTI.permission))) {
             player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, Integer.MAX_VALUE,
                     Main.config.getInt("fti.params.StrengthAmplifier"), false, false));
         }
@@ -343,9 +340,8 @@ public class GlobalListener implements Listener {
             }
             Player player = (Player) e.getEntity();
             PotionEffectType effect = e.getModifiedType();
-            String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
-            if (((effect.equals(PotionEffectType.FIRE_RESISTANCE) && institute.equals(InstituteNames.INFO.name)) ||
-                    (effect.equals(PotionEffectType.INCREASE_DAMAGE) && institute.equals(InstituteNames.FTI.name))) &&
+            if (((effect.equals(PotionEffectType.FIRE_RESISTANCE) && player.hasPermission(String.format("group.%s", InstituteNames.INFO.permission))) ||
+                    (effect.equals(PotionEffectType.INCREASE_DAMAGE) && player.hasPermission(String.format("group.%s", InstituteNames.FTI.permission)))) &&
                     e.getOldEffect().getDuration() > 3600000) {
                 e.setCancelled(true);
             }
@@ -361,7 +357,7 @@ public class GlobalListener implements Listener {
         ItemStack item1 = e.getInventory().getItem(0);
         ItemStack item2 = e.getInventory().getItem(1);
         if (item2 != null && item2.getType().equals(Material.ENCHANTED_BOOK) &&
-                Main.conn.GetInstitute(player.getUniqueId().toString()).equals(InstituteNames.UGI.name)) {
+                player.hasPermission(String.format("group.%s", InstituteNames.UGI.permission))) {
             e.getInventory().setRepairCost(1);
         }
         if (item1 != null && UmcpItem.THUNDERBOW.check(item1)) {
@@ -379,7 +375,7 @@ public class GlobalListener implements Listener {
             ItemStack result = e.getInventory().getItem(2);
             Player player = (Player) e.getView().getPlayer();
             if (result != null && secondItem != null && secondItem.getType().equals(Material.ENCHANTED_BOOK) &&
-                    Main.conn.GetInstitute(player.getUniqueId().toString()).equals(InstituteNames.UGI.name)) {
+                    player.hasPermission(String.format("group.%s", InstituteNames.UGI.permission))) {
                 player.giveExpLevels(1);
             }
         }
@@ -391,7 +387,7 @@ public class GlobalListener implements Listener {
             Player player = (Player) e.getEntity().getShooter();
             if (e.getEntity() instanceof Snowball &&
                     UmcpItem.BOOK.check(player.getInventory().getItemInMainHand())) {
-                if (Main.conn.GetInstitute(player.getUniqueId().toString()).equals(InstituteNames.UGI.name)) {
+                if (player.hasPermission(String.format("group.%s", InstituteNames.UGI.permission))) {
                     e.getEntity().setMetadata("book", new FixedMetadataValue(plugin, true));
                 }
             } else if (e.getEntity() instanceof Arrow &&
@@ -430,7 +426,7 @@ public class GlobalListener implements Listener {
             return;
         }
         Villager villager = (Villager) e.getRightClicked();
-        if (Main.conn.GetInstitute(e.getPlayer().getUniqueId().toString()).equals(InstituteNames.INEU.name)) {
+        if (e.getPlayer().hasPermission(String.format("group.%s", InstituteNames.INEU.permission))) {
             if (villager.hasMetadata("ineu_trade") &&
                     villager.getMetadata("ineu_trade").get(0).asBoolean()) {
                 return;

@@ -117,7 +117,7 @@ public class InstituteTabExecutor extends HelpSupport {
             sender.sendMessage(jm.getString("Cooldown"));
             return true;
         }
-        String lastInstitute = conn.GetInstitute(player.getUniqueId().toString());
+        String lastInstitute = conn.GetInstitute(player);
         String instituteName = args[0];
         if (lastInstitute != null && lastInstitute.equals(instituteName)) {
             sender.sendMessage(String.format(jm.getString("AlreadyInTarget"), painter.get(instituteName)));
@@ -127,7 +127,7 @@ public class InstituteTabExecutor extends HelpSupport {
             sender.sendMessage(jm.getString("NotEnoughMoney"));
             return true;
         }
-        if (JoinInstitute(player.getUniqueId().toString(), instituteName)) {
+        if (JoinInstitute(player, instituteName)) {
             sender.sendMessage(String.format(jm.getString("JoinSuccess"), painter.get(instituteName)));
 
             if (!player.hasPermission("umcp.nojoinpay")) {
@@ -187,7 +187,7 @@ public class InstituteTabExecutor extends HelpSupport {
             return false;
         }
         Player player = (Player) sender;
-        String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
+        String institute = Main.conn.GetInstitute(player);
         ConfigurationSection kits = Main.config.getConfigurationSection("urfu.commands.kit");
         ConfigurationSection messages = Main.config.getConfigurationSection("urfu.messages.kit");
         if (args[0].equals(kits.getString("stroika.Name"))) {
@@ -208,7 +208,7 @@ public class InstituteTabExecutor extends HelpSupport {
     }
 
     private boolean InfoMe(Player player) {
-        String institute = conn.GetInstitute(player.getUniqueId().toString());
+        String institute = conn.GetInstitute(player);
         TextComponent msg;
         if (institute != null) {
             msg = new TextComponent(messages.getString("info.MeFirst"));
@@ -236,7 +236,7 @@ public class InstituteTabExecutor extends HelpSupport {
 
         msg.addExtra(targetName);
         msg.addExtra(messages.getString("info.PlayerMid"));
-        msg.addExtra(GetInteractiveInstitute(conn.GetInstitute(target.getUniqueId().toString())));
+        msg.addExtra(GetInteractiveInstitute(conn.GetInstitute(target)));
         msg.addExtra(messages.getString("info.PlayerLast"));
         player.spigot().sendMessage(msg);
         return true;
@@ -262,33 +262,24 @@ public class InstituteTabExecutor extends HelpSupport {
         return institute;
     }
 
-    private boolean JoinInstitute(String uuid, String instituteName) {
+    private boolean JoinInstitute(Player player, String instituteName) {
+        if (!institutes.containsKey(instituteName)) {
+            return false;
+        }
         try {
-            conn.Connect();
-            ResultSet instituteID = conn.MakeQuery(String.format("select id, permission from institutes where name='%s'", instituteName));
-            if (!instituteID.next()) {
-                return false;
-            }
-            int iid = instituteID.getInt("id");
-            String newPerm = instituteID.getString("permission");
-            instituteID.close();
-            ResultSet players = conn.MakeQuery(
-                    String.format("select uuid, name, permission from players inner join institutes i on i.id = institute where uuid='%s'", uuid));
-            if (players.next()) {
-                String lastPerm = players.getString("permission");
-                Main.removePermission(UUID.fromString(uuid), String.format("group.%s", lastPerm));
+            String newPerm = institutes.get(instituteName).get("permission");
 
-                conn.MakeUpdate(String.format("update players set institute=%d where uuid='%s'", iid, uuid));
-            } else {
-                conn.MakeUpdate(String.format("insert into players values ('%s', %d)", uuid, iid));
+            String currInst = conn.GetInstitute(player);
+
+            if (!currInst.equals(InstituteNames.NONE.name)) {
+                String lastPerm = institutes.get(currInst).get("permission");
+                Main.removePermission(player.getUniqueId(), String.format("group.%s", lastPerm));
             }
-            Main.addPermission(UUID.fromString(uuid), String.format("group.%s", newPerm));
-            conn.Close();
+            Main.addPermission(player.getUniqueId(), String.format("group.%s", newPerm));
             return true;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        conn.Close();
         return false;
     }
 

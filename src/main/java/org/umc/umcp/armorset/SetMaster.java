@@ -43,7 +43,7 @@ public class SetMaster {
         if (activeSets.containsKey(player.getUniqueId()) && activeSets.get(player.getUniqueId()).contains(set)) {
             return;
         }
-        if (set.getInstitute() != null && !set.getInstitute().name.equals(Main.conn.GetInstitute(player.getUniqueId().toString()))) {
+        if (set.getInstitute() != null && !set.getInstitute().name.equals(Main.conn.GetInstitute(player))) {
             return;
         }
         if (!activeSets.containsKey(player.getUniqueId())) {

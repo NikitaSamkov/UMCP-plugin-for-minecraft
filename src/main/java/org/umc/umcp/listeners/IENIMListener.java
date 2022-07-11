@@ -49,11 +49,10 @@ public class IENIMListener implements Listener {
     }
 
     private ConfigurationSection GetMessages(Player player) {
-        String institute = Main.conn.GetInstitute(player.getUniqueId().toString());
-        if (institute.equals(InstituteNames.IENIM.name)) {
+        if (player.hasPermission(String.format("group.%s", InstituteNames.IENIM.permission))) {
             return ienimMessages;
         }
-        if (institute.equals(InstituteNames.ISA.name)) {
+        if (player.hasPermission(String.format("group.%s", InstituteNames.ISA.permission))) {
             return isaMessages;
         }
         return null;

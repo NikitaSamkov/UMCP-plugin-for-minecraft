@@ -75,7 +75,6 @@ public final class Main extends JavaPlugin {
         getCommand("ienim").setExecutor(new IenimTabExecutor());
 
         Bukkit.getServer().getPluginManager().registerEvents(new MyListener(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new PlayerChatListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new CraftListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new GlobalListener(this), this);
         Bukkit.getServer().getPluginManager().registerEvents(new IENIMListener(), this);
@@ -129,33 +128,12 @@ public final class Main extends JavaPlugin {
     }
 
     private void addCrafts() {
-        Crafter.CreateCrafts(this);
+        Crafter.AddCrafts(this);
 
         ShapedRecipe diamond = new ShapedRecipe(new ItemStack(Material.DIAMOND, 1));
         diamond.shape("***", "***", "***");
         diamond.setIngredient('*', Material.GRASS_BLOCK);
         getServer().addRecipe(diamond);
-
-        getServer().addRecipe(Crafter.VapeRecipe);
-        getServer().addRecipe(Crafter.SocksRecipe);
-        getServer().addRecipe(Crafter.LongsocksRecipe);
-        getServer().addRecipe(Crafter.CatEarsRecipe);
-        getServer().addRecipe(Crafter.SportHelmetRecipe);
-        getServer().addRecipe(Crafter.SportChestplateRecipe);
-        getServer().addRecipe(Crafter.SportLeggingsRecipe);
-        getServer().addRecipe(Crafter.SportBootsRecipe);
-        getServer().addRecipe(Crafter.BombRecipe);
-        getServer().addRecipe(Crafter.AdrenalineRecipe);
-        getServer().addRecipe(Crafter.BurnRecipe);
-        getServer().addRecipe(Crafter.MonsterRecipe);
-        getServer().addRecipe(Crafter.RedbullRecipe);
-        getServer().addRecipe(Crafter.BeerRecipe);
-        getServer().addRecipe(Crafter.PorterRecipe);
-        getServer().addRecipe(Crafter.RedAleRecipe);
-        getServer().addRecipe(Crafter.BetterPotionRecipe);
-        getServer().addRecipe(Crafter.UgiBookRecipe);
-        getServer().addRecipe(Crafter.ThunderBowRecipe);
-        Crafter.AddUpgrades(this);
     }
 
     private boolean setupEconomy() {
@@ -194,7 +172,7 @@ public final class Main extends JavaPlugin {
                         p.setStatistic(Statistic.PLAY_ONE_MINUTE, ticks - scholarshipCooldown);
                         econ.depositPlayer(p, scholarshipAmount);
                         p.sendMessage(String.format("Начислена стипендия в размере %d!", scholarshipAmount));
-                    } 
+                    }
                 }
                 CheckScholarship();
             }

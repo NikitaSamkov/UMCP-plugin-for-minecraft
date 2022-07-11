@@ -27,7 +27,7 @@ public class PlayerChatListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onAsyncPlayerChatEvent(AsyncPlayerChatEvent e) {
         Player player = e.getPlayer();
-        String instituteName = Main.conn.GetInstitute(player.getUniqueId().toString());
+        String instituteName = Main.conn.GetInstitute(player);
         if (instituteName.equals(InstituteNames.NONE.name)) {
             instituteName = "абитуриент";
         }
