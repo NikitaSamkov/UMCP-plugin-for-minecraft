@@ -13,6 +13,42 @@ database:
   login: "apexrnga"
   password: "4o168PPYSIdyjFU"
 
+#права для определения принадлежности игрока к какой-либо группе LuckPerms
+#следует писать, что идёт после "group." в правах
+permissions:
+  #ИЕНиМ
+  ienim: "ienim"
+
+  #ИНМиТ
+  inmit: "inmit"
+
+  #ИРИТ-РТФ
+  rtf: "rtf"
+
+  #ИСА
+  isa: "isa"
+
+  #ИФКСиМП
+  ifksimp: "ifksimp"
+
+  #ИНФО
+  info: "info"
+
+  #ХТИ
+  hti: "hti"
+
+  #УГИ
+  ugi: "ugi"
+
+  #ИНЭУ
+  ineu: "ineu"
+
+  #УралЭНИН
+  uralenin: "uralenin"
+
+  #ФТИ
+  fti: "fti"
+
 cooldowns:
   #кулдауны
   #Time

@@ -1,5 +1,7 @@
 package org.umc.umcp.enums;
 
+import org.umc.umcp.Main;
+
 public enum InstituteNames {
     IENIM("ИЕНиМ", "ienim"),
     INMIT("ИНМиТ", "inmit"),
@@ -17,8 +19,8 @@ public enum InstituteNames {
     public String name;
     public String permission;
 
-    private InstituteNames(String name, String permission) {
+    private InstituteNames(String name, String configPermissionValue) {
         this.name = name;
-        this.permission = permission;
+        this.permission = Main.config.getString(String.format("permissions.%s", configPermissionValue));
     }
 }
