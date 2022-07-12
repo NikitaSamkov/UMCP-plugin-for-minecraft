@@ -1,8 +1,10 @@
 package org.umc.umcp;
 
 import net.luckperms.api.LuckPerms;
+import net.luckperms.api.model.data.DataMutateResult;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.Node;
+import net.luckperms.api.node.types.InheritanceNode;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -16,6 +18,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.umc.umcp.armorset.ArmorEquipEvent.ArmorListener;
 import org.umc.umcp.armorset.ArmorEquipEvent.DispenserArmorListener;
 import org.umc.umcp.armorset.SetMaster;
@@ -188,14 +191,14 @@ public final class Main extends JavaPlugin {
     }
 
     public static void addPermission(UUID uuid, String permission) {
-        LPapi.getUserManager().modifyUser(uuid, user -> {
-            user.data().add(Node.builder(permission).build());
-        });
+        User user = LPapi.getUserManager().getUser(uuid);
+        user.data().add(Node.builder(permission).value(true).build());
+        LPapi.getUserManager().saveUser(user);
     }
 
     public static void removePermission(UUID uuid, String permission) {
-        LPapi.getUserManager().modifyUser(uuid, user -> {
-            user.data().remove(Node.builder(permission).build());
-        });
+        User user = LPapi.getUserManager().getUser(uuid);
+        user.data().remove(Node.builder(permission).build());
+        LPapi.getUserManager().saveUser(user);
     }
 }

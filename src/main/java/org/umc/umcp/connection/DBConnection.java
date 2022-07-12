@@ -1,6 +1,7 @@
 package org.umc.umcp.connection;
 
 import org.bukkit.entity.Player;
+import org.umc.umcp.Main;
 import org.umc.umcp.enums.InstituteNames;
 
 import java.sql.*;

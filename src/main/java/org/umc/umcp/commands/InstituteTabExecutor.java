@@ -118,10 +118,6 @@ public class InstituteTabExecutor extends HelpSupport {
             return true;
         }
         String lastInstitute = conn.GetInstitute(player);
-        if (lastInstitute == null) {
-            return false;
-        }
-        Main.log.info("last inst - " + lastInstitute);
         String instituteName = args[0];
         if (lastInstitute != null && lastInstitute.equals(instituteName)) {
             sender.sendMessage(String.format(jm.getString("AlreadyInTarget"), painter.get(instituteName)));
@@ -271,9 +267,7 @@ public class InstituteTabExecutor extends HelpSupport {
             return false;
         }
         try {
-            Main.log.info("new institute name - " + instituteName);
             String newPerm = institutes.get(instituteName).get("permission");
-            Main.log.info("new permission group - " + newPerm);
             String currInst = conn.GetInstitute(player);
 
             if (currInst != null) {
@@ -305,14 +299,24 @@ public class InstituteTabExecutor extends HelpSupport {
     }
 
     private void CheckInstitutePerms(Player player, String lastInstitute, String newInstitute) {
+        if (newInstitute.equals(InstituteNames.INFO.name)) {
+            player.removePotionEffect(PotionEffectType.FIRE_RESISTANCE);
+            player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, Integer.MAX_VALUE,
+                    Main.config.getInt("info.params.FireResistAmplifier"), false, false));
+        }
+        if (newInstitute.equals(InstituteNames.IFKSIMP.name)) {
+            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(24);
+        }
+        if (newInstitute.equals(InstituteNames.FTI.name)) {
+            player.removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
+            player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, Integer.MAX_VALUE,
+                    Main.config.getInt("fti.params.StrengthAmplifier"), false, false));
+        }
         if (lastInstitute == null) {
             return;
         }
         if (lastInstitute.equals(InstituteNames.IFKSIMP.name)) {
             player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
-        }
-        if (newInstitute.equals(InstituteNames.IFKSIMP.name)) {
-            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(24);
         }
         if (lastInstitute.equals(InstituteNames.IENIM.name)) {
             DowngradeOverloadedItems(player);
@@ -320,18 +324,8 @@ public class InstituteTabExecutor extends HelpSupport {
         if (lastInstitute.equals(InstituteNames.INFO.name)) {
             player.removePotionEffect(PotionEffectType.FIRE_RESISTANCE);
         }
-        if (newInstitute.equals(InstituteNames.INFO.name)) {
-            player.removePotionEffect(PotionEffectType.FIRE_RESISTANCE);
-            player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, Integer.MAX_VALUE,
-                    Main.config.getInt("info.params.FireResistAmplifier"), false, false));
-        }
         if (lastInstitute.equals(InstituteNames.FTI.name)) {
             player.removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
-        }
-        if (newInstitute.equals(InstituteNames.FTI.name)) {
-            player.removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
-            player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, Integer.MAX_VALUE,
-                    Main.config.getInt("fti.params.StrengthAmplifier"), false, false));
         }
     }
 
