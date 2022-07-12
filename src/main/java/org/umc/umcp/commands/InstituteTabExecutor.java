@@ -415,7 +415,7 @@ public class InstituteTabExecutor extends HelpSupport {
 
     private @NotNull TextComponent GetClickableCommand(@NotNull Enchantment ench) {
         return GetClickableCommand(String.format(ienimMessages.getString("PlusEnch"), ench.getKey().getKey().toUpperCase(Locale.ROOT)),
-                String.format("/ienim %s %s", Main.config.getString("ienim.commands.Upgrade"), ench.getKey().getKey()));
+                String.format("/urfu ienim %s %s", Main.config.getString("ienim.commands.Upgrade"), ench.getKey().getKey()));
     }
 
     private @NotNull TextComponent GetClickableEnchants(@NotNull List<Enchantment> enchants) {
