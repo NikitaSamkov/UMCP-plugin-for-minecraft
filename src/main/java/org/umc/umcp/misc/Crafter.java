@@ -142,12 +142,15 @@ public class Crafter {
         //</editor-fold>
         //<editor-fold desc="лук, который при попадании может бить молнией игрока" defaultstate="collapsed">
         ItemStack thunderBow = CreateItem(UmcpItem.THUNDERBOW, 1);
-        thunderBow.setDurability((short) (Material.BOW.getMaxDurability() - 3));
+        thunderBow.setDurability((short) (Material.BOW.getMaxDurability() - Main.config.getInt("fti.params.BowDurability")));
         ThunderBowRecipe = new ShapedRecipe(new NamespacedKey(plugin, "thunderbow"), thunderBow);
-        ThunderBowRecipe.shape("sws", "sbs", "sss");
+        ThunderBowRecipe.shape("lsl", "gbg", "rir");
         ThunderBowRecipe.setIngredient('s', Material.SPRUCE_SAPLING);
-        ThunderBowRecipe.setIngredient('w', Material.WATER_BUCKET);
+        ThunderBowRecipe.setIngredient('l', Material.LAPIS_LAZULI);
         ThunderBowRecipe.setIngredient('b', Material.BOW);
+        ThunderBowRecipe.setIngredient('g', Material.GOLD_INGOT);
+        ThunderBowRecipe.setIngredient('r', Material.REDSTONE);
+        ThunderBowRecipe.setIngredient('i', Material.IRON_INGOT);
         //</editor-fold>
 
         //<editor-fold desc="Козырёк 'Абибас'" defaultstate="collapsed">

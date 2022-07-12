@@ -35,6 +35,7 @@ public class CraftListener implements Listener {
         keys.put(InstituteNames.URALENIN, Arrays.asList("bomb", "adrenaline", "burn", "monster", "redbull"));
         keys.put(InstituteNames.HTI, Arrays.asList("beer", "porter", "redale"));
         keys.put(InstituteNames.UGI, Arrays.asList("ugi_book"));
+        keys.put(InstituteNames.FTI, Arrays.asList("thunderbow"));
         FillUpgrades();
     }
 
