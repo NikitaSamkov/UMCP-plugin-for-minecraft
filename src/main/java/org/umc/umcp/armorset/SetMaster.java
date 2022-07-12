@@ -99,6 +99,10 @@ public class SetMaster {
         List<UmcpArmorSet> result = new ArrayList<>();
         for (UmcpArmorSet set: sets) {
             if (set.CheckSet(player)) {
+                String institute = Main.conn.GetInstitute(player);
+                if (set.getInstitute() != null && (institute == null || !institute.equals(set.getInstitute().name))) {
+                    continue;
+                }
                 result.add(set);
             }
         }

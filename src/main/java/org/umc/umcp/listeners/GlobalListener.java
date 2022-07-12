@@ -287,13 +287,62 @@ public class GlobalListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
-        SetMaster.CheckSets(e.getPlayer());
-        if (player.hasPermission(String.format("group.%s", InstituteNames.INFO.permission))) {
+        SetMaster.RemoveAllSets(player);
+        SetMaster.CheckSets(player);
+        RemoveInstitutePerms(player, Main.conn.GetInstitute(player));
+        AddInstitutePerms(player, Main.conn.GetInstitute(player));
+    }
+
+    @EventHandler
+    public void onPlayerRespawn(PlayerRespawnEvent e) {
+        Player player = e.getPlayer();
+        SetMaster.RemoveAllSets(player);
+        SetMaster.CheckSets(player);
+        RemoveInstitutePerms(player, Main.conn.GetInstitute(player));
+        AddInstitutePerms(player, Main.conn.GetInstitute(player));
+        Cooldowns.Clear(player.getUniqueId(), CooldownType.BEER);
+        Cooldowns.Clear(player.getUniqueId(), CooldownType.VAPE);
+        Cooldowns.Clear(player.getUniqueId(), CooldownType.ENERGETICS);
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent e) {
+        Player player = e.getPlayer();
+        SetMaster.RemoveAllSets(player);
+        RemoveInstitutePerms(player, Main.conn.GetInstitute(player));
+    }
+
+    private void AddInstitutePerms(Player player, String institute) {
+        if (institute == null) {
+            return;
+        }
+        if (institute.equals(InstituteNames.INFO.name)) {
+            player.removePotionEffect(PotionEffectType.FIRE_RESISTANCE);
             player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, Integer.MAX_VALUE,
                     Main.config.getInt("info.params.FireResistAmplifier"), false, false));
-        } else if (player.hasPermission(String.format("group.%s", InstituteNames.FTI.permission))) {
+        }
+        if (institute.equals(InstituteNames.IFKSIMP.name)) {
+            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(24);
+        }
+        if (institute.equals(InstituteNames.FTI.name)) {
+            player.removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
             player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, Integer.MAX_VALUE,
                     Main.config.getInt("fti.params.StrengthAmplifier"), false, false));
+        }
+    }
+
+    private void RemoveInstitutePerms(Player player, String institute) {
+        if (institute == null) {
+            return;
+        }
+        if (institute.equals(InstituteNames.IFKSIMP.name)) {
+            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
+        }
+        if (institute.equals(InstituteNames.INFO.name)) {
+            player.removePotionEffect(PotionEffectType.FIRE_RESISTANCE);
+        }
+        if (institute.equals(InstituteNames.FTI.name)) {
+            player.removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
         }
     }
 
@@ -317,18 +366,6 @@ public class GlobalListener implements Listener {
             dirtyCloud.addCustomEffect(new PotionEffect(PotionEffectType.WEAKNESS, 0, 0), false);
             dirtyCloud.setMetadata("isDirtyCloud", new FixedMetadataValue(plugin, true));
             e.setCancelled(true);
-        }
-    }
-
-    @EventHandler
-    public void onPlayerRespawn(PlayerRespawnEvent e) {
-        Player player = e.getPlayer();
-        if (player.hasPermission(String.format("group.%s", InstituteNames.INFO.permission))) {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, Integer.MAX_VALUE,
-                    Main.config.getInt("info.params.FireResistAmplifier"), false, false));
-        } else if (player.hasPermission(String.format("group.%s", InstituteNames.FTI.permission))) {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, Integer.MAX_VALUE,
-                    Main.config.getInt("fti.params.StrengthAmplifier"), false, false));
         }
     }
 

@@ -66,4 +66,11 @@ public class Cooldowns {
     public static void Clear(UUID uuid) {
         cooldowns.remove(uuid);
     }
+
+    public static void Clear(UUID uuid, CooldownType type) {
+        if (!cooldowns.containsKey(uuid) || !cooldowns.get(uuid).containsKey(type)) {
+            return;
+        }
+        cooldowns.get(uuid).remove(type);
+    }
 }
