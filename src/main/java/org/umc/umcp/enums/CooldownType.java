@@ -10,8 +10,7 @@ public enum CooldownType {
     VAPE("vape"),
     INSTITUTE_JOIN("join"),
     ENERGETICS("energetics"),
-    BEER("beer"),
-    KIT_STROIKA("stroika");
+    BEER("beer");
 
     public Date time;
     public int acceptableCount;

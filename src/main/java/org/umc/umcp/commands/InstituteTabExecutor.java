@@ -94,8 +94,7 @@ public class InstituteTabExecutor extends HelpSupport {
                 source.getString("BaseDesc"), new LinkedList<>(Arrays.asList(
                 new UmcpCommand(source.getString("join.Name"), this::Join, source.getString("join.Desc"), null, institutesList),
                 new UmcpCommand(source.getString("info.Name"), this::Info, source.getString("info.Desc"), null, institutesList, true),
-                new UmcpCommand(source.getString("list.Name"), this::InstitutesList, source.getString("list.Desc")),
-                new UmcpCommand(source.getString("kit.Name"), this::Kit, source.getString("kit.Desc"), null, new LinkedList<>(Arrays.asList(source.getString("kit.stroika.Name"))))
+                new UmcpCommand(source.getString("list.Name"), this::InstitutesList, source.getString("list.Desc"))
         )));
         tree.GetSubcommand(source.getString("info.Name")).arguments.add("me");
         return tree;
@@ -179,31 +178,6 @@ public class InstituteTabExecutor extends HelpSupport {
                 String.format("/urfu %s ", Main.config.getString("urfu.commands.info.Name"))));
         msg.addExtra(cmd);
         sender.spigot().sendMessage(msg);
-        return true;
-    }
-
-    private boolean Kit(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length == 0) {
-            return false;
-        }
-        Player player = (Player) sender;
-        String institute = Main.conn.GetInstitute(player);
-        ConfigurationSection kits = Main.config.getConfigurationSection("urfu.commands.kit");
-        ConfigurationSection messages = Main.config.getConfigurationSection("urfu.messages.kit");
-        if (args[0].equals(kits.getString("stroika.Name"))) {
-            if (!institute.equals(InstituteNames.ISA.name)) {
-                player.sendMessage(messages.getString("stroika.NotIsa"));
-                return true;
-            }
-            if (!Cooldowns.CanUse(player.getUniqueId(), CooldownType.KIT_STROIKA)) {
-                player.sendMessage(messages.getString("stroika.Cooldown"));
-                return true;
-            }
-            GiveKit(player, "stroika");
-            Cooldowns.Update(player.getUniqueId(), CooldownType.KIT_STROIKA);
-            return true;
-        }
-        player.sendMessage(messages.getString("NotFound"));
         return true;
     }
 
@@ -326,22 +300,6 @@ public class InstituteTabExecutor extends HelpSupport {
         }
         if (lastInstitute.equals(InstituteNames.FTI.name)) {
             player.removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
-        }
-    }
-
-    private void GiveKit(Player player, String kitid) {
-        World world = player.getWorld();
-        Location loc = player.getLocation();
-        for (String item: Main.config.getStringList(String.format("urfu.commands.kit.%s.Items", kitid))) {
-            String[] parsed = item.split(":");
-            Material material = Material.matchMaterial(parsed[0]);
-            if (material == null) {
-                continue;
-            }
-            ItemStack is = new ItemStack(material, Integer.parseInt(parsed[1]));
-            if (!player.getInventory().addItem(is).isEmpty()) {
-                world.dropItem(loc, is);
-            }
         }
     }
 }
