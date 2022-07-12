@@ -263,7 +263,7 @@ public class CraftListener implements Listener {
                         "BOOTS",
                         "SHEARS",
                         "SHIELD"))) {
-            if (!player.hasPermission(String.format("group.%s", InstituteNames.INMIT.permission))) {
+            if (player.hasPermission(String.format("group.%s", InstituteNames.INMIT.permission))) {
                 ItemMeta resultMeta = result.getItemMeta();
                 assert resultMeta != null;
                 resultMeta.addEnchant(Enchantment.DURABILITY, 1, true);

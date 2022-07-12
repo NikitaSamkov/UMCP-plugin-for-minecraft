@@ -37,7 +37,15 @@ public enum UmcpItem {
 
     BOOK("ugi", "book", Material.SNOWBALL),
 
-    THUNDERBOW("fti", "thunderbow", Material.BOW);
+    THUNDERBOW("fti", "thunderbow", Material.BOW),
+
+    INFO_STRENGTH_POTION("info", "strength_potion", Material.POTION),
+    INFO_SPEED_POTION("info", "speed_potion", Material.POTION),
+    INFO_REGEN_POTION("info", "regen_potion", Material.POTION),
+    INFO_POISON_POTION("info", "poison_potion", Material.SPLASH_POTION),
+    INFO_SLOWING_POTION("info", "slow_potion", Material.SPLASH_POTION);
+
+
 
     private final String displayName;
     private final List<String> lore;

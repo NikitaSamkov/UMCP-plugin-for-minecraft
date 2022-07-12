@@ -47,6 +47,11 @@ public class MyExecutor implements TabExecutor
             if (strings[0].equals("time")) {
                 player.sendMessage(String.format("you are %d sec on this server!", player.getStatistic(Statistic.PLAY_ONE_MINUTE) / 20));
             }
+            if (strings[0].equals("potions")) {
+                for (ItemStack potion : Crafter.GetInfoPotions()) {
+                    player.getInventory().addItem(potion);
+                }
+            }
         }
         return true;
     }
@@ -59,6 +64,7 @@ public class MyExecutor implements TabExecutor
             result.add("leviathan");
             result.add("money");
             result.add("time");
+            result.add("potions");
         }
 
         return result;

@@ -183,6 +183,62 @@ info:
   params:
     #сила эффекта огнестойкости
     FireResistAmplifier: 0
+    potions:
+      StrengthDuration: 300
+      StrengthAmplifier: 3
+      StrengthR: 255
+      StrengthG: 255
+      StrengthB: 255
+
+      SpeedDuration: 2400
+      SpeedAmplifier: 2
+      SpeedR: 255
+      SpeedG: 255
+      SpeedB: 255
+
+      RegenDuration: 200
+      RegenAmplifier: 2
+      RegenR: 255
+      RegenG: 255
+      RegenB: 255
+
+      PoisonDuration: 200
+      PoisonAmplifier: 2
+      PoisonR: 255
+      PoisonG: 255
+      PoisonB: 255
+
+      SlowDuration: 300
+      SlowAmplifier: 4
+      SlowR: 255
+      SlowG: 255
+      SlowB: 255
+  items:
+    strength_potion:
+      Name: "ИНФО ЗЕЛЬЕ СИЛА"
+      Desc:
+        - "АУАУАУАУ"
+      ModelData: 0
+    speed_potion:
+      Name: "ИНФО ЗЕЛЬЕ СКОРОСТЬ"
+      Desc:
+        - "АУАУАУАУ"
+      ModelData: 0
+    regen_potion:
+      Name: "ИНФО ЗЕЛЬЕ ВОССТАНОВЛЕНИЕ"
+      Desc:
+        - "АУАУАУАУ"
+      ModelData: 0
+    poison_potion:
+      Name: "ИНФО ЗЕЛЬЕ ЯД"
+      Desc:
+        - "АУАУАУАУ"
+      ModelData: 0
+    slow_potion:
+      Name: "ИНФО ЗЕЛЬЕ МЕДЛЕННО"
+      Desc:
+        - "АУАУАУАУ"
+      ModelData: 0
 
 ineu:
   color: "3"

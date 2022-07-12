@@ -3,6 +3,7 @@ package org.umc.umcp.misc;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -17,6 +18,8 @@ import org.umc.umcp.Main;
 import org.umc.umcp.enums.UmcpItem;
 
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Crafter {
     public static ShapedRecipe VapeRecipe;
@@ -213,6 +216,77 @@ public class Crafter {
         UgiBookRecipe.addIngredient(Material.IRON_NUGGET);
         //</editor-fold>
 
+    }
+
+    public static List<ItemStack> GetInfoPotions() {
+        List<ItemStack> result = new LinkedList<>();
+        ConfigurationSection potion_data = Main.config.getConfigurationSection("info.params.potions");
+        ItemStack strength = CreateItem(UmcpItem.INFO_STRENGTH_POTION, 1);
+        PotionMeta strength_meta = (PotionMeta) strength.getItemMeta();
+        strength_meta.addCustomEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE,
+                potion_data.getInt("StrengthDuration"),
+                potion_data.getInt("StrengthAmplifier")), true);
+        strength_meta.setColor(Color.fromRGB(
+                potion_data.getInt("StrengthR"),
+                potion_data.getInt("StrengthG"),
+                potion_data.getInt("StrengthB")
+        ));
+        strength.setItemMeta(strength_meta);
+        result.add(strength);
+
+        ItemStack speed = CreateItem(UmcpItem.INFO_SPEED_POTION, 1);
+        PotionMeta speed_meta = (PotionMeta) speed.getItemMeta();
+        speed_meta.addCustomEffect(new PotionEffect(PotionEffectType.SPEED,
+                potion_data.getInt("SpeedDuration"),
+                potion_data.getInt("SpeedAmplifier")), true);
+        speed_meta.setColor(Color.fromRGB(
+                potion_data.getInt("SpeedR"),
+                potion_data.getInt("SpeedG"),
+                potion_data.getInt("SpeedB")
+        ));
+        speed.setItemMeta(speed_meta);
+        result.add(speed);
+
+        ItemStack regen = CreateItem(UmcpItem.INFO_REGEN_POTION, 1);
+        PotionMeta regen_meta = (PotionMeta) regen.getItemMeta();
+        regen_meta.addCustomEffect(new PotionEffect(PotionEffectType.REGENERATION,
+                potion_data.getInt("RegenDuration"),
+                potion_data.getInt("RegenAmplifier")), true);
+        regen_meta.setColor(Color.fromRGB(
+                potion_data.getInt("RegenR"),
+                potion_data.getInt("RegenG"),
+                potion_data.getInt("RegenB")
+        ));
+        regen.setItemMeta(regen_meta);
+        result.add(regen);
+
+        ItemStack poison = CreateItem(UmcpItem.INFO_POISON_POTION, 1);
+        PotionMeta poison_meta = (PotionMeta) poison.getItemMeta();
+        poison_meta.addCustomEffect(new PotionEffect(PotionEffectType.POISON,
+                potion_data.getInt("PoisonDuration"),
+                potion_data.getInt("PoisonAmplifier")), true);
+        poison_meta.setColor(Color.fromRGB(
+                potion_data.getInt("StrengthR"),
+                potion_data.getInt("StrengthG"),
+                potion_data.getInt("StrengthB")
+        ));
+        poison.setItemMeta(poison_meta);
+        result.add(poison);
+
+        ItemStack slow = CreateItem(UmcpItem.INFO_SLOWING_POTION, 1);
+        PotionMeta slow_meta = (PotionMeta) slow.getItemMeta();
+        slow_meta.addCustomEffect(new PotionEffect(PotionEffectType.SLOW,
+                potion_data.getInt("SlowDuration"),
+                potion_data.getInt("SlowAmplifier")), true);
+        slow_meta.setColor(Color.fromRGB(
+                potion_data.getInt("SlowR"),
+                potion_data.getInt("SlowG"),
+                potion_data.getInt("SlowB")
+        ));
+        slow.setItemMeta(slow_meta);
+        result.add(slow);
+
+        return result;
     }
 
     public static @NotNull ItemStack CreateItem(@NotNull UmcpItem umcpItem, int amount) {
