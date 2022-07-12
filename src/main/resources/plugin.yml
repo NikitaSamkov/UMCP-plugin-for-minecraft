@@ -9,8 +9,6 @@ commands:
     usage: /<command>
   urfu:
     usage: §cпопробуйте /<command> help§f
-  ienim:
-    usage: §cпопробуйте /<command> help§f (Могут использовать только учащиеся ИЕНиМ'а!)
 
 permissions:
   umcp.nocooldown:

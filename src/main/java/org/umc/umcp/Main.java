@@ -23,7 +23,6 @@ import org.umc.umcp.armorset.ArmorEquipEvent.ArmorListener;
 import org.umc.umcp.armorset.ArmorEquipEvent.DispenserArmorListener;
 import org.umc.umcp.armorset.SetMaster;
 import org.umc.umcp.armorset.UmcpArmorSet;
-import org.umc.umcp.commands.IenimTabExecutor;
 import org.umc.umcp.commands.InstituteTabExecutor;
 import org.umc.umcp.commands.Painter;
 import org.umc.umcp.connection.DBConnection;
@@ -32,7 +31,6 @@ import org.umc.umcp.enums.UmcpItem;
 import org.umc.umcp.listeners.CraftListener;
 import org.umc.umcp.listeners.GlobalListener;
 import org.umc.umcp.listeners.IENIMListener;
-import org.umc.umcp.listeners.PlayerChatListener;
 import org.umc.umcp.misc.Crafter;
 
 import java.util.Arrays;
@@ -75,7 +73,6 @@ public final class Main extends JavaPlugin {
 
         getCommand("test").setExecutor(new MyExecutor());
         getCommand("urfu").setExecutor(new InstituteTabExecutor());
-        getCommand("ienim").setExecutor(new IenimTabExecutor());
 
         Bukkit.getServer().getPluginManager().registerEvents(new MyListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new CraftListener(), this);

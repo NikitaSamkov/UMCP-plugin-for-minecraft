@@ -23,6 +23,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.jetbrains.annotations.NotNull;
 import org.umc.umcp.misc.Cooldowns;
 import org.umc.umcp.Main;
 import org.umc.umcp.armorset.SetMaster;
@@ -40,25 +41,35 @@ public class InstituteTabExecutor extends HelpSupport {
     private final Map<String, Map<String, String>> institutes;
     private final Map<String, String> painter;
     private UmcpCommand commandTree;
+    private UmcpCommand ienimTree;
     private Help helper;
+    private Help ienimHelper;
     private ConfigurationSection messages;
+    private ConfigurationSection ienimMessages;
 
     public InstituteTabExecutor() {
         conn = Main.conn;
         institutes = conn.GetInstitutes();
         commandTree = GetTree();
+        ienimTree = GetIenimTree();
         painter = Painter.GetPainter(new ArrayList<>(institutes.keySet()));
         helper = new Help(commandTree);
+        ienimHelper = new Help(ienimTree);
         messages = Main.config.getConfigurationSection("urfu.messages");
+        ienimMessages = Main.config.getConfigurationSection("ienim.messages");
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length < 1)
             return false;
+        boolean ienim = sender.hasPermission(
+                String.format("group.%s", institutes.get(InstituteNames.IENIM.name).get("permission")));
         if (args[args.length - 1].equalsIgnoreCase("help"))
-            return helper.GetHelp(sender, command, label, args);
-        UmcpCommand curr = commandTree;
+            return ienim ? ienimHelper.GetHelp(sender, command, label, args) : helper.GetHelp(sender, command, label, args);
+        UmcpCommand curr = ienim ?
+                ienimTree :
+                commandTree;
         for (int i = 0; i < args.length; i++) {
             UmcpCommand next = curr.GetSubcommand(args[i]);
             if (next == null) {
@@ -71,11 +82,13 @@ public class InstituteTabExecutor extends HelpSupport {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+        boolean ienim = sender.hasPermission(
+                String.format("group.%s", institutes.get(InstituteNames.IENIM.name).get("permission")));
         List<String> path = new LinkedList<>(Arrays.asList(args));
         if (path.size() > 0)
             path.remove(path.size() - 1);
 
-        UmcpCommand comm = commandTree.GetSubcommand(path);
+        UmcpCommand comm = ienim ? ienimTree.GetSubcommand(path) : commandTree.GetSubcommand(path);
 
         if (comm == null)
             return new ArrayList<>();
@@ -99,6 +112,16 @@ public class InstituteTabExecutor extends HelpSupport {
         )));
         tree.GetSubcommand(source.getString("info.Name")).arguments.add("me");
         return tree;
+    }
+
+    private UmcpCommand GetIenimTree() {
+        ConfigurationSection commands = Main.config.getConfigurationSection("ienim.commands");
+        UmcpCommand base = GetTree();
+        UmcpCommand ienim = new UmcpCommand(base.name, base.func, base.description, base.subcommands);
+        ienim.AddSubcommand(new UmcpCommand("ienim", this::NoCommand, commands.getString("BaseDesc"), new LinkedList<>(Arrays.asList(
+                new UmcpCommand(commands.getString("Upgrade"), this::IenimPlus, commands.getString("UpgradeDesc"))
+        ))));
+        return ienim;
     }
 
     private boolean NoCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -320,6 +343,92 @@ public class InstituteTabExecutor extends HelpSupport {
                 player.removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
             }
         }
+    }
+
+    private Boolean IenimPlus(CommandSender commandSender, Command command, String s, String[] strings) {
+        Player player = (Player) commandSender;
+        ItemStack item = player.getInventory().getItemInMainHand();
+        if (item.getType() == Material.AIR) {
+            commandSender.sendMessage(ienimMessages.getString("HandsEmpty"));
+            return true;
+        }
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) {
+            return false;
+        }
+
+        if (!meta.hasEnchants()) {
+            commandSender.sendMessage(ienimMessages.getString("NoMaxEnchants"));
+            return true;
+        }
+
+        Map<Enchantment, Integer> enchants = meta.getEnchants();
+        List<Enchantment> upgrade = new ArrayList<>();
+        for (Enchantment ench: enchants.keySet()) {
+            if (enchants.get(ench) > ench.getMaxLevel()) {
+                commandSender.sendMessage(String.format(ienimMessages.getString("HasOverloaded"), ench.getKey().getKey()));
+                return true;
+            }
+            if (enchants.get(ench) == ench.getMaxLevel()) {
+                upgrade.add(ench);
+            }
+        }
+
+        if (strings.length > 0) {
+            return AddEnchantment(player, strings[0]);
+        }
+
+        if (upgrade.size() == 0) {
+            commandSender.sendMessage(ienimMessages.getString("NoMaxEnchants"));
+            return true;
+        }
+
+        commandSender.spigot().sendMessage(GetClickableEnchants(upgrade));
+
+        return true;
+    }
+
+    private Boolean AddEnchantment(Player player, String arg) {
+        Enchantment ench = Enchantment.getByKey(NamespacedKey.minecraft(arg));
+
+        ItemMeta meta = player.getInventory().getItemInMainHand().getItemMeta();
+
+        Map<Enchantment, Integer> enchants = meta.getEnchants();
+
+        if (enchants.get(ench) != ench.getMaxLevel()) {
+            player.sendMessage(String.format(ienimMessages.getString("NotMaxLvl"), arg));
+            return true;
+        }
+        int power = Main.config.getInt("ienim.params.UpgradePower");
+        meta.addEnchant(ench, ench.getMaxLevel() + power, true);
+        player.getInventory().getItemInMainHand().setItemMeta(meta);
+        player.sendMessage(String.format(ienimMessages.getString("UpgradeSuccess"), arg, ench.getMaxLevel() + power));
+
+        return true;
+    }
+
+    private @NotNull TextComponent GetClickableCommand(String text, String command) {
+        TextComponent result = new TextComponent(text);
+        result.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));
+        return result;
+    }
+
+    private @NotNull TextComponent GetClickableCommand(@NotNull Enchantment ench) {
+        return GetClickableCommand(String.format(ienimMessages.getString("PlusEnch"), ench.getKey().getKey().toUpperCase(Locale.ROOT)),
+                String.format("/ienim %s %s", Main.config.getString("ienim.commands.Upgrade"), ench.getKey().getKey()));
+    }
+
+    private @NotNull TextComponent GetClickableEnchants(@NotNull List<Enchantment> enchants) {
+        TextComponent result = new TextComponent(ienimMessages.getString("PlusSeparator"));
+        result.addExtra(ienimMessages.getString("PlusMessage"));
+        for (Enchantment ench: enchants) {
+            TextComponent extra = GetClickableCommand(ench);
+            extra.setColor(ChatColor.AQUA);
+            result.addExtra(extra);
+            result.addExtra("\n\n");
+        }
+        result.addExtra(ienimMessages.getString("PlusSeparator"));
+        return result;
     }
 }
 
