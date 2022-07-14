@@ -302,7 +302,7 @@ public class CraftListener implements Listener {
                 e.getInventory().setResult(new ItemStack(Material.AIR));
                 return;
             }
-            boolean inmit = player.hasPermission(String.format("group.%s", InstituteNames.IENIM.permission));
+            boolean inmit = player.hasPermission(String.format("group.%s", InstituteNames.INMIT.permission));
             boolean ugi = player.hasPermission(String.format("group.%s", InstituteNames.UGI.permission));
             if ((!inmit && !ugi) ||
                     (ugi &&
