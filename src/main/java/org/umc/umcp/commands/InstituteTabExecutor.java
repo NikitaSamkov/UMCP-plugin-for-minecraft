@@ -84,6 +84,7 @@ public class InstituteTabExecutor extends HelpSupport {
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         boolean ienim = sender.hasPermission(
                 String.format("group.%s", institutes.get(InstituteNames.IENIM.name).get("permission")));
+        boolean director = sender.hasPermission("group.director");
         List<String> path = new LinkedList<>(Arrays.asList(args));
         if (path.size() > 0)
             path.remove(path.size() - 1);
@@ -96,8 +97,11 @@ public class InstituteTabExecutor extends HelpSupport {
         List<String> subs = comm.GetSubcommands();
         subs.addAll(comm.GetArguments());
         subs.add("help");
-
-        return subs.stream().filter((String sub)->sub.startsWith(args[args.length - 1])).collect(Collectors.toList());
+        List<String> result = subs.stream().filter((String sub)->sub.startsWith(args[args.length - 1])).collect(Collectors.toList());
+        if (args.length == 1 && result.contains("otchislen") && !director) {
+            result.remove("otchislen");
+        }
+        return result;
     }
 
     protected UmcpCommand GetTree() {
@@ -108,7 +112,8 @@ public class InstituteTabExecutor extends HelpSupport {
                 new UmcpCommand(source.getString("join.Name"), this::Join, source.getString("join.Desc"), null, institutesList),
                 new UmcpCommand(source.getString("info.Name"), this::Info, source.getString("info.Desc"), null, institutesList, true),
                 new UmcpCommand(source.getString("list.Name"), this::InstitutesList, source.getString("list.Desc")),
-                new UmcpCommand(source.getString("leave.Name"), this::Leave, source.getString("leave.Desc"))
+                new UmcpCommand(source.getString("leave.Name"), this::Leave, source.getString("leave.Desc")),
+                new UmcpCommand(source.getString("otchislen.Name"), this::Otchislen, source.getString("otchislen.Desc"), null, null, true)
         )));
         tree.GetSubcommand(source.getString("info.Name")).arguments.add("me");
         return tree;
@@ -142,6 +147,72 @@ public class InstituteTabExecutor extends HelpSupport {
 
         SetMaster.RemoveAllSets(player);
         SetMaster.CheckSets(player);
+        return true;
+    }
+
+    private boolean Otchislen(CommandSender sender, Command command, String label, String[] args) {
+        Player player = (Player) sender;
+        boolean director = player.hasPermission("group.director");
+        if (!director) {
+            return false;
+        }
+        ConfigurationSection om = messages.getConfigurationSection("otchislen");
+        boolean rector = player.hasPermission(String.format("group.%s", "rector"));
+        if (!Cooldowns.CanUse(player.getUniqueId(), CooldownType.OTCHISLEN)) {
+            player.sendMessage(om.getString("Cooldown"));
+            return true;
+        }
+
+        String institute = Main.conn.GetInstitute(player);
+        if (!rector && institute == null) {
+            player.sendMessage(om.getString("DirectorNoInstitute"));
+            return true;
+        }
+
+        List<Player> targets = new ArrayList<>();
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            String pinst = Main.conn.GetInstitute(p);
+            if (p.hasPermission("group.aspirant") || pinst == null || (!rector && !institute.equals(pinst))) {
+                continue;
+            }
+            targets.add(p);
+        }
+
+        if (targets.size() == 0) {
+            player.sendMessage(om.getString("NoTargets"));
+            return true;
+        }
+
+        List<Player> victims = new ArrayList<>();
+
+        if (rector && targets.size() < 4) {
+            victims = targets;
+        } else {
+            int victimCount = rector ? 3 : 1;
+            Random random = new Random();
+            for (int i = 0; i < victimCount; i++) {
+                boolean success = false;
+                while (!success) {
+                    Player potVictim = targets.get(random.nextInt(targets.size()));
+                    if (victims.contains(potVictim)) {
+                        continue;
+                    }
+                    victims.add(potVictim);
+                    success = true;
+                }
+            }
+        }
+
+        for (Player victim : victims) {
+            String inst = Main.conn.GetInstitute(victim);
+            Main.removePermission(victim.getUniqueId(), String.format("group.%s", institutes.get(inst).get("permission")));
+            victim.sendMessage(om.getString("YouOtchislenFirst") + player.getDisplayName() + om.getString("YouOtchislenLast"));
+            CheckInstitutePerms(victim, institute, null);
+            SetMaster.RemoveAllSets(victim);
+            SetMaster.CheckSets(victim);
+        }
+
+        Cooldowns.Update(player.getUniqueId(), CooldownType.OTCHISLEN);
         return true;
     }
 
@@ -244,6 +315,12 @@ public class InstituteTabExecutor extends HelpSupport {
     }
 
     private boolean InfoPlayer(Player player, Player target) {
+        String targetInstitute = conn.GetInstitute(target);
+        if (targetInstitute == null) {
+            player.sendMessage("Данный игрок только абитуриент!");
+            return true;
+        }
+
         TextComponent msg = new TextComponent(messages.getString("info.PlayerFirst"));
 
         TextComponent targetName = new TextComponent(target.getName());
