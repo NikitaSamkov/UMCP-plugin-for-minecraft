@@ -1,12 +1,19 @@
 package org.umc.umcp.misc;
 
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.umc.umcp.Main;
 import org.umc.umcp.enums.CooldownType;
 
+import java.io.File;
 import java.util.*;
 
 public class Cooldowns {
+    private static File cooldownFile;
+    private static FileConfiguration cooldownConfig;
     static Map<UUID, Map<CooldownType, List<Date>>> cooldowns = new HashMap<>();
 
     public static void Update(UUID uuid, CooldownType type, Date moment) {
@@ -72,5 +79,63 @@ public class Cooldowns {
             return;
         }
         cooldowns.get(uuid).remove(type);
+    }
+
+    public static FileConfiguration GetCooldowns(JavaPlugin plugin) {
+        cooldownFile = new File(plugin.getDataFolder(), "cooldowns.yml");
+        if (!cooldownFile.exists()) {
+            try {
+                cooldownFile.createNewFile();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        cooldownConfig = YamlConfiguration.loadConfiguration(cooldownFile);
+        for (String uuids : cooldownConfig.getKeys(false)) {
+            UUID uuid = UUID.fromString(uuids);
+            if (!cooldowns.containsKey(uuid)) {
+                cooldowns.put(uuid, new HashMap<>());
+            }
+            for (String types : cooldownConfig.getConfigurationSection(uuids).getKeys(false)) {
+                CooldownType type = CooldownType.ByName(types);
+                if (type != null) {
+                    List<Long> datesl = cooldownConfig.getLongList(String.format("%s.%s", uuids, types));
+                    List<Date> dates = new ArrayList<>();
+                    for (Long time : datesl) {
+                        dates.add(new Date(time));
+                    }
+                    cooldowns.get(uuid).put(type, dates);
+                    Main.log.info(String.format("loaded %s.%s", uuids, types));
+                }
+            }
+        }
+        return cooldownConfig;
+    }
+
+    public static void SaveCooldowns(JavaPlugin plugin) {
+        try {
+            cooldownFile.createNewFile();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        cooldownConfig = YamlConfiguration.loadConfiguration(cooldownFile);
+        for (UUID uuid : cooldowns.keySet()) {
+            for (CooldownType type : cooldowns.get(uuid).keySet()) {
+                UpdateStamps(uuid, type, new Date());
+                if (cooldowns.get(uuid).get(type).size() != 0) {
+                    List<Long> dates = new LinkedList<>();
+                    for (Date d : cooldowns.get(uuid).get(type)) {
+                        dates.add(d.getTime());
+                    }
+                    cooldownConfig.set(String.format("%s.%s", uuid.toString(), CooldownType.GetName(type)), dates);
+                }
+            }
+        }
+        try {
+            cooldownConfig.save(cooldownFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }

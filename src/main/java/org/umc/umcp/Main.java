@@ -10,7 +10,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.Statistic;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
@@ -31,8 +33,10 @@ import org.umc.umcp.enums.UmcpItem;
 import org.umc.umcp.listeners.CraftListener;
 import org.umc.umcp.listeners.GlobalListener;
 import org.umc.umcp.listeners.IENIMListener;
+import org.umc.umcp.misc.Cooldowns;
 import org.umc.umcp.misc.Crafter;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.UUID;
@@ -41,6 +45,7 @@ import java.util.logging.Logger;
 public final class Main extends JavaPlugin {
     public static DBConnection conn;
     public static FileConfiguration config;
+    public static FileConfiguration cd;
     private static Economy econ = null;
     public static final Logger log = Logger.getLogger("Minecraft");
     private static int scholarshipAmount;
@@ -51,6 +56,7 @@ public final class Main extends JavaPlugin {
     public void onEnable() {
         saveDefaultConfig();
         config = this.getConfig();
+        cd = Cooldowns.GetCooldowns(this);
 
         if (!setupEconomy() ) {
             log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
@@ -125,6 +131,7 @@ public final class Main extends JavaPlugin {
     @Override
     public void onDisable() {
         saveDefaultConfig();
+        Cooldowns.SaveCooldowns(this);
         this.getLogger().info("ПРАЩЯЙ ЖИСТОКИЙ МИР!11!!1!!");
     }
 
