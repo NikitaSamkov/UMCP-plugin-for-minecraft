@@ -12,6 +12,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.*;
@@ -506,6 +507,13 @@ public class GlobalListener implements Listener {
         }
         if (e.getInventory().getItem(0) != null && UmcpItem.THUNDERBOW.check(e.getInventory().getItem(0))) {
             e.getInventory().setItem(2, new ItemStack(Material.AIR));
+        }
+    }
+
+    @EventHandler
+    public void onEnchant(EnchantItemEvent e) {
+        if (UmcpItem.THUNDERBOW.check(e.getItem())) {
+            e.setCancelled(true);
         }
     }
 }

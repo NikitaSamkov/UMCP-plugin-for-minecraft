@@ -124,6 +124,7 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        saveDefaultConfig();
         this.getLogger().info("ПРАЩЯЙ ЖИСТОКИЙ МИР!11!!1!!");
     }
 
